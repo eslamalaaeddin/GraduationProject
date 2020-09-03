@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:gravity="center"
+    android:background="@color/view_page_color"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="128dp"
+        android:layout_height="128dp"
+        android:id="@+id/logo_image_view"
+        android:src="@drawable/ic_travel_splash"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/heading_text_view"
+        tools:text="Travel App"
+        android:textSize="36sp"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:layout_margin="16dp"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/heading_description_text_view"
+        tools:text="doaj;fdoasfjaodfj;ofjsdfnd;salfjad;fjdl;kafjdsalkfjlsdaflkdsj;flsdajklflkdasfjdkslafdsaf;lsadfjksd;flsdafjl;kasdl;kfsd;klfajlksdfjsdfjsdkl;fa;ldjflkdsjflsdkafsjda;flkdsjaflk;sadjfalksdjfasdlkfjlkdsjflsadjf;sadfdslkf;lasdfjklds;flkdslkfsadljkf;a;kdsl;l"
+        android:textSize="16sp"
+        android:textColor="@color/white"
+        android:layout_margin="16dp"
+        />
+
+
+
+</LinearLayout>
