@@ -17,6 +17,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/first_name_edit_text"
             android:hint="Email address"
+            android:backgroundTint="@color/white"
             android:inputType="text"
             android:layout_margin="8dp"
             />
@@ -25,8 +26,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/last_name_edit_text"
-            android:inputType="text"
             android:hint="Password"
+            android:backgroundTint="@color/white"
             android:layout_margin="8dp"
             />
 
@@ -51,7 +52,7 @@
             android:id="@+id/forget_password_text_view"
             android:text="Forgot password?"
             android:textSize="16sp"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:gravity="end"
             android:layout_margin="8dp"
             />
