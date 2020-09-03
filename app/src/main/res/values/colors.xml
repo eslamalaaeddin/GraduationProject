@@ -7,4 +7,5 @@
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
     <color name="view_page_color">#F4511E</color>
+    <color name="secondary_text">#FFFFFF</color>
 </resources>
