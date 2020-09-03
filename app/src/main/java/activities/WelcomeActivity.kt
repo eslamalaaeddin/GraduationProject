@@ -1,5 +1,6 @@
 package activities
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Html
@@ -29,7 +30,7 @@ class WelcomeActivity : AppCompatActivity() {
         activityWelcomeBinding.sliderImagesViewPager.addOnPageChangeListener(viewListener)
 
         activityWelcomeBinding.skipButton.setOnClickListener {
-            Toast.makeText(this, "Skip", Toast.LENGTH_SHORT).show()
+            startActivity(Intent(this,RegisterActivity::class.java))
         }
     }
 

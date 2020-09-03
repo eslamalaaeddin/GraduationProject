@@ -24,21 +24,7 @@ class RegisterActivity : AppCompatActivity() {
                 .commit()
         }
 
-        registerBinding.signUpButton.setOnClickListener {
 
-                val signUpFragment = SignUpFragment()
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, signUpFragment)
-                    .commit()
-
-        }
-
-        registerBinding.signInButton.setOnClickListener {
-                val signInFragment = SignInFragment()
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, signInFragment)
-                    .commit()
-        }
 
     }
 

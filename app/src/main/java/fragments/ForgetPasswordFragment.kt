@@ -28,7 +28,10 @@ class ForgetPasswordFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         passwordBinding.sendPasswordLinkButton.setOnClickListener {
             Toast.makeText(context, "A link has been sent to your email, please check it.", Toast.LENGTH_LONG).show()
-
+            val resetPasswordFragment = ResetPasswordFragment()
+            activity?.supportFragmentManager?.beginTransaction()
+                ?.replace(R.id.fragment_container, resetPasswordFragment)
+                ?.commit()
         }
     }
 }
