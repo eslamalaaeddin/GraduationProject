@@ -2,11 +2,44 @@ package activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.databinding.DataBindingUtil
 import com.example.graduationproject.R
+import com.example.graduationproject.databinding.ActivityRegisterBinding
+import fragments.SignInFragment
+import fragments.SignUpFragment
 
 class RegisterActivity : AppCompatActivity() {
+    private lateinit var registerBinding: ActivityRegisterBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_register)
+
+        registerBinding = DataBindingUtil.setContentView(this,R.layout.activity_register)
+
+        val currentFragment =
+            supportFragmentManager.findFragmentById(R.id.fragment_container)
+        if (currentFragment == null) {
+            val signUpFragment = SignUpFragment()
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, signUpFragment)
+                .commit()
+        }
+
+        registerBinding.signUpButton.setOnClickListener {
+
+                val signUpFragment = SignUpFragment()
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, signUpFragment)
+                    .commit()
+
+        }
+
+        registerBinding.signInButton.setOnClickListener {
+                val signInFragment = SignInFragment()
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, signInFragment)
+                    .commit()
+        }
+
     }
+
 }
