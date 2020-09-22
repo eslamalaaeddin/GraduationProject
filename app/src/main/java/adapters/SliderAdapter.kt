@@ -1,4 +1,4 @@
-package com.example.graduationproject
+package adapters
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -7,11 +7,14 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.core.content.getSystemService
 import androidx.viewpager.widget.PagerAdapter
-import org.w3c.dom.Text
+import com.example.graduationproject.R
 
-val IMAGES = arrayOf(R.drawable.ic_travel_splash,R.drawable.ic_travel_splash,R.drawable.ic_travel_splash)
+val IMAGES = arrayOf(
+    R.drawable.ic_travel_splash,
+    R.drawable.ic_travel_splash,
+    R.drawable.ic_travel_splash
+)
 val HEADINGS = arrayOf("Heading 1","Heading 2","Heading 3")
 val DESCRIPTIONS =
     arrayOf("Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",

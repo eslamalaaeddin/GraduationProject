@@ -1,4 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="Home" android:id="@+id/homeFragment"
+        android:icon="@drawable/ic_home" app:showAsAction="always"/>
+
+    <item android:title="Favorites" android:id="@+id/favoritesFragment"
+        android:icon="@drawable/ic_heart"
+        app:showAsAction="always"/>
+
+    <item android:title="Add place" android:id="@+id/add_place"
+        android:icon="@drawable/ic_placeholder"
+        app:showAsAction="always"/>
+
+
+    <item android:title="Search" android:id="@+id/search"
+        android:icon="@drawable/ic_search"
+        app:showAsAction="always"/>
+
+
+    <item android:title="NavDrawer" android:id="@+id/nav_drawer"
+        android:icon="@drawable/ic_menu" app:showAsAction="always"/>
+
+
+
 
 </menu>

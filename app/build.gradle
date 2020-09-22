@@ -16,7 +16,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.graduationproject"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
@@ -71,5 +71,14 @@ dependencies {
 
     // Testing Navigation
     androidTestImplementation "androidx.navigation:navigation-testing:$nav_version"
+
+    //Smiley rating
+    implementation 'com.github.sujithkanna:smileyrating:2.0.0'
+
+    implementation 'com.google.android.material:material:1.2.1'
+
+    //rounded images
+    implementation 'com.mikhaellopez:circularimageview:4.2.0'
+
 
 }

@@ -5,11 +5,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Html
 import android.widget.TextView
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.viewpager.widget.ViewPager
 import com.example.graduationproject.R
-import com.example.graduationproject.SliderAdapter
+import adapters.SliderAdapter
 import com.example.graduationproject.databinding.ActivityWelcomeBinding
 
 class WelcomeActivity : AppCompatActivity() {
@@ -41,6 +40,7 @@ class WelcomeActivity : AppCompatActivity() {
         for ((i,item) in dots.withIndex()) {
             dots[i] = TextView(this)
             dots[i].apply {
+              //  background = resources.getDrawable(R.drawable.shape_deselected_dot)
                 text = (Html.fromHtml("&#8226;"))
                 textSize = 36F
                 setTextColor(resources.getColor(R.color.white))
