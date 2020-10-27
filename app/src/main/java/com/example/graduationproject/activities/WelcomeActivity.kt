@@ -1,4 +1,4 @@
-package activities
+package com.example.graduationproject.activities
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -8,7 +8,7 @@ import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.viewpager.widget.ViewPager
 import com.example.graduationproject.R
-import adapters.SliderAdapter
+import com.example.graduationproject.adapters.SliderAdapter
 import com.example.graduationproject.databinding.ActivityWelcomeBinding
 
 class WelcomeActivity : AppCompatActivity() {

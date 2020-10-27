@@ -1,6 +1,5 @@
-package activities
+package com.example.graduationproject.activities
 
-import android.content.Intent
 import android.graphics.Color
 import android.graphics.PorterDuff
 import androidx.appcompat.app.AppCompatActivity

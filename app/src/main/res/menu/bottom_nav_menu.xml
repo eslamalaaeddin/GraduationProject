@@ -9,7 +9,7 @@
         android:icon="@drawable/ic_heart"
         app:showAsAction="always"/>
 
-    <item android:title="Add place" android:id="@+id/add_place"
+    <item android:title="Add place" android:id="@+id/addPlacesActivity"
         android:icon="@drawable/ic_placeholder"
         app:showAsAction="always"/>
 
@@ -19,8 +19,8 @@
         app:showAsAction="always"/>
 
 
-    <item android:title="NavDrawer" android:id="@+id/nav_drawer"
-        android:icon="@drawable/ic_menu" app:showAsAction="always"/>
+<!--    <item android:title="NavDrawer" android:id="@+id/nav_drawer"-->
+<!--        android:icon="@drawable/ic_menu" app:showAsAction="always"/>-->
 
 
 

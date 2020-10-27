@@ -1,4 +1,4 @@
-package activities
+package com.example.graduationproject.activities
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity

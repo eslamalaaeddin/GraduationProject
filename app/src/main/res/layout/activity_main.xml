@@ -5,27 +5,12 @@
 
     </data>
 
-    <androidx.drawerlayout.widget.DrawerLayout
-        android:id="@+id/drawer_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/main_toolbar"
-                android:layout_width="match_parent"
-                app:titleTextColor="@color/white"
-                app:theme="@style/AppTheme.Toolbar"
-                android:layout_height="?android:attr/actionBarSize"
-                style="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                android:background="@color/colorPrimary"/>
-
-
-            <fragment
+            <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/my_nav_host_fragment"
                 android:name="androidx.navigation.fragment.NavHostFragment"
                 android:layout_width="match_parent"
@@ -42,20 +27,13 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="4dp"
+                app:itemIconTint="@drawable/bottom_nav_view_icon_selector"
                 app:labelVisibilityMode="unlabeled"
                 android:background="@drawable/round_background"
                 app:menu="@menu/bottom_nav_menu" />
         </LinearLayout>
 
-        <com.google.android.material.navigation.NavigationView
-            android:id="@+id/nav_view"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="start"
-            app:headerLayout="@layout/nav_header"
-            app:itemIconTint="@color/orange"
-            app:menu="@menu/nav_drawer_menu" />
-    </androidx.drawerlayout.widget.DrawerLayout>
+
 </layout>
 
 

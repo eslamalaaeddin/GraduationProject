@@ -1,4 +1,4 @@
-//package activities
+//package com.example.graduationproject.activities
 //
 //import android.graphics.Color
 //import android.os.Bundle

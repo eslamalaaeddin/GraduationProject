@@ -5,18 +5,18 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="fragments.HomeFragment"
+        android:name="com.example.graduationproject.fragments.HomeFragment"
         android:label="HomeFragment" >
-        <action
-            android:id="@+id/action_homeFragment_to_favoritesFragment"
-            app:destination="@id/favoritesFragment" />
+
     </fragment>
     <fragment
         android:id="@+id/favoritesFragment"
-        android:name="fragments.FavoritesFragment"
+        android:name="com.example.graduationproject.fragments.FavoritesFragment"
         android:label="FavoritesFragment" >
-        <action
-            android:id="@+id/action_favoritesFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
+
     </fragment>
+    <activity
+        android:id="@+id/addPlaceActivity"
+        android:name="com.example.graduationproject.activities.AddPlaceActivity"
+        android:label="AddPlaceActivity" />
 </navigation>

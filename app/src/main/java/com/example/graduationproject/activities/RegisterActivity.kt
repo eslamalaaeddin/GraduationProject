@@ -1,12 +1,11 @@
-package activities
+package com.example.graduationproject.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.databinding.DataBindingUtil
 import com.example.graduationproject.R
 import com.example.graduationproject.databinding.ActivityRegisterBinding
-import fragments.SignInFragment
-import fragments.SignUpFragment
+import com.example.graduationproject.fragments.SignUpFragment
 
 class RegisterActivity : AppCompatActivity() {
     private lateinit var registerBinding: ActivityRegisterBinding
@@ -23,9 +22,6 @@ class RegisterActivity : AppCompatActivity() {
                 .replace(R.id.fragment_container, signUpFragment)
                 .commit()
         }
-
-
-
     }
 
 }
