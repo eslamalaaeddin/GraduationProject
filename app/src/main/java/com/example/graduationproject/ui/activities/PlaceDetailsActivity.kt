@@ -1,4 +1,4 @@
-package com.example.graduationproject.activities
+package com.example.graduationproject.ui.activities
 
 import android.annotation.SuppressLint
 import android.graphics.Color

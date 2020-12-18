@@ -52,7 +52,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                tools:context="com.example.graduationproject.activities.PlaceDetailsActivity">
+                tools:context=".ui.activities.PlaceDetailsActivity">
 
                 <LinearLayout
                     android:layout_width="match_parent"

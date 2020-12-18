@@ -14,7 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            tools:context="com.example.graduationproject.activities.WelcomeActivity">
+            tools:context=".ui.activities.WelcomeActivity">
 
             <androidx.viewpager.widget.ViewPager
                 android:layout_width="match_parent"
@@ -42,7 +42,7 @@
             android:background="@android:color/transparent"
             android:textColor="@android:color/white"
             android:text="Skip"
-            android:layout_gravity="end"
+            android:layout_gravity="end|bottom"
             android:textSize="14sp" />
 
     </FrameLayout>

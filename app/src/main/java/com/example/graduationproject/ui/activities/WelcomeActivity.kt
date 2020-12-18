@@ -1,4 +1,4 @@
-package com.example.graduationproject.activities
+package com.example.graduationproject.ui.activities
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -30,6 +30,7 @@ class WelcomeActivity : AppCompatActivity() {
 
         activityWelcomeBinding.skipButton.setOnClickListener {
             startActivity(Intent(this,RegisterActivity::class.java))
+            finish()
         }
     }
 

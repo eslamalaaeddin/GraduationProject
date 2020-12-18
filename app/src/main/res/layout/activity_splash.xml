@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#1E88E5"
-    tools:context="com.example.graduationproject.activities.SplashActivity">
+    tools:context=".ui.activities.SplashActivity">
 
 
     <ImageView
@@ -14,8 +14,5 @@
         android:layout_height="128dp"
         android:layout_gravity="center"
         android:src="@drawable/ic_travel_splash"/>
-
-
-
 
 </FrameLayout>

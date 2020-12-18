@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -24,17 +25,17 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/first_name_edit_text"
+            android:id="@+id/mail_edit_text"
             android:hint="Email address"
             android:backgroundTint="@color/grey"
-            android:inputType="text"
+            android:inputType="textEmailAddress"
             android:layout_margin="8dp"
             />
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/last_name_edit_text"
+            android:id="@+id/password_edit_text"
             android:hint="Password"
             android:backgroundTint="@color/grey"
             android:layout_margin="8dp"
@@ -45,7 +46,7 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/sign_in_button"
+            android:id="@+id/signInButton"
             android:text="Sign in"
             android:background="@drawable/round_button"
             android:textColor="@color/white"
@@ -60,21 +61,21 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/forget_password_text_view"
+            android:id="@+id/forgetPasswordTextView"
             android:text="Forgot password?"
             android:textSize="16sp"
-            android:textColor="@color/white"
+            android:textColor="@color/dark_grey"
             android:gravity="end"
             android:layout_margin="4dp"
             />
 
         <TextView
-            android:id="@+id/do_not_have_account_text_view"
+            android:id="@+id/doNotHaveAccountTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text=" Do not have an account? Sign Up"
             android:textAlignment="center"
-            android:textColor="@color/white"
+            android:textColor="@color/dark_grey"
             android:textSize="14sp"
             android:layout_marginTop="8dp"
            />

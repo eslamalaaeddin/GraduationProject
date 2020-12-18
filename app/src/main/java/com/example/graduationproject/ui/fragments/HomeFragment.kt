@@ -1,6 +1,6 @@
-package com.example.graduationproject.fragments
+package com.example.graduationproject.ui.fragments
 
-import com.example.graduationproject.activities.PlaceDetailsActivity
+import com.example.graduationproject.ui.activities.PlaceDetailsActivity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -8,6 +8,7 @@ import android.view.*
 import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -15,60 +16,57 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.graduationproject.DummyPlace
 import com.example.graduationproject.R
-import com.example.graduationproject.databinding.FragmentFavoritesBinding
+import com.example.graduationproject.databinding.FragmentHomeBinding
+import com.example.graduationproject.ui.activities.SplashActivity
 
-private const val TAG = "FavoritesFragment"
-class FavoritesFragment: Fragment() {
-    private lateinit var fragmentFavoritesBinding: FragmentFavoritesBinding
-    private var placesAdapter = PlacesAdapter(emptyList())
+private const val TAG = "HomeFragment"
+class HomeFragment : Fragment() {
+    private lateinit var fragmentBinding: FragmentHomeBinding
+        private var placesAdapter = PlacesAdapter(emptyList())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
     }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        fragmentFavoritesBinding = DataBindingUtil.inflate(
-            inflater,
-            R.layout.fragment_favorites,
-            container,
-            false
-        )
-        ///(activity as AppCompatActivity?)?.setSupportActionBar(fragmentFavoritesBinding.mainToolbar)
-
-        Log.i(TAG, "onCreateView: Favorites")
-        return fragmentFavoritesBinding.root
+        fragmentBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_home,container,false)
+       // (activity as AppCompatActivity?)?.setSupportActionBar(fragmentBinding.mainToolbar)
+        Log.i(TAG, "onCreateView: Home")
+        return fragmentBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         val dummyList = mutableListOf<DummyPlace>()
-        dummyList.add(0,DummyPlace("Cairo", R.drawable.cairo_tower, 3F))
-        dummyList.add(0,DummyPlace("Giza", R.drawable.pyramids, 2F))
-        dummyList.add(0,DummyPlace("Alex", R.drawable.citadel, 4F))
-        dummyList.add(0,DummyPlace("Aswan", R.drawable.aswan, 5F))
-        dummyList.add(0,DummyPlace("Khalifa burg", R.drawable.burj, 3F))
-        dummyList.add(0,DummyPlace("Mo'ai", R.drawable.moai, 2F))
-        dummyList.add(0,DummyPlace("Eiffel tower", R.drawable.eiffel, 4F))
-        dummyList.add(0,DummyPlace("Cairo", R.drawable.cairo_tower, 3F))
-        dummyList.add(0,DummyPlace("Giza", R.drawable.pyramids, 2F))
-        dummyList.add(0,DummyPlace("Alex", R.drawable.citadel, 4F))
-        dummyList.add(0,DummyPlace("Aswan", R.drawable.aswan, 5F))
-        dummyList.add(0,DummyPlace("Khalifa burg", R.drawable.burj, 3F))
-        dummyList.add(0,DummyPlace("Mo'ai", R.drawable.moai, 2F))
-        dummyList.add(0,DummyPlace("Eiffel tower", R.drawable.eiffel, 4F))
+        dummyList.add(DummyPlace("Cairo",R.drawable.cairo_tower,3F))
+        dummyList.add(DummyPlace("Giza",R.drawable.pyramids,2F))
+        dummyList.add(DummyPlace("Alex",R.drawable.citadel,4F))
+        dummyList.add(DummyPlace("Aswan",R.drawable.aswan,5F))
+        dummyList.add(DummyPlace("Khalifa burg",R.drawable.burj,3F))
+        dummyList.add(DummyPlace("Mo'ai",R.drawable.moai,2F))
+        dummyList.add(DummyPlace("Eiffel tower",R.drawable.eiffel,4F))
+        dummyList.add(DummyPlace("Cairo",R.drawable.cairo_tower,3F))
+        dummyList.add(DummyPlace("Giza",R.drawable.pyramids,2F))
+        dummyList.add(DummyPlace("Alex",R.drawable.citadel,4F))
+        dummyList.add(DummyPlace("Aswan",R.drawable.aswan,5F))
+        dummyList.add(DummyPlace("Khalifa burg",R.drawable.burj,3F))
+        dummyList.add(DummyPlace("Mo'ai",R.drawable.moai,2F))
+        dummyList.add(DummyPlace("Eiffel tower",R.drawable.eiffel,4F))
 
         placesAdapter = PlacesAdapter(dummyList)
 
-        fragmentFavoritesBinding.homePlacesRecyclerView.apply {
-            //layoutManager = LinearLayoutManager(this@HomeActivity)
-            layoutManager = GridLayoutManager(context, 2)
+        fragmentBinding.homePlacesRecyclerView.apply {
+//            layoutManager = LinearLayoutManager(context)
+            layoutManager = GridLayoutManager(context,2)
             adapter = placesAdapter
         }
+
+        Toast.makeText(requireContext(), "${SplashActivity.getAccessToken(requireContext())}", Toast.LENGTH_LONG).show()
 
 //        homeBinding.addPlacesFab.setOnClickListener {
 //            startActivity(Intent(context, AddPlaceActivity::class.java))
@@ -76,6 +74,7 @@ class FavoritesFragment: Fragment() {
 
 
     }
+
 
 
     inner class PlacesAdapter(private var placesList: List<DummyPlace>) : RecyclerView.Adapter<PlacesAdapter.PlacesHolder>() {
@@ -93,13 +92,13 @@ class FavoritesFragment: Fragment() {
 
 
             fun bind(place: DummyPlace) {
-                placeNameTextView.text = place.name
-                placeImage.setImageResource(place.image)
-                placeRatingBar.rating = place.rating
+              placeNameTextView.text = place.name
+              placeImage.setImageResource(place.image)
+              placeRatingBar.rating = place.rating
             }
 
             override fun onClick(item: View?) {
-                //Temp code
+            //Temp code
                 val placeDetailsIntent = Intent(context, PlaceDetailsActivity::class.java)
                 startActivity(placeDetailsIntent)
 

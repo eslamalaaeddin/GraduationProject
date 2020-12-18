@@ -74,7 +74,7 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/create_account_button"
+            android:id="@+id/signUpButton"
             android:text="Sign up"
             android:background="@drawable/round_button"
             android:textColor="@color/white"
@@ -87,12 +87,12 @@
             />
 
         <TextView
-            android:id="@+id/have_account_text_view"
+            android:id="@+id/haveAccountTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Do you have an account? Sign in"
             android:textAlignment="center"
-            android:textColor="@color/white"
+            android:textColor="@color/dark_grey"
             android:textSize="16sp"
             />
 
