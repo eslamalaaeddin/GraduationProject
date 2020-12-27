@@ -13,7 +13,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.graduationproject.DummyPlace
+import com.example.graduationproject.dummy.DummyPlace
 import com.example.graduationproject.R
 import com.example.graduationproject.databinding.FragmentFavoritesBinding
 
@@ -47,20 +47,20 @@ class FavoritesFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val dummyList = mutableListOf<DummyPlace>()
-        dummyList.add(0,DummyPlace("Cairo", R.drawable.cairo_tower, 3F))
-        dummyList.add(0,DummyPlace("Giza", R.drawable.pyramids, 2F))
-        dummyList.add(0,DummyPlace("Alex", R.drawable.citadel, 4F))
-        dummyList.add(0,DummyPlace("Aswan", R.drawable.aswan, 5F))
-        dummyList.add(0,DummyPlace("Khalifa burg", R.drawable.burj, 3F))
-        dummyList.add(0,DummyPlace("Mo'ai", R.drawable.moai, 2F))
-        dummyList.add(0,DummyPlace("Eiffel tower", R.drawable.eiffel, 4F))
-        dummyList.add(0,DummyPlace("Cairo", R.drawable.cairo_tower, 3F))
-        dummyList.add(0,DummyPlace("Giza", R.drawable.pyramids, 2F))
-        dummyList.add(0,DummyPlace("Alex", R.drawable.citadel, 4F))
-        dummyList.add(0,DummyPlace("Aswan", R.drawable.aswan, 5F))
-        dummyList.add(0,DummyPlace("Khalifa burg", R.drawable.burj, 3F))
-        dummyList.add(0,DummyPlace("Mo'ai", R.drawable.moai, 2F))
-        dummyList.add(0,DummyPlace("Eiffel tower", R.drawable.eiffel, 4F))
+        dummyList.add(0, DummyPlace("Cairo", R.drawable.cairo_tower, 3F))
+        dummyList.add(0, DummyPlace("Giza", R.drawable.pyramids, 2F))
+        dummyList.add(0, DummyPlace("Alex", R.drawable.citadel, 4F))
+        dummyList.add(0, DummyPlace("Aswan", R.drawable.aswan, 5F))
+        dummyList.add(0, DummyPlace("Khalifa burg", R.drawable.burj, 3F))
+        dummyList.add(0, DummyPlace("Mo'ai", R.drawable.moai, 2F))
+        dummyList.add(0, DummyPlace("Eiffel tower", R.drawable.eiffel, 4F))
+        dummyList.add(0, DummyPlace("Cairo", R.drawable.cairo_tower, 3F))
+        dummyList.add(0, DummyPlace("Giza", R.drawable.pyramids, 2F))
+        dummyList.add(0, DummyPlace("Alex", R.drawable.citadel, 4F))
+        dummyList.add(0, DummyPlace("Aswan", R.drawable.aswan, 5F))
+        dummyList.add(0, DummyPlace("Khalifa burg", R.drawable.burj, 3F))
+        dummyList.add(0, DummyPlace("Mo'ai", R.drawable.moai, 2F))
+        dummyList.add(0, DummyPlace("Eiffel tower", R.drawable.eiffel, 4F))
 
         placesAdapter = PlacesAdapter(dummyList)
 

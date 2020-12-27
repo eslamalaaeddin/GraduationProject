@@ -28,24 +28,24 @@ class SplashActivity : AppCompatActivity() {
 
 
         Handler().postDelayed({
-            if (signedInORSignedUpVerified) {
-                startActivity(Intent(this, MainActivity::class.java))
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
-                finish()
-            } else if (welcomed) {
-                startActivity(Intent(this, RegisterActivity::class.java))
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
-                finish()
-            }else{
-                setWelcomed(this, true)
-                startActivity(Intent(this, WelcomeActivity::class.java))
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
-                finish()
-            }
-
-//            startActivity(Intent(this, RegisterActivity::class.java))
+//            if (signedInORSignedUpVerified) {
+//                startActivity(Intent(this, MainActivity::class.java))
 //                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
 //                finish()
+//            } else if (welcomed) {
+//                startActivity(Intent(this, RegisterActivity::class.java))
+//                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+//                finish()
+//            }else{
+//                setWelcomed(this, true)
+//                startActivity(Intent(this, WelcomeActivity::class.java))
+//                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+//                finish()
+//            }
+
+            startActivity(Intent(this, RegisterActivity::class.java))
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+                finish()
 
 
         }, 1000)

@@ -12,17 +12,29 @@ import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.observe
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.graduationproject.DummyPlace
+import com.example.graduationproject.dummy.DummyPlace
 import com.example.graduationproject.R
 import com.example.graduationproject.databinding.FragmentHomeBinding
+import com.example.graduationproject.model.places.FavoritePlace
+import com.example.graduationproject.model.places.Place
+import com.example.graduationproject.model.places.VisitedPlace
 import com.example.graduationproject.ui.activities.SplashActivity
+import com.example.graduationproject.viewmodel.HomeFragmentViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 private const val TAG = "HomeFragment"
 class HomeFragment : Fragment() {
+    private val homeFragmentViewModel by viewModel<HomeFragmentViewModel>()
     private lateinit var fragmentBinding: FragmentHomeBinding
-        private var placesAdapter = PlacesAdapter(emptyList())
+    private var placesAdapter = PlacesAdapter(emptyList())
+    private var accessToken = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +53,7 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+         accessToken = SplashActivity.getAccessToken(requireContext()).orEmpty()
 
         val dummyList = mutableListOf<DummyPlace>()
         dummyList.add(DummyPlace("Cairo",R.drawable.cairo_tower,3F))
@@ -71,6 +84,79 @@ class HomeFragment : Fragment() {
 //        homeBinding.addPlacesFab.setOnClickListener {
 //            startActivity(Intent(context, AddPlaceActivity::class.java))
 //        }
+
+//          lifecycleScope.launch {
+//              homeFragmentViewModel.addNewPlace(Place(name = "place name", country = "Egypt", city = "Zagazig", latitude = -12.5, longitude = 10.24), accessToken).message.toString()
+//          }
+
+        lifecycleScope.launch {
+            homeFragmentViewModel.getRecommendedPlaces(1, accessToken).observe(viewLifecycleOwner) {
+                Log.i(TAG, "ISLAM onViewCreated: $it")
+                Log.i(TAG, "ISLAM onViewCreated: ${it.size}")
+            }
+        }
+//
+//        lifecycleScope.launch {
+//            homeFragmentViewModel.searchForPlaceInCountry("beach", "egypt", accessToken).observe(viewLifecycleOwner){
+//                Log.i(TAG, "ISLAM onViewCreated: $it")
+//                Log.i(TAG, "ISLAM onViewCreated: ${it.size}")
+//            }
+//        }
+
+//        lifecycleScope.launch {
+//            homeFragmentViewModel.searchForSpecificPlace(1,accessToken).observe(viewLifecycleOwner){
+//                Log.i(TAG, "onViewCreated: $it")
+//            }
+//        }
+
+//        lifecycleScope.launch {
+//            homeFragmentViewModel.getPlaceImages("1",accessToken).observe(viewLifecycleOwner){
+//                Log.i(TAG, "onViewCreated: $it")
+//                Log.i(TAG, "onViewCreated: ${it.size}")
+//            }
+//        }
+
+//        lifecycleScope.launch {
+//            homeFragmentViewModel.getPlaceComments("1", 1, accessToken).observe(viewLifecycleOwner){
+//                Log.i(TAG, "ISLAM onViewCreated: $it")
+//                Log.i(TAG, "ISLAM onViewCreated: ${it.size}")
+//            }
+//        }
+
+//        lifecycleScope.launch {
+//            homeFragmentViewModel.getUserVisitedPlaces(accessToken).observe(viewLifecycleOwner){
+//                Log.i(TAG, "ISLAM onViewCreated: $it")
+//                Log.i(TAG, "ISLAM onViewCreated: ${it.size}")
+//            }
+//        }
+
+//        lifecycleScope.launch {
+//            Log.i(TAG, "ISLAM onViewCreated: ${homeFragmentViewModel.addPlaceToUserVisitedPlaces(VisitedPlace(123), accessToken).message.toString()}")
+//        }
+
+//        lifecycleScope.launch {
+//            Log.i(TAG, "ISLAM onViewCreated: ${homeFragmentViewModel.deleteVisitedPlace("1", accessToken).message.toString()}")
+//        }
+
+//        lifecycleScope.launch {
+//            homeFragmentViewModel.getUserFavoritePlaces(accessToken).observe(viewLifecycleOwner){
+//                Log.i(TAG, "ISLAM onViewCreated: $it")
+//                Log.i(TAG, "ISLAM onViewCreated: ${it.size}")
+//            }
+//        }
+
+//        lifecycleScope.launch {
+//            //homeFragmentViewModel.addPlaceToUserFavoritePlaces(FavoritePlace())
+//            /*
+//                I HAVE TO SOLVE BODY PROBLEM ==> WATCH FORM URL ENCODED
+//             */
+//        }
+
+//        lifecycleScope.launch {
+//            Log.i(TAG, "ISLAM onViewCreated: ${homeFragmentViewModel.deleteUserFavoritePlace("1", accessToken).message.toString()}")
+//        }
+
+
 
 
     }

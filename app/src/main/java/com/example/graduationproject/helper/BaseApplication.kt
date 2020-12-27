@@ -1,6 +1,9 @@
 package com.example.graduationproject.helper
 
 import android.app.Application
+import com.example.graduationproject.di.apiModule
+import com.example.graduationproject.di.homeFragmentViewModelModule
+import com.example.graduationproject.di.placesRepository
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -13,7 +16,11 @@ class BaseApplication : Application() {
             androidLogger(Level.DEBUG)
             androidContext(this@BaseApplication)
             modules(
-                listOf()
+                listOf(
+                    apiModule,
+                    placesRepository,
+                    homeFragmentViewModelModule
+                )
             )
         }
     }

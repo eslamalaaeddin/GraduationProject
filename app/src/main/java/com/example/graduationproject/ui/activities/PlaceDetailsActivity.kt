@@ -18,8 +18,8 @@ import androidx.cardview.widget.CardView
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.graduationproject.DummyComment
-import com.example.graduationproject.DummyPlace
+import com.example.graduationproject.dummy.DummyComment
+import com.example.graduationproject.dummy.DummyPlace
 import com.example.graduationproject.R
 import com.example.graduationproject.databinding.ActivityPlaceDetailsBinding
 

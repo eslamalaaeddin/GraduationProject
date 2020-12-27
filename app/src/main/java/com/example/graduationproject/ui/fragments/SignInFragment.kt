@@ -23,6 +23,9 @@ class SignInFragment : Fragment(R.layout.fragment_in_sign ) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        mail_edit_text.setText("islamalaaeddin1998@gmail.com")
+        password_edit_text.setText("123456")
+
         doNotHaveAccountTextView.setOnClickListener {
             val action = SignInFragmentDirections.actionSignInFragmentToSignUpFragment()
             findNavController().navigate(action)
