@@ -1,9 +1,7 @@
 package com.example.graduationproject.helper
 
 import android.app.Application
-import com.example.graduationproject.di.apiModule
-import com.example.graduationproject.di.homeFragmentViewModelModule
-import com.example.graduationproject.di.placesRepository
+import com.example.graduationproject.di.*
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -18,8 +16,13 @@ class BaseApplication : Application() {
             modules(
                 listOf(
                     apiModule,
-                    placesRepository,
-                    homeFragmentViewModelModule
+                    placesRepositoryModule,
+                    homeFragmentViewModelModule,
+                    authenticationRepositoryModule,
+                    signUpViewModelModule,
+                    loginViewModelModule,
+                    verificationFragmentViewModelModule,
+                    splashActivityViewModelModule
                 )
             )
         }

@@ -5,13 +5,17 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.graduationproject.R
 import com.example.graduationproject.model.authentication.Token
 import com.example.graduationproject.model.authentication.Verify
 import com.example.graduationproject.network.RetrofitInstance
 import com.example.graduationproject.ui.activities.SplashActivity
+import com.example.graduationproject.viewmodel.VerificationFragmentViewModel
 import kotlinx.android.synthetic.main.fragment_verification.*
+import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -19,18 +23,13 @@ import retrofit2.Response
 private const val TAG = "VerificationFragment"
 
 class VerificationFragment : Fragment(R.layout.fragment_verification) {
-    private val api = RetrofitInstance.api
-    //val args: VerificationFragmentArgs by navArgs()
+    private val verificationFragmentViewModel by viewModel<VerificationFragmentViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         noVerificationSendTextView.setOnClickListener {
-            Toast.makeText(
-                context,
-                "Verification code has been sent,please check your phone",
-                Toast.LENGTH_LONG
-            ).show()
+            Toast.makeText(context, "Verification code has been sent,please check your phone", Toast.LENGTH_LONG).show()
         }
 
         haveAccountTextView.setOnClickListener {
@@ -52,34 +51,31 @@ class VerificationFragment : Fragment(R.layout.fragment_verification) {
             val email = "islamalaaeddin1998@gmail.com"
             val verify = Verify(email, code.toInt())
 
-            val call = api.verify(verify)
-            call.enqueue(object : Callback<Token> {
-                override fun onResponse(
-                    call: Call<Token>,
-                    response: Response<Token>
-                ) {
-                    val responseCode = response.code()
-                    //Not acceptable
-                    if (responseCode == 406) {
-                        Toast.makeText(requireContext(), "Wrong code", Toast.LENGTH_SHORT).show()
-                    } else if (responseCode == 200) {
-                        Log.i(TAG, "ISLAM onResponse: ${response.body()}")
-                        val accessToken = response.body()?.access_token.orEmpty()
-                        val refreshToken = response.body()?.refresh_token.orEmpty()
-                        SplashActivity.setAccessToken(requireContext(), accessToken)
-                        SplashActivity.setRefreshToken(requireContext(), refreshToken)
-                        SplashActivity.setSignedIn(requireContext(), true)
-                        val action = VerificationFragmentDirections.actionVerificationFragmentToMainActivity()
-                        findNavController().navigate(action)
-                        activity?.finish()
-                    }
+            lifecycleScope.launch {
+                val token = verificationFragmentViewModel.verifyUser(verify)
+                token?.let { t ->
+                    val accessToken = t.access_token
+                    val refreshToken = t.refresh_token
+                    val accessTokenExTime = t.access_token_exp
+                    val refreshTokenExTime = t.refresh_token_exp
+                    saveUserAsLoggedInAndSaveTokens(accessToken, refreshToken, accessTokenExTime, refreshTokenExTime)
+                    navigateToMainActivity()
                 }
-
-                override fun onFailure(call: Call<Token>, t: Throwable) {
-                    Toast.makeText(requireContext(), t.message.toString(), Toast.LENGTH_SHORT)
-                        .show()
-                }
-            })
+            }
         }
+    }
+
+    private fun saveUserAsLoggedInAndSaveTokens(accessToken: String, refreshToken: String, accessTokenExTime: String, refreshTokenExTime: String){
+        SplashActivity.setAccessToken(requireContext(), accessToken)
+        SplashActivity.setRefreshToken(requireContext(), refreshToken)
+        SplashActivity.setAccessTokenExpirationTime(requireContext(), accessTokenExTime)
+        SplashActivity.setRefreshTokenExpirationTime(requireContext(), refreshTokenExTime)
+        SplashActivity.setSignedIn(requireContext(), true)
+    }
+
+    private fun navigateToMainActivity(){
+        val action = VerificationFragmentDirections.actionVerificationFragmentToMainActivity()
+        findNavController().navigate(action)
+        activity?.finish()
     }
 }

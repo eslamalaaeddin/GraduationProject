@@ -24,6 +24,7 @@ import com.example.graduationproject.model.places.Place
 import com.example.graduationproject.model.places.VisitedPlace
 import com.example.graduationproject.ui.activities.SplashActivity
 import com.example.graduationproject.viewmodel.HomeFragmentViewModel
+import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -79,7 +80,7 @@ class HomeFragment : Fragment() {
             adapter = placesAdapter
         }
 
-        Toast.makeText(requireContext(), "${SplashActivity.getAccessToken(requireContext())}", Toast.LENGTH_LONG).show()
+       // Toast.makeText(requireContext(), "${SplashActivity.getAccessToken(requireContext())}", Toast.LENGTH_LONG).show()
 
 //        homeBinding.addPlacesFab.setOnClickListener {
 //            startActivity(Intent(context, AddPlaceActivity::class.java))
@@ -89,12 +90,17 @@ class HomeFragment : Fragment() {
 //              homeFragmentViewModel.addNewPlace(Place(name = "place name", country = "Egypt", city = "Zagazig", latitude = -12.5, longitude = 10.24), accessToken).message.toString()
 //          }
 
-        lifecycleScope.launch {
-            homeFragmentViewModel.getRecommendedPlaces(1, accessToken).observe(viewLifecycleOwner) {
-                Log.i(TAG, "ISLAM onViewCreated: $it")
-                Log.i(TAG, "ISLAM onViewCreated: ${it.size}")
+        testButton.setOnClickListener {
+            lifecycleScope.launch {
+                homeFragmentViewModel.getRecommendedPlaces(1, accessToken).observe(viewLifecycleOwner) {
+                    val places = it.orEmpty()
+                    Log.i(TAG, "ISLAM onViewCreated: $places")
+                    Log.i(TAG, "ISLAM onViewCreated: ${places.size}")
+                }
             }
         }
+
+
 //
 //        lifecycleScope.launch {
 //            homeFragmentViewModel.searchForPlaceInCountry("beach", "egypt", accessToken).observe(viewLifecycleOwner){

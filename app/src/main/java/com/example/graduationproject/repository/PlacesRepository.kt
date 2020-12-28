@@ -1,15 +1,21 @@
 package com.example.graduationproject.repository
 
+import android.content.Context
+import android.util.Log
+import android.widget.Toast
 import com.example.graduationproject.model.ResponseMessage
 import com.example.graduationproject.model.places.*
 import com.example.graduationproject.network.Api
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import retrofit2.HttpException
+import java.io.IOException
 
 /*
     This repo. is for the second section of our api, which deals with places in general.
  */
-class PlacesRepository(private val api: Api) {
+private const val TAG = "PlacesRepository"
+class PlacesRepository(private val api: Api, private val context: Context): BaseRepository() {
 
     suspend fun addNewPlace(place: Place, accessToken: String): ResponseMessage{
         return withContext(Dispatchers.IO){
@@ -18,20 +24,24 @@ class PlacesRepository(private val api: Api) {
     }
 
 
-    suspend fun getRecommendedPlaces(
-        page: Int,
-        accessToken: String
-    ): List<Place> {
-        return withContext(Dispatchers.IO) {
-            api.getRecommendedPlaces(accessToken, page)
+    suspend fun getRecommendedPlaces(page: Int, accessToken: String): List<Place>? {
+        var response : List<Place>? = null
+        try {
+             response = safeApiCall(
+                call = { withContext(Dispatchers.IO){api.getRecommendedPlaces(page, accessToken)}},
+                errorMessage = "Error Fetching Recommended Places")
         }
+
+        catch (e: IOException) {
+            Toast.makeText(context, "${e.message} please check your internet connection", Toast.LENGTH_SHORT).show()
+        }
+        catch (e: Throwable) {
+            Toast.makeText(context, "${e.message}", Toast.LENGTH_SHORT).show()
+        }
+        return response
     }
 
-    suspend fun searchForPlaceInCountry(
-        placeName: String,
-        countryName: String,
-        accessToken: String
-    ): List<Place> {
+    suspend fun searchForPlaceInCountry(placeName: String, countryName: String, accessToken: String): List<Place> {
         return withContext(Dispatchers.IO){
             api.searchForPlaceInCountry(placeName, countryName, accessToken)
         }

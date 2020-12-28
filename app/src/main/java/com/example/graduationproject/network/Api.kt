@@ -3,25 +3,28 @@ package com.example.graduationproject.network
 import com.example.graduationproject.model.ResponseMessage
 import com.example.graduationproject.model.authentication.*
 import com.example.graduationproject.model.places.*
+import kotlinx.coroutines.Deferred
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.*
 
 interface Api {
     //    @FormUrlEncoded
     @POST("auth/signup")
-    fun signUp(@Body signUp: SignUp): Call<ResponseMessage>
+    suspend fun signUp(@Body signUp: SignUp): Response<ResponseMessage>
 
     @POST("auth/verify")
-    fun verify(@Body verify: Verify): Call<Token>
+    suspend fun verifyUser(@Body verify: Verify): Response<Token>
 
     @POST("auth/login")
-    fun login(@Body login: Login): Call<Token>
+//    fun login(@Body login: Login): Call<Token>
+    suspend fun login(@Body login: Login): Response<Token>
 
     @POST("auth/send_reset_code")
     fun sendResetCode(@Body email: ResetCode): Call<ResponseMessage>
 
     @POST("auth/refresh_token")
-    fun refreshToken(@Body refreshToken: RefreshToken): Call<Token>
+    suspend fun refreshToken(@Body refreshToken: RefreshToken): Response<Token>
 
     /////////////////////////////////////////////////////////////////////////
 
@@ -31,12 +34,11 @@ interface Api {
         @Header("Authorization") accessToken: String
     ): ResponseMessage
 
-//    @GET("places/rec")
-    @GET("places/recc")
+    @GET("places/rec")
     suspend fun getRecommendedPlaces(
-        @Header("Authorization") accessToken: String,
-        @Query("page") page: Int
-    ): List<Place>
+        @Query("page") page: Int,
+        @Header("Authorization") accessToken: String
+    ): Response<List<Place>>
 
     @GET("places/search")
     suspend fun searchForPlaceInCountry(
@@ -96,7 +98,7 @@ interface Api {
     @GET("places/fav")
     suspend fun getUserFavoritePlaces(
         @Header("Authorization") accessToken: String
-    ):List<FavoritePlace>
+    ): List<FavoritePlace>
 
     @POST("places/visited")
     suspend fun addPlaceToUserFavoritePlaces(
