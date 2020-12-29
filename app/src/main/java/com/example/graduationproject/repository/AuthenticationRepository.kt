@@ -1,11 +1,20 @@
 package com.example.graduationproject.repository
 
+import android.app.Dialog
 import android.content.Context
+import android.content.Intent
 import android.util.Log
+import android.view.Window
 import android.widget.Toast
+import androidx.navigation.fragment.NavHostFragment.findNavController
+import androidx.navigation.fragment.findNavController
+import com.example.graduationproject.R
 import com.example.graduationproject.model.ResponseMessage
 import com.example.graduationproject.model.authentication.*
 import com.example.graduationproject.network.Api
+import com.example.graduationproject.ui.activities.RegisterActivity
+import com.example.graduationproject.ui.fragments.SignUpFragmentDirections
+import kotlinx.android.synthetic.main.unverified_account_dialog_layout.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
@@ -52,7 +61,10 @@ class AuthenticationRepository(private val api: Api, private val context: Contex
         catch (ex: HttpException){
             when(ex.code()){
                 404 -> Toast.makeText(context, "No account matches this email", Toast.LENGTH_SHORT).show()
-                403 -> Toast.makeText(context, "Unverified account", Toast.LENGTH_SHORT).show()
+                403 -> {
+                    Toast.makeText(context, "Unverified account", Toast.LENGTH_SHORT).show()
+                    navigateToVerificationFragment()
+                }
                 406 -> Toast.makeText(context, "Incorrect password", Toast.LENGTH_SHORT).show()
             }
         }
@@ -75,7 +87,12 @@ class AuthenticationRepository(private val api: Api, private val context: Contex
                 errorMessage = "Verification is not available now.")
         }
         catch (ex: HttpException){
-            when(ex.code()){ 406 -> Toast.makeText(context, "Incorrect code", Toast.LENGTH_SHORT).show() }
+            when(ex.code()){
+                406 -> {
+                    Toast.makeText(context, "Incorrect code", Toast.LENGTH_SHORT).show()
+
+                }
+            }
         }
         catch (ex: IOException){
             Toast.makeText(context, "${ex.message.toString()} please check your internet connection", Toast.LENGTH_SHORT).show()
@@ -103,6 +120,13 @@ class AuthenticationRepository(private val api: Api, private val context: Contex
             Toast.makeText(context, ex.message.toString(), Toast.LENGTH_SHORT).show()
         }
         return token
+    }
+
+    private fun navigateToVerificationFragment(){
+        val intent = Intent(context, RegisterActivity::class.java)
+        intent.putExtra("unVerified", 403)
+        context.startActivity(intent)
+
     }
 
 }

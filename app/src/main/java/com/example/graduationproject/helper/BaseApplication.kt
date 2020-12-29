@@ -19,10 +19,12 @@ class BaseApplication : Application() {
                     placesRepositoryModule,
                     homeFragmentViewModelModule,
                     authenticationRepositoryModule,
+                    commentsRepositoryModule,
                     signUpViewModelModule,
                     loginViewModelModule,
                     verificationFragmentViewModelModule,
-                    splashActivityViewModelModule
+                    splashActivityViewModelModule,
+                    placeActivityViewModelModule
                 )
             )
         }

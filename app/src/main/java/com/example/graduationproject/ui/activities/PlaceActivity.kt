@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,22 +17,28 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.graduationproject.dummy.DummyComment
 import com.example.graduationproject.dummy.DummyPlace
 import com.example.graduationproject.R
-import com.example.graduationproject.databinding.ActivityPlaceDetailsBinding
+import com.example.graduationproject.databinding.ActivityPlaceBinding
+import com.example.graduationproject.model.comments.PlaceComment
+import com.example.graduationproject.model.comments.UpdateComment
+import com.example.graduationproject.viewmodel.PlaceActivityViewModel
+import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class PlaceDetailsActivity : AppCompatActivity() {
-    private lateinit var placeDetailsBinding:ActivityPlaceDetailsBinding
+class PlaceActivity : AppCompatActivity() {
+    private lateinit var placeDetailsBinding: ActivityPlaceBinding
     private var placesAdapter = PlacesAdapter(emptyList())
     private var commentsAdapter = CommentsAdapter(emptyList())
-
+    private val placeActivityViewModel by viewModel<PlaceActivityViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        placeDetailsBinding = DataBindingUtil.setContentView(this,R.layout.activity_place_details)
+        val accessToken = SplashActivity.getAccessToken(this).orEmpty()
+        placeDetailsBinding = DataBindingUtil.setContentView(this,R.layout.activity_place)
 
         setUpToolbar()
         val dummyList = mutableListOf<DummyPlace>()
@@ -53,7 +60,7 @@ class PlaceDetailsActivity : AppCompatActivity() {
 
         placeDetailsBinding.placeImagesRecyclerView.apply {
             //layoutManager = LinearLayoutManager(this@HomeActivity)
-            layoutManager = LinearLayoutManager(this@PlaceDetailsActivity,LinearLayoutManager.HORIZONTAL,false)
+            layoutManager = LinearLayoutManager(this@PlaceActivity,LinearLayoutManager.HORIZONTAL,false)
             adapter = placesAdapter
         }
 
@@ -70,8 +77,26 @@ class PlaceDetailsActivity : AppCompatActivity() {
         commentsAdapter = CommentsAdapter(dummyComments)
 
         placeDetailsBinding.commentsRecyclerView.apply {
-            layoutManager = LinearLayoutManager(this@PlaceDetailsActivity)
+            layoutManager = LinearLayoutManager(this@PlaceActivity)
             adapter = commentsAdapter
+        }
+
+
+        lifecycleScope.launch {
+            val map = hashMapOf(
+                "pid" to 1,
+                "comment" to "Good Place",
+                "time" to ""
+            )
+            val comment = PlaceComment(null, "Good Place", null)
+            //val responseMessage = placeActivityViewModel.updateCommentOnPlace("1", comment, accessToken)
+
+            val responseMessage = placeActivityViewModel.deleteCommentOnPlace("1", accessToken)
+
+            if (responseMessage != null) {
+                Toast.makeText(this@PlaceActivity, "${responseMessage.message}", Toast.LENGTH_SHORT).show()
+            }
+
         }
 
 
@@ -134,7 +159,7 @@ class PlaceDetailsActivity : AppCompatActivity() {
 
             override fun onClick(item: View?) {
                 //Temp code
-                Toast.makeText(this@PlaceDetailsActivity, "Clicked", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@PlaceActivity, "Clicked", Toast.LENGTH_SHORT).show()
 
             }
 
@@ -188,7 +213,7 @@ class PlaceDetailsActivity : AppCompatActivity() {
 
             override fun onClick(item: View?) {
                 //Temp code
-                Toast.makeText(this@PlaceDetailsActivity, "Clicked", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@PlaceActivity, "Clicked", Toast.LENGTH_SHORT).show()
 
             }
 

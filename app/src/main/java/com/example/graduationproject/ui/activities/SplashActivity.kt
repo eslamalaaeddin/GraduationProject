@@ -43,6 +43,9 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         makeFullScreen()
         setContentView(R.layout.activity_splash)
+
+
+
         val signedInORSignedUpVerified = getSignedIn(this)
         val welcomed = getWelcomed(this)
 
@@ -197,12 +200,14 @@ class SplashActivity : AppCompatActivity() {
         Log.i(TAG, "ISLAM isAccessTokenExpired: Current time $currentTimeInSeconds")
         Log.i(TAG, "ISLAM isAccessTokenExpired: Expiration time  ${accessTokenTimestamp + 7200}")
         Log.i(TAG, "ISLAM isAccessTokenExpired: Differenece time  ${currentTimeInSeconds - (accessTokenTimestamp + 7200)}")
-        return (currentTimeInSeconds - (accessTokenTimestamp + 7200)) >= MINUTES_15
+//        return (currentTimeInSeconds - (accessTokenTimestamp + 7200)) >= MINUTES_15
+        return (currentTimeInSeconds - (accessTokenTimestamp + 7200)) >= 0
     }
 
     private fun isRefreshTokenExpired(refreshTokenTimestamp: Long): Boolean {
         val currentTimeInSeconds = System.currentTimeMillis() / 1000
-        return (currentTimeInSeconds - (refreshTokenTimestamp + 7200)) >= DAYS_14
+//        return (currentTimeInSeconds - (refreshTokenTimestamp + 7200)) >= DAYS_14
+        return (currentTimeInSeconds - (refreshTokenTimestamp + 7200)) >= 0
     }
 
     private fun getNewAccessToken(oldAccessToken: String, oldRefreshToken: String) {
@@ -221,7 +226,7 @@ class SplashActivity : AppCompatActivity() {
                 setRefreshToken(this@SplashActivity, refreshToken)
                 setAccessTokenExpirationTime(this@SplashActivity, accessTokenExTime)
                 setRefreshTokenExpirationTime(this@SplashActivity, refreshTokenExTime)
-
+                Log.i(TAG, "ISLAM onCreate: ${getAccessToken(this@SplashActivity)}")
                 navigateToMainActivity()
 
             }

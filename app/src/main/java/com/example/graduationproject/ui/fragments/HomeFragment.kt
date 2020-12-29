@@ -1,6 +1,6 @@
 package com.example.graduationproject.ui.fragments
 
-import com.example.graduationproject.ui.activities.PlaceDetailsActivity
+import com.example.graduationproject.ui.activities.PlaceActivity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -8,7 +8,6 @@ import android.view.*
 import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.TextView
-import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -19,14 +18,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.graduationproject.dummy.DummyPlace
 import com.example.graduationproject.R
 import com.example.graduationproject.databinding.FragmentHomeBinding
-import com.example.graduationproject.model.places.FavoritePlace
-import com.example.graduationproject.model.places.Place
-import com.example.graduationproject.model.places.VisitedPlace
 import com.example.graduationproject.ui.activities.SplashActivity
 import com.example.graduationproject.viewmodel.HomeFragmentViewModel
 import kotlinx.android.synthetic.main.fragment_home.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -171,7 +165,7 @@ class HomeFragment : Fragment() {
 
     inner class PlacesAdapter(private var placesList: List<DummyPlace>) : RecyclerView.Adapter<PlacesAdapter.PlacesHolder>() {
 
-        inner class PlacesHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener, View.OnLongClickListener {
+        inner class PlacesHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener{
             private val placeNameTextView : TextView = itemView.findViewById(R.id.home_place_name_text_view)
             private val placeImage: ImageView =  itemView.findViewById(R.id.place_image_view)
             private val placeRatingBar : RatingBar = itemView.findViewById(R.id.home_rating_bar)
@@ -179,7 +173,6 @@ class HomeFragment : Fragment() {
 
             init {
                 itemView.setOnClickListener(this)
-                itemView.setOnLongClickListener(this)
             }
 
 
@@ -191,13 +184,9 @@ class HomeFragment : Fragment() {
 
             override fun onClick(item: View?) {
             //Temp code
-                val placeDetailsIntent = Intent(context, PlaceDetailsActivity::class.java)
+                val placeDetailsIntent = Intent(context, PlaceActivity::class.java)
                 startActivity(placeDetailsIntent)
 
-            }
-
-            override fun onLongClick(item: View?): Boolean {
-                return true
             }
 
         }

@@ -1,6 +1,8 @@
 package com.example.graduationproject.ui.fragments
 
+import android.content.Context
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -23,6 +25,7 @@ import retrofit2.Response
 
 private const val TAG = "SignUpFragment"
 
+const val USER_EMAIL = "user email"
 class SignUpFragment : Fragment(R.layout.fragment_up_sign) {
     private val signUpViewModel by viewModel<SignUpViewModel>()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -62,6 +65,7 @@ class SignUpFragment : Fragment(R.layout.fragment_up_sign) {
             Toast.makeText(requireContext(), "Enter all information first", Toast.LENGTH_SHORT)
                 .show()
         } else {
+            setUserEmail(requireContext(), email)
             val signUp = SignUp(firstName, lastName, email, password)
             lifecycleScope.launch {
                val responseMessage = signUpViewModel.signUp(signUp)
@@ -77,6 +81,20 @@ class SignUpFragment : Fragment(R.layout.fragment_up_sign) {
     private fun navigateToVerificationFragment(){
         val action = SignUpFragmentDirections.actionSignUpFragmentToVerificationFragment()
         findNavController().navigate(action)
+    }
+
+    companion object{
+        fun setUserEmail(context: Context?, userEmail: String) {
+            PreferenceManager.getDefaultSharedPreferences(context)
+                .edit()
+                .putString(USER_EMAIL, userEmail)
+                .apply()
+        }
+
+        fun getUserEmail(context: Context?): String? {
+            val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+            return prefs.getString(USER_EMAIL, "")
+        }
     }
 
 }

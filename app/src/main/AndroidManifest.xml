@@ -14,7 +14,9 @@
         android:theme="@style/AppTheme">
 
         <activity android:name="com.example.graduationproject.ui.activities.AddPlaceActivity" android:parentActivityName="com.example.graduationproject.ui.activities.MainActivity"> </activity>
-        <activity android:name="com.example.graduationproject.ui.activities.PlaceDetailsActivity" android:parentActivityName="com.example.graduationproject.ui.activities.MainActivity"></activity>
+        <activity
+            android:name="com.example.graduationproject.ui.activities.PlaceActivity"
+            android:parentActivityName="com.example.graduationproject.ui.activities.MainActivity" />
 
         <activity android:name="com.example.graduationproject.ui.activities.RegisterActivity" />
         <activity android:name="com.example.graduationproject.ui.activities.WelcomeActivity" />

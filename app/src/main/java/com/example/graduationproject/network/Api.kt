@@ -2,6 +2,8 @@ package com.example.graduationproject.network
 
 import com.example.graduationproject.model.ResponseMessage
 import com.example.graduationproject.model.authentication.*
+import com.example.graduationproject.model.comments.PlaceComment
+import com.example.graduationproject.model.comments.UpdateComment
 import com.example.graduationproject.model.places.*
 import kotlinx.coroutines.Deferred
 import retrofit2.Call
@@ -111,5 +113,35 @@ interface Api {
         @Path("id") placeId: String,
         @Header("Authorization") accessToken: String
     ): ResponseMessage
+
+    /////////////////////////////////////////////////////////////////////////////
+
+//    @FormUrlEncoded
+//    @POST("comments")
+//    suspend fun addCommentOnPlace(
+//        @Field("pid") pid: Int,
+//        @Field("comment") comment: String,
+//        @Field("time") time: String = "2020-09-25 20:13:00",
+//        @Header("Authorization") accessToken: String
+//    ): ResponseMessage
+
+    @POST("comments")
+    suspend fun addCommentOnPlace(
+        @Body placeComment: PlaceComment,
+        @Header("Authorization") accessToken: String
+    ): Response<ResponseMessage>
+
+    @PUT("comments/{id}")
+    suspend fun updateCommentOnPlace(
+        @Path("id")placeId: String,
+        @Body placeComment: PlaceComment,
+        @Header("Authorization") accessToken: String
+    ): Response<ResponseMessage>
+
+    @DELETE("comments/{id}")
+    suspend fun deleteCommentOnPlace(
+        @Path("id")placeId: String,
+        @Header("Authorization") accessToken: String
+    ): Response<ResponseMessage>
 
 }

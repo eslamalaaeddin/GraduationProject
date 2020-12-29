@@ -1,6 +1,6 @@
 package com.example.graduationproject.ui.fragments
 
-import com.example.graduationproject.ui.activities.PlaceDetailsActivity
+import com.example.graduationproject.ui.activities.PlaceActivity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -100,7 +100,7 @@ class FavoritesFragment: Fragment() {
 
             override fun onClick(item: View?) {
                 //Temp code
-                val placeDetailsIntent = Intent(context, PlaceDetailsActivity::class.java)
+                val placeDetailsIntent = Intent(context, PlaceActivity::class.java)
                 startActivity(placeDetailsIntent)
 
             }
