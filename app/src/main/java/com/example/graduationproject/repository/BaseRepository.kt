@@ -3,17 +3,20 @@ package com.example.graduationproject.repository
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
+import com.example.graduationproject.helper.ExceptionHandler
 import com.example.graduationproject.helper.Result
 import retrofit2.HttpException
 import retrofit2.Response
 import java.io.IOException
 
 private const val TAG = "BaseRepository"
-open class BaseRepository{
+open class BaseRepository (context: Context){
 
-    suspend fun <T : Any> safeApiCall(call: suspend () -> Response<T>, errorMessage: String): T? {
+    val exceptionHandler = ExceptionHandler(context)
 
-        val result : Result<T> = safeApiResult(call,errorMessage)
+    suspend fun <T : Any> safeApiCall(call: suspend () -> Response<T>, errorMessage: String? = null): T? {
+
+        val result : Result<T> = safeApiResult(call,errorMessage.orEmpty())
         var data : T? = null
 
         when(result) {

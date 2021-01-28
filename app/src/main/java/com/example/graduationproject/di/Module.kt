@@ -3,9 +3,7 @@ package com.example.graduationproject.di
 import android.content.Context
 import com.example.graduationproject.network.Api
 import com.example.graduationproject.network.RetrofitInstance
-import com.example.graduationproject.repository.AuthenticationRepository
-import com.example.graduationproject.repository.CommentsRepository
-import com.example.graduationproject.repository.PlacesRepository
+import com.example.graduationproject.repository.*
 import com.example.graduationproject.viewmodel.*
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -44,10 +42,26 @@ val commentsRepositoryModule = module {
     single { provideCommentsRepository(androidContext()) }
 }
 
+val ratingRepositoryModule = module {
+    fun provideRatingRepository(context: Context): RatingRepository{
+        return RatingRepository(RetrofitInstance.api, context)
+    }
+    single { provideRatingRepository(androidContext()) }
+}
+
+val userRepositoryModule = module {
+    fun provideUserRepository(context: Context): UserRepository{
+        return UserRepository(RetrofitInstance.api, context)
+    }
+    single { provideUserRepository(androidContext()) }
+}
+
 val homeFragmentViewModelModule = module{viewModel { HomeFragmentViewModel (get()) }}
 val signUpViewModelModule = module { viewModel { SignUpViewModel(get()) } }
 val loginViewModelModule = module { viewModel { LoginViewModel(get()) } }
 val verificationFragmentViewModelModule = module { viewModel { VerificationFragmentViewModel(get()) } }
 val splashActivityViewModelModule = module { viewModel { SplashActivityViewModel(get()) } }
-val placeActivityViewModelModule = module { viewModel { PlaceActivityViewModel(get()) } }
+val placeActivityViewModelModule = module { viewModel { PlaceActivityViewModel(get(), get()) } }
+val addPlaceViewModelModule = module { viewModel { AddPlaceViewModel(get()) } }
+val userProfileActivityViewModelModule = module { viewModel { UserProfileViewModel(get()) } }
 

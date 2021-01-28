@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="256dp"
     android:layout_gravity="center|top"
+    android:layout_marginTop="4dp"
     android:layout_marginEnd="4dp"
     android:layout_marginStart="4dp"
     >
@@ -16,26 +17,25 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/cairo_tower"
             android:id="@+id/detail_place_image_view"
             android:scaleType="centerCrop"/>
 
-        <FrameLayout
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:background="@drawable/rounded_background_no_stroke"
-            android:layout_gravity="end"
-            android:layout_margin="8dp"
-            >
-            <ImageView
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_gravity="center"
-                android:id="@+id/add_to_favorite_image_view"
-                android:src="@drawable/ic_like"
-                app:tint="@color/red" />
+<!--        <FrameLayout-->
+<!--            android:layout_width="30dp"-->
+<!--            android:layout_height="30dp"-->
+<!--            android:background="@drawable/rounded_background_no_stroke"-->
+<!--            android:layout_gravity="end"-->
+<!--            android:layout_margin="8dp"-->
+<!--            >-->
+<!--            <ImageView-->
+<!--                android:layout_width="16dp"-->
+<!--                android:layout_height="16dp"-->
+<!--                android:layout_gravity="center"-->
+<!--                android:id="@+id/add_to_favorite_image_view"-->
+<!--                android:src="@drawable/ic_like"-->
+<!--                app:tint="@color/red" />-->
 
-        </FrameLayout>
+<!--        </FrameLayout>-->
 
 
 

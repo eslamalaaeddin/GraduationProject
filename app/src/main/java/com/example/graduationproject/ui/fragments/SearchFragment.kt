@@ -10,9 +10,9 @@ import kotlinx.android.synthetic.main.fragment_search.*
 class SearchFragment : Fragment(R.layout.fragment_search) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        upButton.setOnClickListener {
-            //findNavController().navigateUp()
-            activity?.supportFragmentManager?.popBackStack()
-        }
+//        upButton.setOnClickListener {
+//            //findNavController().navigateUp()
+//            activity?.supportFragmentManager?.popBackStack()
+//        }
     }
 }

@@ -85,8 +85,6 @@ dependencies {
     // Testing Navigation
     androidTestImplementation "androidx.navigation:navigation-testing:$nav_version"
 
-    //Smiley rating
-    implementation 'com.github.sujithkanna:smileyrating:2.0.0'
 
     implementation 'com.google.android.material:material:1.2.1'
 
@@ -102,6 +100,10 @@ dependencies {
     //Kotlin coroutines
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.9'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9'
+
+    implementation 'com.squareup.picasso:picasso:2.71828'
+
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
 
 
 }

@@ -13,13 +13,13 @@ import com.google.gson.annotations.SerializedName
  */
 data class Comment(
     @SerializedName("comment_id")
-    var commentId: Int? = null,
-    var rate: String? = null,
+    var commentId: Long? = null,
+    var rate: Float? = null,
     @SerializedName("text")
     var commentContent: String? = null,
     var time: String? = null,
     @SerializedName("user_id")
-    var userId: Int? = null,
+    var userId: Long? = null,
     @SerializedName("user_image")
     var userImage: String? = null,
     @SerializedName("username")

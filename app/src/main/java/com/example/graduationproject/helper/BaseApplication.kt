@@ -24,7 +24,11 @@ class BaseApplication : Application() {
                     loginViewModelModule,
                     verificationFragmentViewModelModule,
                     splashActivityViewModelModule,
-                    placeActivityViewModelModule
+                    placeActivityViewModelModule,
+                    ratingRepositoryModule,
+                    addPlaceViewModelModule,
+                    userRepositoryModule,
+                    userProfileActivityViewModelModule
                 )
             )
         }

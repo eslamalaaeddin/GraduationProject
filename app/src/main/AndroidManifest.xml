@@ -18,9 +18,12 @@
             android:name="com.example.graduationproject.ui.activities.PlaceActivity"
             android:parentActivityName="com.example.graduationproject.ui.activities.MainActivity" />
 
+        <activity android:name="com.example.graduationproject.ui.activities.TestingActivity"/>
+
         <activity android:name="com.example.graduationproject.ui.activities.RegisterActivity" />
         <activity android:name="com.example.graduationproject.ui.activities.WelcomeActivity" />
         <activity android:name="com.example.graduationproject.ui.activities.SplashActivity">
+
 
              <intent-filter>
              <action android:name="android.intent.action.MAIN" />

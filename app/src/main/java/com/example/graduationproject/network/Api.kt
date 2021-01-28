@@ -3,9 +3,13 @@ package com.example.graduationproject.network
 import com.example.graduationproject.model.ResponseMessage
 import com.example.graduationproject.model.authentication.*
 import com.example.graduationproject.model.comments.PlaceComment
-import com.example.graduationproject.model.comments.UpdateComment
 import com.example.graduationproject.model.places.*
-import kotlinx.coroutines.Deferred
+import com.example.graduationproject.model.rating.Rate
+import com.example.graduationproject.model.user.User
+import com.example.graduationproject.model.user.UserName
+import com.example.graduationproject.model.user.UserPassword
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.*
@@ -34,7 +38,7 @@ interface Api {
     suspend fun addNewPlace(
         @Body place: Place,
         @Header("Authorization") accessToken: String
-    ): ResponseMessage
+    ): Response<ResponseMessage>
 
     @GET("places/rec")
     suspend fun getRecommendedPlaces(
@@ -47,20 +51,20 @@ interface Api {
         @Query("key") placeName: String,
         @Query("country") countryName: String,
         @Header("Authorization") accessToken: String
-    ): List<Place>
+    ): Response<List<Place>>
 
 
     @GET("places/{id}")
-    suspend fun searchForSpecificPlace(
-        @Path("id") placeId: Int,
+    suspend fun getPlaceDetails(
+        @Path("id") placeId: String,
         @Header("Authorization") accessToken: String
-    ): Place
+    ): Response<Place>
 
     @GET("places/{id}/images")
     suspend fun getPlaceImages(
         @Path("id") placeId: String,
         @Header("Authorization") accessToken: String
-    ): List<PlaceImage>
+    ): Response<List<PlaceImage>>
 
     /*
         POST IMAGES STUFF
@@ -71,7 +75,7 @@ interface Api {
         @Path("id") placeId: String,
         @Query("page") page: Int,
         @Header("Authorization") accessToken: String
-    ): List<Comment>
+    ): Response<List<Comment>>
 
     /*
         TO BE CHANGED
@@ -80,19 +84,19 @@ interface Api {
     @GET("places/visited")
     suspend fun getUserVisitedPlaces(
         @Header("Authorization") accessToken: String
-    ): List<Place>
+    ): Response<List<Place>>
 
     @POST("places/visited")
     suspend fun addPlaceToUserVisitedPlaces(
         @Body visitedPlace: VisitedPlace,
         @Header("Authorization") accessToken: String
-    ): ResponseMessage
+    ): Response<ResponseMessage>
 
     @DELETE("places/visited/{id}")
     suspend fun deleteUserVisitedPlace(
         @Path("id") placeId: String,
         @Header("Authorization") accessToken: String
-    ): ResponseMessage
+    ): Response<ResponseMessage>
 
     /*
        TO BE CHANGED AS IT IS HHH
@@ -100,19 +104,19 @@ interface Api {
     @GET("places/fav")
     suspend fun getUserFavoritePlaces(
         @Header("Authorization") accessToken: String
-    ): List<FavoritePlace>
+    ): Response<List<FavoritePlace>>
 
     @POST("places/visited")
     suspend fun addPlaceToUserFavoritePlaces(
         @Body favoritePlace: FavoritePlace,
         @Header("Authorization") accessToken: String
-    ): ResponseMessage
+    ): Response<ResponseMessage>
 
     @DELETE("places/fav/{id}")
     suspend fun deleteUserFavoritePlace(
         @Path("id") placeId: String,
         @Header("Authorization") accessToken: String
-    ): ResponseMessage
+    ): Response<ResponseMessage>
 
     /////////////////////////////////////////////////////////////////////////////
 
@@ -133,15 +137,60 @@ interface Api {
 
     @PUT("comments/{id}")
     suspend fun updateCommentOnPlace(
-        @Path("id")placeId: String,
+        @Path("id") placeId: String,
         @Body placeComment: PlaceComment,
         @Header("Authorization") accessToken: String
     ): Response<ResponseMessage>
 
     @DELETE("comments/{id}")
     suspend fun deleteCommentOnPlace(
-        @Path("id")placeId: String,
+        @Path("id") placeId: String,
         @Header("Authorization") accessToken: String
     ): Response<ResponseMessage>
 
+    //////////////////////////////////////////////////////////////////////////////////
+
+    @POST("ratings")
+    suspend fun addRatingToPlace(
+        @Body rate: Rate,
+        @Header("Authorization") accessToken: String
+    ): Response<ResponseMessage>
+
+    @PUT("ratings/{id}")
+    suspend fun updateRatingToPlace(
+        @Path("id") ratingId: String,
+        @Body rate: Rate,
+        @Header("Authorization") accessToken: String
+    ): Response<ResponseMessage>
+
+    ///////////////////////////////////////////////////////////////////////////////////
+
+    @GET("user")
+    suspend fun getUser(@Header("Authorization") accessToken: String): Response<User>
+
+    @PUT("user")
+    suspend fun updateUserName(
+        @Body userName: UserName,
+        @Header("Authorization") accessToken: String
+    ): Response<ResponseMessage>
+
+    /*
+        Change user image
+     */
+
+    @PUT("user/change_password")
+    suspend fun updateUserPassword(
+        @Body userPassword: UserPassword,
+        @Header("Authorization") accessToken: String
+    ): Response<ResponseMessage>
+
+    /////////////////////////////////////////////////////////////////////////////////////
+
+    @Multipart
+    @POST("places/{id}/images")
+    fun uploadImage(
+        @Part part: MultipartBody.Part?,
+        @Path("id") placeId: String?,
+        @Header("Authorization") accessToken: String
+    ): Call<RequestBody?>?
 }

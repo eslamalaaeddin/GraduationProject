@@ -15,7 +15,7 @@ import com.google.gson.annotations.SerializedName
   "lng": 0,
  */
 data class Place(
-    var id: String? = null,
+    var id: Long? = null,
     //I don't know how to show this images as it is does not provide any links
     var image: String? = null,
     @SerializedName("is_favorite")

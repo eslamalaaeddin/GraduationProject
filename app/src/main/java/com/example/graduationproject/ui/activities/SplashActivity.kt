@@ -56,22 +56,24 @@ class SplashActivity : AppCompatActivity() {
 
 
         Handler().postDelayed({
-            when {
-                signedInORSignedUpVerified -> {
-                    tokenizeUser(accessTokenExTime, refreshTokenExTime)
-                }
-                welcomed -> {
-                    startActivity(Intent(this, RegisterActivity::class.java))
-                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
-                    finish()
-                }
-                else -> {
-                    setWelcomed(this, true)
-                    startActivity(Intent(this, WelcomeActivity::class.java))
-                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
-                    finish()
-                }
-            }
+//            when {
+//                signedInORSignedUpVerified -> {
+//                    tokenizeUser(accessTokenExTime, refreshTokenExTime)
+//                }
+//                welcomed -> {
+//                    startActivity(Intent(this, RegisterActivity::class.java))
+//                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+//                    finish()
+//                }
+//                else -> {
+//                    setWelcomed(this, true)
+//                    startActivity(Intent(this, WelcomeActivity::class.java))
+//                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+//                    finish()
+//                }
+//            }
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
 
         }, 2000)
     }
@@ -170,6 +172,9 @@ class SplashActivity : AppCompatActivity() {
         if (isAccessTokenExpired(accessTokenExTimestamp)) {
             if (isRefreshTokenExpired(refreshTokenExTimestamp)) {
                 Toast.makeText(this, "Navigate to Login", Toast.LENGTH_SHORT).show()
+                startActivity(Intent(this, RegisterActivity::class.java))
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+                finish()
             } else {
                 val oldAccessToken = getAccessToken(this).toString()
                 val refreshToken = getRefreshToken(this).toString()

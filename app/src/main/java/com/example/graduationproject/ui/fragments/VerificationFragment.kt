@@ -3,6 +3,7 @@ package com.example.graduationproject.ui.fragments
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.core.app.ActivityCompat.finishAffinity
@@ -55,7 +56,9 @@ class VerificationFragment : Fragment(R.layout.fragment_verification) {
 //            val email = "islamalaaeddin1998@gmail.com"
             val email = SignUpFragment.getUserEmail(requireContext())
             Toast.makeText(requireContext(), "$email", Toast.LENGTH_SHORT).show()
-            val verify = Verify(email, code.trim().substring(0,3).toInt())
+            val verCode = code.trim().substring(0,4).toInt()
+            Log.i(TAG, "AHMAD validateVerificationCodeAndNavigateToMainActivity: $verCode")
+            val verify = Verify(email, verCode)
 
             lifecycleScope.launch {
                 val token = verificationFragmentViewModel.verifyUser(verify)

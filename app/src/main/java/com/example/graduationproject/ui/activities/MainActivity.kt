@@ -1,10 +1,15 @@
 package com.example.graduationproject.ui.activities
 
+import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
+import android.view.Window
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
+import androidx.navigation.ui.setupWithNavController
 import com.example.graduationproject.R
+import com.example.graduationproject.ui.bottomsheets.SearchBottomSheet
 import com.example.graduationproject.ui.fragments.FavoritesFragment
 import com.example.graduationproject.ui.fragments.HomeFragment
 import com.example.graduationproject.ui.fragments.SearchFragment
@@ -23,44 +28,25 @@ class MainActivity : AppCompatActivity() {
 //
 //        val navController = host.navController
 //
-//        setupBottomNavMenu
+//        setupBottomNavMenu(navController = navController)
 
-        stack.push(0)
-        bottomNavigationView.menu.getItem(0).setIcon(R.drawable.ic_tent_home)
+        //check if it is not there add it else do not do anything
+        navigateToHomeFragment()
 
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.homeFragment -> {
-                    val i = 0
                     navigateToHomeFragment()
-                    changeColorNext(i)
-                    if (!stack.contains(i)) {
-                        stack.push(i)
-                    }
                 }
                 R.id.favoritesFragment -> {
-                    val i = 1
                     navigateToFavoritesFragment()
-                    changeColorNext(i)
-                    if (!stack.contains(i)) {
-                        stack.push(i)
-                    }
                 }
                 R.id.addPlaces -> {
-                    val i = 2
                     navigateToAddPlacesActivity()
-                    changeColorNext(i)
-                    if (!stack.contains(i)) {
-                        stack.push(i)
-                    }
                 }
                 R.id.searchFragment -> {
-                    val i = 3
-                    navigateToSearchFragment()
-                    changeColorNext(i)
-                    if (!stack.contains(i)) {
-                        stack.push(i)
-                    }
+//                    navigateToSearchFragment()
+                    navigateToSearchBottomSheet()
                 }
             }
             true
@@ -69,7 +55,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupBottomNavMenu(navController: NavController) {
-        //  bottom_nav.setupWithNavController(navController)
+        bottomNavigationView.setupWithNavController(navController)
     }
 
     private fun navigateToHomeFragment() {
@@ -77,7 +63,7 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.my_nav_host_fragment, homeFragment)
-            .addToBackStack(null)
+//            .addToBackStack(null)
             .commit()
     }
 
@@ -86,7 +72,7 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.my_nav_host_fragment, favoriteFragment)
-            .addToBackStack(null)
+//            .addToBackStack(null)
             .commit()
     }
 
@@ -95,8 +81,13 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.my_nav_host_fragment, searchFragment)
-            .addToBackStack(null)
+//            .addToBackStack(null)
             .commit()
+    }
+
+    private fun navigateToSearchBottomSheet(){
+        val searchBottomSheet = SearchBottomSheet()
+        searchBottomSheet.show(supportFragmentManager, searchBottomSheet.tag)
     }
 
     private fun navigateToAddPlacesActivity() {
@@ -104,32 +95,26 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-//    override fun onBackPressed() {
-//        if (!stack.empty()) {
-//            changeColorPrevious(stack.peek())
-//            stack.pop()
-//            changeColorNext(stack.peek())
-//            supportFragmentManager.popBackStack()
-//        }
-//    }
-
-    private fun changeColorNext(i: Int) {
-        //have to be tented
-        when (i) {
-            0 -> bottomNavigationView.menu.getItem(i).setIcon(R.drawable.ic_tent_home)
-            1 -> bottomNavigationView.menu.getItem(i).setIcon(R.drawable.ic_tent_heart)
-            2 -> bottomNavigationView.menu.getItem(i).setIcon(R.drawable.ic_tent_add_places)
-            3 -> bottomNavigationView.menu.getItem(i).setIcon(R.drawable.ic_tent_search)
-        }
+    override fun onBackPressed() {
+       showExitApplicationDialog()
     }
 
-    private fun changeColorPrevious(i: Int) {
-        when (i) {
-            0 -> bottomNavigationView.menu.getItem(i).setIcon(R.drawable.ic_home)
-            1 -> bottomNavigationView.menu.getItem(i).setIcon(R.drawable.ic_heart)
-            2 -> bottomNavigationView.menu.getItem(i).setIcon(R.drawable.ic_placeholder)
-            3 -> bottomNavigationView.menu.getItem(i).setIcon(R.drawable.ic_search)
+    private fun showExitApplicationDialog() {
+        val dialog = Dialog(this)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(true)
+        dialog.setContentView(R.layout.exit_application_dialog)
+
+        val cancelButton = dialog.findViewById(R.id.cancelExit) as TextView
+        val exitButton = dialog.findViewById(R.id.confirmExit) as TextView
+        cancelButton.setOnClickListener {
+            dialog.dismiss()
         }
+        exitButton.setOnClickListener {
+            finish()
+        }
+        dialog.show()
+
     }
 
 

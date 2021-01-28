@@ -11,7 +11,7 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.graduationproject.dummy.DummyPlace
 import com.example.graduationproject.R
@@ -65,8 +65,8 @@ class FavoritesFragment: Fragment() {
         placesAdapter = PlacesAdapter(dummyList)
 
         fragmentFavoritesBinding.homePlacesRecyclerView.apply {
-            //layoutManager = LinearLayoutManager(this@HomeActivity)
-            layoutManager = GridLayoutManager(context, 2)
+            layoutManager = LinearLayoutManager(requireContext())
+//            layoutManager = GridLayoutManager(context, 2)
             adapter = placesAdapter
         }
 
