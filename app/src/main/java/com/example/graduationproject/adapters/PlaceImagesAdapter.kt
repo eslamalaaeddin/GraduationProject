@@ -3,6 +3,7 @@ package com.example.graduationproject.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
@@ -12,12 +13,18 @@ import com.example.graduationproject.model.places.PlaceImage
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.place_details_item_layout.view.*
 
+const val BASE_PLACE_IMAGE_URL = "http://10.0.0.2:3000/images/places/"
 
-class PlaceImagesAdapter(private var placeImages: List<PlaceImage>) : RecyclerView.Adapter<PlaceImagesAdapter.PlacesImagesViewHolder>() {
+class PlaceImagesAdapter(
+    private val placeId: String,
+    private var placeImages: List<PlaceImage>
+    ) :
+    RecyclerView.Adapter<PlaceImagesAdapter.PlacesImagesViewHolder>() {
 
-    inner class PlacesImagesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener, View.OnLongClickListener {
+    inner class PlacesImagesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
+        View.OnClickListener, View.OnLongClickListener {
         // private val placeNameTextView : TextView = itemView.findViewById(R.id.details_place_name_text_view)
-        private val placeImage: ImageView =  itemView.findViewById(R.id.detail_place_image_view)
+        private val placeImage: ImageView = itemView.findViewById(R.id.detail_place_image_view)
         //  private val placeRatingBar : RatingBar = itemView.findViewById(R.id.details_place_rating_bar)
 
 
@@ -27,9 +34,10 @@ class PlaceImagesAdapter(private var placeImages: List<PlaceImage>) : RecyclerVi
         }
 
 
-        fun bind(place: PlaceImage) {
-            if (place.name?.isNotEmpty() == true){
-                Picasso.get().load(place.name).into(itemView.detail_place_image_view)
+        fun bind(placeImage: PlaceImage) {
+            if (placeImage.name?.isNotEmpty() == true) {
+//                Picasso.get().load("${BASE_PLACE_IMAGE_URL}$placeId/${placeImage.name}").into(itemView.detail_place_image_view)
+                Picasso.get().load(placeImage.name).into(itemView.detail_place_image_view)
             }
 
         }

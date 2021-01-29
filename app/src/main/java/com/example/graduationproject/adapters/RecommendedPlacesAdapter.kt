@@ -7,18 +7,26 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.graduationproject.R
+import com.example.graduationproject.helper.listeners.RecommendedPlaceClickListener
 import com.example.graduationproject.model.places.Place
 import com.example.graduationproject.ui.activities.PlaceActivity
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.home_place_item.view.*
 const val imageLocation = "https://st2.depositphotos.com/3974537/10978/v/600/depositphotos_109787082-stock-video-pyramids-at-night-with-moon.jpg"
-class RecommendedPlacesAdapter(private val recommendedPlaces: List<Place>) :
+class RecommendedPlacesAdapter(
+    private val recommendedPlaces: List<Place>,
+    private val recommendedPlaceClickListener: RecommendedPlaceClickListener
+    ) :
     RecyclerView.Adapter<RecommendedPlacesAdapter.RecommendedPlacesViewHolder>() {
 
         inner class RecommendedPlacesViewHolder(itemView: View): RecyclerView.ViewHolder(itemView), View.OnClickListener{
 
             init {
                 itemView.setOnClickListener(this)
+                itemView.add_to_favorite_image_view.setOnClickListener {
+                    val place = recommendedPlaces[adapterPosition]
+                    recommendedPlaceClickListener.onFavoriteIconClicked(place)
+                }
             }
 
             fun bind(place: Place){

@@ -1,60 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <LinearLayout
-        android:id="@+id/peopleWhoReactedLayout"
-        android:layout_width="match_parent"
-        android:layout_height="?android:attr/actionBarSize"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:elevation="12dp"
-        android:orientation="horizontal">
+    <data>
 
-        <ImageView
-            android:id="@+id/upButtonImageView"
-            android:layout_width="24dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:src="@drawable/ic_semi_up_button" />
+    </data>
 
-        <EditText
-            android:id="@+id/searchPlacesEditText"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:backgroundTint="@color/grey"
-            android:hint="Search..." />
-
-    </LinearLayout>
-
-    <View
-        android:id="@+id/lastSeparator"
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:layout_below="@id/peopleWhoReactedLayout"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_gravity="bottom"
-        android:background="@color/grey" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/searchedPlacesRecyclerView"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/lastSeparator"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_margin="4dp"
-        android:layout_weight="1" />
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/searchPlaceLayout"
+            android:layout_width="match_parent"
+            android:layout_height="?android:attr/actionBarSize"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:elevation="12dp"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/upButtonView"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="4dp"
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                android:src="@drawable/ic_semi_up_button" />
+
+            <EditText
+                android:id="@+id/searchPlacesEditText"
+                android:layout_width="0dp"
+                android:padding="1dp"
+                android:layout_height="match_parent"
+                android:layout_weight="12"
+                android:background="@android:color/transparent"
+                android:backgroundTint="@color/grey"
+                android:hint="Search..." />
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/lastSeparator"
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_below="@id/searchPlaceLayout"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_gravity="bottom"
+            android:background="@color/grey" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/searchedPlacesRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/lastSeparator"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="4dp"
+            android:layout_weight="1" />
 
 
-</RelativeLayout>
+    </RelativeLayout>
+</layout>

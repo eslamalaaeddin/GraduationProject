@@ -27,13 +27,13 @@ class AddPlaceActivity : AppCompatActivity() {
 //        }
         setUpToolbar()
 
-        lifecycleScope.launch {
-            val rate = Rate(rate =  2.5)
-            val responseMessage = addPlaceViewModel.updateRatingToPlace("1", rate, accessToken)
-            if (responseMessage != null) {
-                Toast.makeText(this@AddPlaceActivity, responseMessage.message, Toast.LENGTH_SHORT).show()
-            }
-        }
+//        lifecycleScope.launch {
+//            val rate = Rate(rate =  2.5)
+//            val responseMessage = addPlaceViewModel.updateRatingToPlace(placeId = placeId, rate, accessToken)
+//            if (responseMessage != null) {
+//                Toast.makeText(this@AddPlaceActivity, responseMessage.message, Toast.LENGTH_SHORT).show()
+//            }
+//        }
     }
 
     private fun setUpToolbar(){

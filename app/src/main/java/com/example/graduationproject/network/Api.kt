@@ -106,9 +106,10 @@ interface Api {
         @Header("Authorization") accessToken: String
     ): Response<List<FavoritePlace>>
 
-    @POST("places/visited")
+    //Here i used VisitedPlace as the body object as it has the field that i want
+    @POST("places/fav")
     suspend fun addPlaceToUserFavoritePlaces(
-        @Body favoritePlace: FavoritePlace,
+        @Body favoritePlace: VisitedPlace,
         @Header("Authorization") accessToken: String
     ): Response<ResponseMessage>
 
@@ -137,28 +138,35 @@ interface Api {
 
     @PUT("comments/{id}")
     suspend fun updateCommentOnPlace(
-        @Path("id") placeId: String,
+        @Path("id") commentId: String,
         @Body placeComment: PlaceComment,
         @Header("Authorization") accessToken: String
     ): Response<ResponseMessage>
 
     @DELETE("comments/{id}")
     suspend fun deleteCommentOnPlace(
-        @Path("id") placeId: String,
+        @Path("id") commentId: String,
         @Header("Authorization") accessToken: String
     ): Response<ResponseMessage>
 
     //////////////////////////////////////////////////////////////////////////////////
 
-    @POST("ratings")
+    @GET("ratings/{id}")
+    suspend fun getUserSpecificRateToPlace(
+        @Path("id") placeId: String,
+        @Header("Authorization") accessToken: String
+    ): Response<Rate>
+
+    @POST("ratings/{id}")
     suspend fun addRatingToPlace(
+        @Path("id") placeId: String,
         @Body rate: Rate,
         @Header("Authorization") accessToken: String
     ): Response<ResponseMessage>
 
     @PUT("ratings/{id}")
     suspend fun updateRatingToPlace(
-        @Path("id") ratingId: String,
+        @Path("id") placeId: String,
         @Body rate: Rate,
         @Header("Authorization") accessToken: String
     ): Response<ResponseMessage>

@@ -56,24 +56,24 @@ class SplashActivity : AppCompatActivity() {
 
 
         Handler().postDelayed({
-//            when {
-//                signedInORSignedUpVerified -> {
-//                    tokenizeUser(accessTokenExTime, refreshTokenExTime)
-//                }
-//                welcomed -> {
-//                    startActivity(Intent(this, RegisterActivity::class.java))
-//                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
-//                    finish()
-//                }
-//                else -> {
-//                    setWelcomed(this, true)
-//                    startActivity(Intent(this, WelcomeActivity::class.java))
-//                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
-//                    finish()
-//                }
-//            }
-            startActivity(Intent(this, MainActivity::class.java))
-            finish()
+            when {
+                signedInORSignedUpVerified -> {
+                    tokenizeUser(accessTokenExTime, refreshTokenExTime)
+                }
+                welcomed -> {
+                    startActivity(Intent(this, RegisterActivity::class.java))
+                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+                    finish()
+                }
+                else -> {
+                    setWelcomed(this, true)
+                    startActivity(Intent(this, WelcomeActivity::class.java))
+                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+                    finish()
+                }
+            }
+//            startActivity(Intent(this, MainActivity::class.java))
+//            finish()
 
         }, 2000)
     }
@@ -131,6 +131,7 @@ class SplashActivity : AppCompatActivity() {
         fun getAccessToken(context: Context?): String? {
             val prefs = PreferenceManager.getDefaultSharedPreferences(context)
             return prefs.getString(ACCESS_TOKEN, "")
+//            return "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOjk4MTM2OTIxNDE2MTcxLCJleHAiOjE2MTE5MjIzMTN9.xX4K2Srm2VGHch_o1WucJ9ddYHlyr7anzqgGiljyudU"
         }
 
         fun getAccessTokenExpirationTime(context: Context?): String? {
@@ -161,6 +162,8 @@ class SplashActivity : AppCompatActivity() {
             val prefs = PreferenceManager.getDefaultSharedPreferences(context)
             return prefs.getString(REFRESH_TOKEN_EX_TIME, "")
         }
+
+
     }
 
     private fun tokenizeUser(accessTokenExTime: String?, refreshTokenExTime: String?) {
@@ -215,7 +218,7 @@ class SplashActivity : AppCompatActivity() {
         return (currentTimeInSeconds - (refreshTokenTimestamp + 7200)) >= 0
     }
 
-    private fun getNewAccessToken(oldAccessToken: String, oldRefreshToken: String) {
+    fun getNewAccessToken(oldAccessToken: String, oldRefreshToken: String) {
         // Toast.makeText(this, "I am getting new access token", Toast.LENGTH_SHORT).show()
         val refreshTokenObj = RefreshToken(oldAccessToken, oldRefreshToken)
         lifecycleScope.launch {

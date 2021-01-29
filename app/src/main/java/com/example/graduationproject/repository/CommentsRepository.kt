@@ -31,12 +31,12 @@ class CommentsRepository(private val api: Api, private val context: Context) : B
         return responseMessage
     }
 
-    suspend fun updateCommentOnPlace(placeId: String, placeComment: PlaceComment, accessToken: String): ResponseMessage?{
+    suspend fun updateCommentOnPlace(commentId: String, placeComment: PlaceComment, accessToken: String): ResponseMessage?{
         var responseMessage : ResponseMessage? = null
 
         try {
             responseMessage = safeApiCall(
-                call = { withContext(Dispatchers.IO){api.updateCommentOnPlace(placeId, placeComment, accessToken)} },
+                call = { withContext(Dispatchers.IO){api.updateCommentOnPlace(commentId, placeComment, accessToken)} },
                 errorMessage = "Updating comment is not available now.")
         }
         catch (ex: Throwable){
@@ -47,12 +47,12 @@ class CommentsRepository(private val api: Api, private val context: Context) : B
         return responseMessage
     }
 
-    suspend fun deleteCommentOnPlace(placeId: String, accessToken: String): ResponseMessage?{
+    suspend fun deleteCommentOnPlace(commentId: String, accessToken: String): ResponseMessage?{
         var responseMessage : ResponseMessage? = null
 
         try {
             responseMessage = safeApiCall(
-                call = { withContext(Dispatchers.IO){api.deleteCommentOnPlace(placeId, accessToken)} },
+                call = { withContext(Dispatchers.IO){api.deleteCommentOnPlace(commentId, accessToken)} },
                 errorMessage = "Deleting comment is not available now.")
         }
         catch (ex: Throwable){

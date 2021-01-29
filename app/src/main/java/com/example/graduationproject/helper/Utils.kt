@@ -4,7 +4,7 @@ object Utils {
     val jsonComments = "[\n" +
             "    {\n" +
             "        \"comment_id\": 36542818184331,\n" +
-            "        \"rate\": null,\n" +
+            "        \"rate\": 3,\n" +
             "        \"text\": \"Greeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeat\",\n" +
             "        \"time\": \"Thu, 28 Jan 2021 10:05:34 GMT\",\n" +
             "        \"user_id\": 98136921416171,\n" +

@@ -140,7 +140,7 @@ class PlacesRepository(private val api: Api, private val context: Context): Base
         return favoritePlaces
     }
 
-    suspend fun addPlaceToUserFavoritePlaces(favoritePlace: FavoritePlace, accessToken: String): ResponseMessage?{
+    suspend fun addPlaceToUserFavoritePlaces(favoritePlace: VisitedPlace, accessToken: String): ResponseMessage?{
         var responseMessage: ResponseMessage? = null
         try {
             responseMessage = safeApiCall({ withContext(Dispatchers.IO){api.addPlaceToUserFavoritePlaces(favoritePlace, accessToken)} })

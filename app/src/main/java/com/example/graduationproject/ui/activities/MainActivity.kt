@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.Window
+import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
@@ -105,12 +106,13 @@ class MainActivity : AppCompatActivity() {
         dialog.setCancelable(true)
         dialog.setContentView(R.layout.exit_application_dialog)
 
-        val cancelButton = dialog.findViewById(R.id.cancelExit) as TextView
-        val exitButton = dialog.findViewById(R.id.confirmExit) as TextView
+        val cancelButton = dialog.findViewById(R.id.cancelExitButton) as Button
+        val exitButton = dialog.findViewById(R.id.confirmExitButton) as Button
         cancelButton.setOnClickListener {
             dialog.dismiss()
         }
         exitButton.setOnClickListener {
+            dialog.dismiss()
             finish()
         }
         dialog.show()

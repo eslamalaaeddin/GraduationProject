@@ -1,51 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:layout_gravity="center"
+    android:layout_height="match_parent"
     android:padding="8dp"
     android:gravity="center"
-    >
+    android:orientation="vertical">
+
 
     <TextView
+        android:id="@+id/deleteCommentTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Are you sure you want to exit?"
-        android:gravity="center|start"
-        android:textColor="@color/black"
-        android:padding="8dp"
-        android:textSize="21sp"/>
+        android:layout_margin="8dp"
+        android:padding="4dp"
+        android:text="Are you sure you want to delete this comment?"
+        />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="end"
         android:orientation="horizontal"
-        android:gravity="end|center"
-        >
+        android:paddingEnd="16dp">
 
         <Button
+            android:id="@+id/cancelDeleteCommentButton"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:id="@+id/cancelExitButton"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp"
             android:text="Cancel"
             style="@style/Widget.AppCompat.Button.Borderless.Colored"
             android:textAllCaps="false"
-            android:layout_margin="8dp"
-            android:textColor="@color/black"
-            android:textSize="16sp"/>
-
+            android:textColor="@color/dark_grey" />
 
         <Button
+            android:id="@+id/deleteCommentButton"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:id="@+id/confirmExitButton"
-            android:text="Exit"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="Delete"
             style="@style/Widget.AppCompat.Button.Borderless.Colored"
-            android:layout_margin="8dp"
             android:textAllCaps="false"
-            android:textColor="@color/red"
-            android:textSize="16sp"/>
+            android:textColor="@color/red" />
+
     </LinearLayout>
 
 </LinearLayout>

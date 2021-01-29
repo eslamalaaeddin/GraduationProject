@@ -52,18 +52,6 @@ class HomeFragmentViewModel(private val placesRepository: PlacesRepository): Vie
         return placesRepository.deleteUserVisitedPlace(placeId, accessToken)
     }
 
-    suspend fun getUserFavoritePlaces(accessToken: String): LiveData<List<FavoritePlace>?>{
-        return liveData {
-            val data = placesRepository.getUserFavoritePlaces(accessToken)
-            emit(data)
-        }
-    }
 
-    suspend fun addPlaceToUserFavoritePlaces(favoritePlace: FavoritePlace, accessToken: String): ResponseMessage?{
-        return placesRepository.addPlaceToUserFavoritePlaces(favoritePlace, accessToken)
-    }
 
-    suspend fun deleteUserFavoritePlace(placeId: String, accessToken: String): ResponseMessage?{
-        return placesRepository.deleteUserFavoritePlace(placeId, accessToken)
-    }
 }

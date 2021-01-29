@@ -10,11 +10,11 @@ import retrofit2.HttpException
 
 class RatingRepository(private val api: Api, private val context: Context): BaseRepository(context) {
 
-    suspend fun addRatingToPlace(rate: Rate, accessToken: String): ResponseMessage?{
+    suspend fun addRatingToPlace(rate: Rate, placeId: String, accessToken: String): ResponseMessage?{
         var responseMessage: ResponseMessage? = null
         try {
             responseMessage = safeApiCall(
-                call = { withContext(Dispatchers.IO){api.addRatingToPlace(rate, accessToken)} },
+                call = { withContext(Dispatchers.IO){api.addRatingToPlace(placeId, rate, accessToken)} },
                 errorMessage = "Rating place is not available now."
             )
         }
@@ -25,7 +25,7 @@ class RatingRepository(private val api: Api, private val context: Context): Base
         return responseMessage
     }
 
-    suspend fun updateRatingToPlace(placeId: String, rate: Rate, accessToken: String): ResponseMessage?{
+    suspend fun updateRatingToPlace(rate: Rate, placeId: String, accessToken: String): ResponseMessage?{
         var responseMessage: ResponseMessage? = null
         try {
             responseMessage = safeApiCall(
@@ -38,5 +38,20 @@ class RatingRepository(private val api: Api, private val context: Context): Base
             else{exceptionHandler.handleException(ex)}
         }
         return responseMessage
+    }
+
+    suspend fun getUserSpecificRateToPlace(placeId: String, accessToken: String): Rate? {
+        var rate: Rate? = null
+        try {
+            rate = safeApiCall(
+                call = { withContext(Dispatchers.IO){api.getUserSpecificRateToPlace(placeId, accessToken)} },
+                errorMessage = "Getting your rate on place is not available now."
+            )
+        }
+        catch (ex: Throwable){
+            if (ex is HttpException){exceptionHandler.handleException(ex, ex.code().toString())}
+            else{exceptionHandler.handleException(ex)}
+        }
+        return rate
     }
 }

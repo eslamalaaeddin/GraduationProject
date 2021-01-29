@@ -10,10 +10,11 @@ class ExceptionHandler(private val context: Context) {
     fun handleException(ex: Throwable, message: String? = null){
         when (ex) {
             is HttpException -> {
-                showErrorMessage(message)
+//                showErrorMessage(message)
+                showErrorMessage(ex.localizedMessage)
             }
             is IOException -> {
-                showErrorMessage("Please check your internet connection")
+//                showErrorMessage("Please check your internet connection")
                 showErrorMessage(ex.localizedMessage)
             }
             else -> {
@@ -24,6 +25,6 @@ class ExceptionHandler(private val context: Context) {
     }
 
     private fun showErrorMessage(message: String?) {
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, message, Toast.LENGTH_LONG).show()
     }
 }

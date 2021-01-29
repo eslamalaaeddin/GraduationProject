@@ -11,7 +11,6 @@
         android:id="@+id/coordinator"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
         >
 
         <com.google.android.material.appbar.AppBarLayout
@@ -121,6 +120,18 @@
 
 
                 </LinearLayout>
+
+                <RatingBar
+                    android:id="@+id/addRatingToPlaceBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:numStars="5"
+                    android:stepSize="1"
+                    android:visibility="gone"
+                    android:layout_gravity="center"
+                    android:progressTint="@color/orange"
+                    android:rating="4" />
 
                 <TextView
                     android:layout_width="match_parent"

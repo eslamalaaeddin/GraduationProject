@@ -4,28 +4,28 @@
 
     <item
         android:id="@+id/homeFragment"
-        android:icon="@drawable/ic_home"
+        android:icon="@drawable/home_selector"
         android:title="Home" />
 
     <item
         android:id="@+id/favoritesFragment"
-        android:icon="@drawable/ic_heart"
+        android:icon="@drawable/favorite_places_selector"
         android:title="Favorites" />
 
     <item
         android:id="@+id/addPlaces"
-        android:icon="@drawable/ic_place_localizer"
+        android:icon="@drawable/add_place_selector"
         android:title="Add place" />
 
 
     <item
         android:id="@+id/searchFragment"
-        android:icon="@drawable/ic_search"
+        android:icon="@drawable/search_places_selector"
         android:title="Search" />
 
     <item
         android:id="@+id/moreFragment"
-        android:icon="@drawable/ic_more_"
+        android:icon="@drawable/more_selector"
         android:title="More" />
 
 

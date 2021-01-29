@@ -8,6 +8,7 @@ import android.view.*
 import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -16,20 +17,22 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.graduationproject.R
 import com.example.graduationproject.adapters.RecommendedPlacesAdapter
 import com.example.graduationproject.databinding.FragmentHomeBinding
+import com.example.graduationproject.helper.listeners.RecommendedPlaceClickListener
 import com.example.graduationproject.model.places.Place
 import com.example.graduationproject.ui.activities.SplashActivity
 import com.example.graduationproject.viewmodel.HomeFragmentViewModel
+import kotlinx.android.synthetic.main.activity_place.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 private const val TAG = "HomeFragment"
 
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(), RecommendedPlaceClickListener {
     private val homeFragmentViewModel by viewModel<HomeFragmentViewModel>()
     private lateinit var fragmentBinding: FragmentHomeBinding
     private var placesAdapter = PlacesAdapter(emptyList())
     private var accessToken = ""
-
+    var tempClicked = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -143,7 +146,7 @@ class HomeFragment : Fragment() {
         )
         fragmentBinding.homePlacesRecyclerView.apply {
             layoutManager = GridLayoutManager(context, 2)
-            adapter = RecommendedPlacesAdapter(hardCodedPlaces.sortedBy { it.id })
+            adapter = RecommendedPlacesAdapter(hardCodedPlaces.sortedBy { it.id }, this@HomeFragment)
         }
 //            }
 //        }
@@ -247,5 +250,17 @@ class HomeFragment : Fragment() {
             val place = placesList[holder.adapterPosition]
             holder.bind(place)
         }
+    }
+
+    override fun onFavoriteIconClicked(place: Place) {
+
+            if (tempClicked) {
+                add_to_favorite_image_view.setImageResource(R.drawable.ic_heart)
+                tempClicked = false
+            } else {
+                add_to_favorite_image_view.setImageResource(R.drawable.ic_heart_filled)
+                tempClicked = true
+            }
+            Toast.makeText(requireContext(), "${place.name}", Toast.LENGTH_SHORT).show()
     }
 }
