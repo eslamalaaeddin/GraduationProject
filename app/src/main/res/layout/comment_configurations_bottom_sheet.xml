@@ -23,7 +23,7 @@
                 android:layout_height="24dp"
                 android:layout_marginStart="8dp"
                 android:layout_gravity="center"
-                app:srcCompat="@drawable/ic_home"
+                app:srcCompat="@drawable/ic_edit"
                 app:tint="@color/grey" />
 
             <TextView
@@ -48,7 +48,7 @@
                 android:layout_height="24dp"
                 android:layout_gravity="center"
                 android:layout_marginStart="8dp"
-                app:srcCompat="@drawable/ic_settings"
+                app:srcCompat="@drawable/ic_delete"
                 app:tint="@color/grey" />
 
             <TextView
@@ -73,7 +73,7 @@
                 android:layout_height="24dp"
                 android:layout_marginStart="8dp"
                 android:layout_gravity="center"
-                app:srcCompat="@drawable/ic_favorite_border_24"
+                app:srcCompat="@drawable/ic_rating_star"
                 app:tint="@color/grey" />
 
             <TextView

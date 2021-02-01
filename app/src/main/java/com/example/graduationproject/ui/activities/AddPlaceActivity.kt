@@ -27,6 +27,8 @@ class AddPlaceActivity : AppCompatActivity() {
 //        }
         setUpToolbar()
 
+        addPlaceBinding.upButtonImageButton.setOnClickListener { finish() }
+
 //        lifecycleScope.launch {
 //            val rate = Rate(rate =  2.5)
 //            val responseMessage = addPlaceViewModel.updateRatingToPlace(placeId = placeId, rate, accessToken)
@@ -38,8 +40,8 @@ class AddPlaceActivity : AppCompatActivity() {
 
     private fun setUpToolbar(){
         setSupportActionBar(addPlaceBinding.mainToolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setDisplayShowCustomEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(false)
+        supportActionBar?.setDisplayShowCustomEnabled(false)
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
         addPlaceBinding.mainToolbar.setTitleTextColor(Color.WHITE)

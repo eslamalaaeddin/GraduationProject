@@ -1,5 +1,6 @@
 package com.example.graduationproject.adapters
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,10 +9,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.graduationproject.R
 import com.example.graduationproject.helper.listeners.CommentClickListener
 import com.example.graduationproject.model.places.Comment
+import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
+import kotlinx.android.synthetic.main.comment_item_layout.view.*
 
 private const val TAG = "CommentsAdapter"
-private const val BASE_IMAGE_URL = "http://10.0.2.2:3000/images/users/"
+private const val BASE_IMAGE_URL = "http://10.0.3.2:3000/images/users/"
 class CommentsAdapter(
     private val userId: Long,
     private val comments: List<Comment>,
@@ -39,14 +42,13 @@ class CommentsAdapter(
         fun bind(comment: Comment) {
             personNameTextView.text = comment.userName
             //UserImage
-//            if (comment.userImage.isNullOrEmpty()){
-//                personImage.setImageResource(R.drawable.ic_person_24)
-//            }
-//            else{
-//                val userImageUrl = "$BASE_IMAGE_URL${comment.userImage}"
-//                Log.i(TAG, "OOOO bind: $userImageUrl")
-//                Picasso.get().load(comment.userImage).into(itemView.comment_person_image_view)
-//            }
+            if (comment.userImage.isNullOrEmpty()){
+                personImage.setImageResource(R.drawable.ic_person_24)
+            }
+            else{
+                val userImageUrl = "$BASE_IMAGE_URL${comment.userImage}"
+                Picasso.get().load(userImageUrl).into(itemView.comment_person_image_view)
+            }
             personImage.setImageResource(R.drawable.avatar)
             //Rate
             if (comment.rate == null){
@@ -59,11 +61,12 @@ class CommentsAdapter(
             commentTextView.text = comment.commentContent
 
             moreOnCommentButton.visibility = if (userId == comment.userId) View.VISIBLE else View.GONE
+
         }
 
         override fun onClick(item: View?) {
             //Temp code
-            Toast.makeText(itemView.context, "CommentClicked", Toast.LENGTH_SHORT).show()
+            Toast.makeText(itemView.context, "$userId \n ${comments[adapterPosition].userId}", Toast.LENGTH_SHORT).show()
 
         }
 

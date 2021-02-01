@@ -27,5 +27,6 @@ data class Place(
     @SerializedName("lat")
     var latitude: Double? = null,
     @SerializedName("lng")
-    var longitude: Double? = null
+    var longitude: Double? = null,
+    var description: String? = null
 )

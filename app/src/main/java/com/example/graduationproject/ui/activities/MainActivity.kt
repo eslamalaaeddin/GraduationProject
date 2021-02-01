@@ -32,6 +32,7 @@ class MainActivity : AppCompatActivity() {
 //        setupBottomNavMenu(navController = navController)
 
         //check if it is not there add it else do not do anything
+
         navigateToHomeFragment()
 
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
@@ -52,6 +53,12 @@ class MainActivity : AppCompatActivity() {
             }
             true
         }
+
+
+    }
+
+    override fun onStart() {
+        super.onStart()
 
     }
 

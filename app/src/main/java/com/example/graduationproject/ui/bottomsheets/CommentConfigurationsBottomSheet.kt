@@ -72,6 +72,7 @@ class CommentConfigurationsBottomSheet(private val comment: Comment, private val
         val updateCommentEditText = dialog.findViewById(R.id.updateCommentEditText) as EditText
 
         updateCommentEditText.setText(comment.commentContent.orEmpty())
+        updateCommentEditText.setSelection(updateCommentEditText.text.length)
 
         updateButton.setOnClickListener {
             val commentContent = updateCommentEditText.text.toString()
@@ -86,10 +87,10 @@ class CommentConfigurationsBottomSheet(private val comment: Comment, private val
                     responseMessage?.let {
                         Toast.makeText(requireContext(), "Comment updated", Toast.LENGTH_SHORT)
                             .show()
+                        dialog.dismiss()
+                        dismiss()
                     }
                 }
-                dialog.dismiss()
-                dismiss()
             }
             else{
                 Toast.makeText(requireContext(), "Enter a comment first", Toast.LENGTH_SHORT).show()
@@ -120,10 +121,11 @@ class CommentConfigurationsBottomSheet(private val comment: Comment, private val
                 )
                 responseMessage?.let {
                     Toast.makeText(requireContext(), "Comment deleted", Toast.LENGTH_SHORT).show()
+                    dialog.dismiss()
+                    dismiss()
                 }
             }
-            dialog.dismiss()
-            dismiss()
+
         }
         cancelButton.setOnClickListener {
             dialog.dismiss()
@@ -154,6 +156,8 @@ class CommentConfigurationsBottomSheet(private val comment: Comment, private val
                         placeActivityViewModel.addRatingToPlace(rate, placeId.toString(), accessToken)
                     responseMessage?.let {
                         Toast.makeText(requireContext(), "Rate added", Toast.LENGTH_SHORT).show()
+                        dialog.dismiss()
+                        dismiss()
                     }
                 }
             }
@@ -163,12 +167,12 @@ class CommentConfigurationsBottomSheet(private val comment: Comment, private val
                         placeActivityViewModel.updateRatingToPlace(rate, placeId.toString(), accessToken)
                     responseMessage?.let {
                         Toast.makeText(requireContext(), "Rate updated", Toast.LENGTH_SHORT).show()
+                        dialog.dismiss()
+                        dismiss()
                     }
                 }
             }
 
-            dialog.dismiss()
-            dismiss()
         }
         cancelButton.setOnClickListener {
             dialog.dismiss()
@@ -176,6 +180,5 @@ class CommentConfigurationsBottomSheet(private val comment: Comment, private val
         dialog.show()
 
     }
-
 
 }

@@ -18,9 +18,21 @@
             android:layout_width="match_parent"
             android:layout_height="?android:attr/actionBarSize"
             style="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:title="Add Place"
             app:titleTextColor="@color/white"
-            android:background="@color/colorPrimary"/>
+            android:background="@color/colorPrimary">
+
+            <ImageButton
+                android:id="@+id/upButtonImageButton"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_gravity="center|start"
+                android:scaleType="centerCrop"
+                app:tint="@color/white"
+                android:src="@drawable/ic_left_arrow"
+                />
+
+        </androidx.appcompat.widget.Toolbar>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

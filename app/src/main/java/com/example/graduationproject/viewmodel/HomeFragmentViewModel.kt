@@ -13,17 +13,22 @@ import java.io.IOException
 
 private const val TAG = "HomeFragmentViewModel"
 class HomeFragmentViewModel(private val placesRepository: PlacesRepository): ViewModel() {
+    var recommendedPlacesLiveData:LiveData<List<Place>?>? = null
 
     suspend fun addNewPlace(place: Place, accessToken: String): ResponseMessage?{
         return placesRepository.addNewPlace(place, accessToken)
     }
 
 
-    suspend fun getRecommendedPlaces(page: Int, accessToken: String): LiveData<List<Place>?>{
-        return liveData {
+    suspend fun getRecommendedPlaces(page: Int, accessToken: String): LiveData<List<Place>?>?{
+//        if (recommendedPlacesLiveData != null){
+//            return recommendedPlacesLiveData
+//        }
+        recommendedPlacesLiveData = liveData {
             val data = placesRepository.getRecommendedPlaces(page,accessToken)
             emit(data)
         }
+        return recommendedPlacesLiveData
     }
 
     suspend fun searchForPlaceInCountry(

@@ -13,7 +13,8 @@ import com.example.graduationproject.model.places.PlaceImage
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.place_details_item_layout.view.*
 
-const val BASE_PLACE_IMAGE_URL = "http://10.0.0.2:3000/images/places/"
+//const val BASE_PLACE_IMAGE_URL = "http://10.0.0.2:3000/images/places/"
+const val BASE_PLACE_IMAGE_URL = "http://10.0.3.2:3000/images/places/"
 
 class PlaceImagesAdapter(
     private val placeId: String,
@@ -36,8 +37,8 @@ class PlaceImagesAdapter(
 
         fun bind(placeImage: PlaceImage) {
             if (placeImage.name?.isNotEmpty() == true) {
-//                Picasso.get().load("${BASE_PLACE_IMAGE_URL}$placeId/${placeImage.name}").into(itemView.detail_place_image_view)
-                Picasso.get().load(placeImage.name).into(itemView.detail_place_image_view)
+                Picasso.get().load("${BASE_PLACE_IMAGE_URL}$placeId/${placeImage.name}").into(itemView.detail_place_image_view)
+//                Picasso.get().load(placeImage.name).into(itemView.detail_place_image_view)
             }
 
         }
