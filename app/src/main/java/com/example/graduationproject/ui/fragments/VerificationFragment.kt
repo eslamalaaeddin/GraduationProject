@@ -56,26 +56,32 @@ class VerificationFragment : Fragment(R.layout.fragment_verification) {
 //            val email = "islamalaaeddin1998@gmail.com"
             val email = SignUpFragment.getUserEmail(requireContext())
             Toast.makeText(requireContext(), "$email", Toast.LENGTH_SHORT).show()
-            val verCode = code.trim().substring(0,4).toInt()
-            Log.i(TAG, "AHMAD validateVerificationCodeAndNavigateToMainActivity: $verCode")
-            val verify = Verify(email, verCode)
+//            if(code.length < 4){
+//                Toast.makeText(requireContext(), "Verification code must contains four characters", Toast.LENGTH_SHORT).show()
+//            }
+//            else{
+//                val verCode = code.trim().substring(0,4).toInt()
+                Log.i(TAG, "AHMAD validateVerificationCodeAndNavigateToMainActivity: $code")
+                val verify = Verify(email, code.trim().toInt())
 
-            lifecycleScope.launch {
-                val token = verificationFragmentViewModel.verifyUser(verify)
-                token?.let { t ->
-                    val accessToken = t.access_token
-                    val refreshToken = t.refresh_token
-                    val accessTokenExTime = t.access_token_exp
-                    val refreshTokenExTime = t.refresh_token_exp
-                    saveUserAsLoggedInAndSaveTokens(
-                        accessToken,
-                        refreshToken,
-                        accessTokenExTime,
-                        refreshTokenExTime
-                    )
-                    navigateToMainActivity()
+                lifecycleScope.launch {
+                    val token = verificationFragmentViewModel.verifyUser(verify)
+                    token?.let { t ->
+                        val accessToken = t.access_token
+                        val refreshToken = t.refresh_token
+                        val accessTokenExTime = t.access_token_exp
+                        val refreshTokenExTime = t.refresh_token_exp
+                        saveUserAsLoggedInAndSaveTokens(
+                            accessToken,
+                            refreshToken,
+                            accessTokenExTime,
+                            refreshTokenExTime
+                        )
+                        navigateToMainActivity()
+                    }
                 }
-            }
+//            }
+
         }
     }
 

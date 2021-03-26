@@ -10,7 +10,7 @@ import retrofit2.HttpException
 
 class RatingRepository(private val api: Api, private val context: Context): BaseRepository(context) {
 
-    suspend fun addRatingToPlace(rate: Rate, placeId: String, accessToken: String): ResponseMessage?{
+    suspend fun addRatingToProduct(rate: Rate, placeId: String, accessToken: String): ResponseMessage?{
         var responseMessage: ResponseMessage? = null
         try {
             responseMessage = safeApiCall(
@@ -25,7 +25,7 @@ class RatingRepository(private val api: Api, private val context: Context): Base
         return responseMessage
     }
 
-    suspend fun updateRatingToPlace(rate: Rate, placeId: String, accessToken: String): ResponseMessage?{
+    suspend fun updateRatingToProduct(rate: Rate, placeId: String, accessToken: String): ResponseMessage?{
         var responseMessage: ResponseMessage? = null
         try {
             responseMessage = safeApiCall(
@@ -40,11 +40,11 @@ class RatingRepository(private val api: Api, private val context: Context): Base
         return responseMessage
     }
 
-    suspend fun getUserSpecificRateToPlace(placeId: String, accessToken: String): Rate? {
+    suspend fun getProductRate(placeId: String, accessToken: String): Rate? {
         var rate: Rate? = null
         try {
             rate = safeApiCall(
-                call = { withContext(Dispatchers.IO){api.getUserSpecificRateToPlace(placeId, accessToken)} },
+                call = { withContext(Dispatchers.IO){api.getProductRate(placeId, accessToken)} },
                 errorMessage = "Getting your rate on place is not available now."
             )
         }

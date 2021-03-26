@@ -6,6 +6,7 @@ import android.graphics.PorterDuff
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -18,15 +19,17 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.graduationproject.R
 import com.example.graduationproject.adapters.CommentsAdapter
 import com.example.graduationproject.adapters.PlaceImagesAdapter
-import com.example.graduationproject.databinding.ActivityPlaceBinding
+import com.example.graduationproject.databinding.ActivityProductBinding
 import com.example.graduationproject.helper.listeners.CommentClickListener
 import com.example.graduationproject.model.comments.PlaceComment
-import com.example.graduationproject.model.places.Comment
-import com.example.graduationproject.model.places.VisitedPlace
+import com.example.graduationproject.model.products.Comment
+import com.example.graduationproject.model.products.PlaceImage
+import com.example.graduationproject.model.products.VisitedPlace
 import com.example.graduationproject.model.rating.Rate
 import com.example.graduationproject.ui.bottomsheets.CommentConfigurationsBottomSheet
 import com.example.graduationproject.viewmodel.PlaceActivityViewModel
-import kotlinx.android.synthetic.main.activity_place.*
+import kotlinx.android.synthetic.main.activity_product.*
+import kotlinx.android.synthetic.main.place_details_item_layout.view.*
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -43,8 +46,9 @@ const val image6 =
     "https://t3.ftcdn.net/jpg/02/66/45/50/360_F_266455083_yASCBTitC7vtyI7dBL9kzk1SDXLS3m6s.jpg"
 
 
+private const val TAG = "PlaceActivity"
 class PlaceActivity : AppCompatActivity(), CommentClickListener {
-    private lateinit var placeDetailsBinding: ActivityPlaceBinding
+    private lateinit var placeDetailsBinding: ActivityProductBinding
     private val placeActivityViewModel by viewModel<PlaceActivityViewModel>()
     private var placeId: Long = 0
     private lateinit var accessToken :String
@@ -54,11 +58,11 @@ class PlaceActivity : AppCompatActivity(), CommentClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         accessToken = SplashActivity.getAccessToken(this).orEmpty()
-        placeDetailsBinding = DataBindingUtil.setContentView(this, R.layout.activity_place)
+        placeDetailsBinding = DataBindingUtil.setContentView(this, R.layout.activity_product)
 
         setUpToolbar()
         placeId = intent.getLongExtra("placeId", 0)
-        Toast.makeText(this, "Place id: $placeId", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "Product id: $placeId", Toast.LENGTH_SHORT).show()
         placeDetailsBinding.addRatingToPlaceBar.setOnRatingBarChangeListener { _, rating, _ ->
             val rate = Rate(rate = rating.toInt())
             if (placeRate == null) {
@@ -76,7 +80,7 @@ class PlaceActivity : AppCompatActivity(), CommentClickListener {
             finish()
         }
 
-        //Add Place to favorite or remove it from fav.
+        //Add Product to favorite or remove it from fav.
         placeDetailsBinding.addToFavoriteImageView.setOnClickListener {
             if (isPlaceFavorite) {
                 lifecycleScope.launch { deletePlaceFromFavorite() }
@@ -115,7 +119,7 @@ class PlaceActivity : AppCompatActivity(), CommentClickListener {
             }
         }
 
-        lifecycleScope.launch { getPlaceImages() }
+        //lifecycleScope.launch { getPlaceImages() }
 
 
 
@@ -140,10 +144,10 @@ class PlaceActivity : AppCompatActivity(), CommentClickListener {
             addCommentAndUpdateComments()
         }
 
-        placeDetailsBinding.swipeRefreshLayout.setOnRefreshListener {
-            onStart()
-            placeDetailsBinding.swipeRefreshLayout.isRefreshing = false
-        }
+//        placeDetailsBinding.swipeRefreshLayout.setOnRefreshListener {
+//            onStart()
+//            placeDetailsBinding.swipeRefreshLayout.isRefreshing = false
+//        }
 
         placeDetailsBinding.upButtonImageButton.setOnClickListener { finish() }
 
@@ -180,7 +184,7 @@ class PlaceActivity : AppCompatActivity(), CommentClickListener {
 
     private suspend fun getPlaceDetails(){
             val placeDetailsLiveData =
-                placeActivityViewModel.getPlaceDetails(placeId.toString(), accessToken)
+                placeActivityViewModel.getProductDetails(placeId.toString(), accessToken)
             placeDetailsLiveData?.observe(this@PlaceActivity) { place ->
                 place?.let {
                     placeDetailsBinding.detailsPlaceNameTextView.text = it.name
@@ -194,7 +198,16 @@ class PlaceActivity : AppCompatActivity(), CommentClickListener {
                     } else {
                         add_to_favorite_image_view.setImageResource(R.drawable.ic_heart)
                     }
+
+                    placeDetailsBinding.placeImagesRecyclerView.apply {
+                        val placeImages = mutableListOf<PlaceImage>()
+                        placeImages.add(PlaceImage(name = place.image))
+                        layoutManager = LinearLayoutManager(this@PlaceActivity,LinearLayoutManager.HORIZONTAL,false)
+                        adapter = PlaceImagesAdapter(placeId.toString(), placeImages)
+                        snapHelper.attachToRecyclerView(this)
+                    }
                 }
+                Log.i(TAG, "getPlaceDetails: $place" )
             }
     }
 
@@ -204,7 +217,7 @@ class PlaceActivity : AppCompatActivity(), CommentClickListener {
             comment = placeDetailsBinding.placeCommentEditText.text.toString()
         )
         lifecycleScope.launch {
-            val responseMessage = placeActivityViewModel.addCommentOnPlace(
+            val responseMessage = placeActivityViewModel.addCommentOnProduct(
                 placeComment,
                 accessToken
             )
@@ -216,7 +229,7 @@ class PlaceActivity : AppCompatActivity(), CommentClickListener {
     }
 
     private suspend fun getComments(){
-        val placeCommentsLiveData = placeActivityViewModel.getPlaceComments(
+        val placeCommentsLiveData = placeActivityViewModel.getProductComments(
             placeId.toString(),
             1,
             accessToken
@@ -225,7 +238,7 @@ class PlaceActivity : AppCompatActivity(), CommentClickListener {
             placeDetailsBinding.commentsRecyclerView.apply {
                 layoutManager = LinearLayoutManager(this@PlaceActivity)
                 adapter = CommentsAdapter(
-                    89005421161637,
+                    79312841268376,
                     comments.orEmpty(),
                     this@PlaceActivity
                 )
@@ -233,19 +246,19 @@ class PlaceActivity : AppCompatActivity(), CommentClickListener {
         }
     }
 
-    private suspend fun getPlaceImages(){
-        val placeImagesLiveData =  placeActivityViewModel.getPlaceImages(placeId.toString(), accessToken)
-        placeImagesLiveData?.observe(this@PlaceActivity){placeImages ->
-            placeDetailsBinding.placeImagesRecyclerView.apply {
-                layoutManager = LinearLayoutManager(this@PlaceActivity,LinearLayoutManager.HORIZONTAL,false)
-                adapter = PlaceImagesAdapter(placeId.toString(),placeImages.orEmpty())
-                snapHelper.attachToRecyclerView(this)
-            }
-        }
-    }
+//    private suspend fun getPlaceImages(){
+//        val placeImagesLiveData =  placeActivityViewModel.getPlaceImages(placeId.toString(), accessToken)
+//        placeImagesLiveData?.observe(this@PlaceActivity){placeImages ->
+//            placeDetailsBinding.placeImagesRecyclerView.apply {
+//                layoutManager = LinearLayoutManager(this@PlaceActivity,LinearLayoutManager.HORIZONTAL,false)
+//                adapter = PlaceImagesAdapter(placeId.toString(),placeImages.orEmpty())
+//                snapHelper.attachToRecyclerView(this)
+//            }
+//        }
+//    }
 
     private suspend fun addPlaceToFavorite(){
-            val responseMessage = placeActivityViewModel.addPlaceToUserFavoritePlaces(
+            val responseMessage = placeActivityViewModel.addProductToFavorites(
                 VisitedPlace(pid = placeId),
                 accessToken
             )
@@ -256,7 +269,7 @@ class PlaceActivity : AppCompatActivity(), CommentClickListener {
     }
 
     private suspend fun deletePlaceFromFavorite(){
-            val responseMessage = placeActivityViewModel.deleteUserFavoritePlace(
+            val responseMessage = placeActivityViewModel.deleteProductFromFavorites(
                 placeId.toString(),
                 accessToken
             )
@@ -267,7 +280,7 @@ class PlaceActivity : AppCompatActivity(), CommentClickListener {
     }
 
     private suspend fun getPlaceRate(){
-        val rate = placeActivityViewModel.getUserSpecificRateToPlace(
+        val rate = placeActivityViewModel.getProductRate(
             placeId.toString(),
             accessToken
         )
@@ -282,7 +295,7 @@ class PlaceActivity : AppCompatActivity(), CommentClickListener {
     private fun addRateToPlace(rate: Rate){
         lifecycleScope.launch {
             val responseMessage =
-                placeActivityViewModel.addRatingToPlace(rate, placeId.toString(), accessToken)
+                placeActivityViewModel.addRatingToProduct(rate, placeId.toString(), accessToken)
             responseMessage?.let {
 //                Toast.makeText(this@PlaceActivity, "Rate added", Toast.LENGTH_SHORT).show()
             }
@@ -292,7 +305,7 @@ class PlaceActivity : AppCompatActivity(), CommentClickListener {
     private fun deleteRateFromPlace(rate: Rate){
         lifecycleScope.launch {
             val responseMessage =
-                placeActivityViewModel.updateRatingToPlace(rate, placeId.toString(), accessToken)
+                placeActivityViewModel.updateRatingToProduct(rate, placeId.toString(), accessToken)
             responseMessage?.let {
 //                Toast.makeText(this@PlaceActivity, "Rate updated", Toast.LENGTH_SHORT).show()
             }

@@ -7,10 +7,10 @@ import com.example.graduationproject.repository.RatingRepository
 
 class AddPlaceViewModel(private val ratingRepository: RatingRepository): ViewModel() {
     suspend fun addRatingToPlace(rate: Rate, accessToken: String): ResponseMessage?{
-        return ratingRepository.addRatingToPlace(rate, "bal", accessToken)
+        return ratingRepository.addRatingToProduct(rate, "bal", accessToken)
     }
 
     suspend fun updateRatingToPlace(placeId: String, rate: Rate, accessToken: String): ResponseMessage?{
-        return ratingRepository.updateRatingToPlace(rate, placeId, accessToken)
+        return ratingRepository.updateRatingToProduct(rate, placeId, accessToken)
     }
 }

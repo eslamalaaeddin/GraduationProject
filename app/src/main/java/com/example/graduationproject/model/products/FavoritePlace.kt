@@ -1,4 +1,4 @@
-package com.example.graduationproject.model.places
+package com.example.graduationproject.model.products
 
 data class FavoritePlace(
     var id: Long? = null,

@@ -42,11 +42,11 @@ class UserRepository(private val api: Api, private val context: Context): BaseRe
         return responseMessage
     }
 
-    suspend fun updateUserPassword(userPassword: UserPassword, accessToken: String): ResponseMessage?{
+    suspend fun changeUserPassword(userPassword: UserPassword, accessToken: String): ResponseMessage?{
         var responseMessage: ResponseMessage? = null
         try {
             responseMessage = safeApiCall(
-                call = { withContext(Dispatchers.IO){api.updateUserPassword(userPassword, accessToken)}},
+                call = { withContext(Dispatchers.IO){api.changeUserPassword(userPassword, accessToken)}},
                 errorMessage = "Error changing user password"
             )
         }

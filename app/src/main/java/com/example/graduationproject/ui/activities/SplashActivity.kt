@@ -52,9 +52,6 @@ class SplashActivity : AppCompatActivity() {
         val accessTokenExTime = getAccessTokenExpirationTime(this).orEmpty()
         val refreshTokenExTime = getRefreshTokenExpirationTime(this).orEmpty()
 
-        Log.i(TAG, "ISLAM onCreate: ACCESSEX $accessTokenExTime ")
-
-
         Handler().postDelayed({
             when {
                 signedInORSignedUpVerified -> {
@@ -131,7 +128,6 @@ class SplashActivity : AppCompatActivity() {
         fun getAccessToken(context: Context?): String? {
             val prefs = PreferenceManager.getDefaultSharedPreferences(context)
             return prefs.getString(ACCESS_TOKEN, "")
-//            return "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOjk4MTM2OTIxNDE2MTcxLCJleHAiOjE2MTE5MjIzMTN9.xX4K2Srm2VGHch_o1WucJ9ddYHlyr7anzqgGiljyudU"
         }
 
         fun getAccessTokenExpirationTime(context: Context?): String? {
@@ -181,8 +177,8 @@ class SplashActivity : AppCompatActivity() {
             } else {
                 val oldAccessToken = getAccessToken(this).toString()
                 val refreshToken = getRefreshToken(this).toString()
-                Log.i(TAG, "ISLAM tokenizeUser: $oldAccessToken")
-                Log.i(TAG, "ISLAM tokenizeUser: $refreshToken")
+                Log.i(TAG, "TOKEN old access token: $oldAccessToken")
+                Log.i(TAG, "TOKEN refresh token: $refreshToken")
                 getNewAccessToken(oldAccessToken, refreshToken)
             }
         } else {
@@ -206,19 +202,18 @@ class SplashActivity : AppCompatActivity() {
     private fun isAccessTokenExpired(accessTokenTimestamp: Long): Boolean {
         val currentTimeInSeconds = System.currentTimeMillis() / 1000
         Log.i(TAG, "ISLAM isAccessTokenExpired: Current time $currentTimeInSeconds")
-        Log.i(TAG, "ISLAM isAccessTokenExpired: Expiration time  ${accessTokenTimestamp + 7200}")
-        Log.i(TAG, "ISLAM isAccessTokenExpired: Differenece time  ${currentTimeInSeconds - (accessTokenTimestamp + 7200)}")
-//        return (currentTimeInSeconds - (accessTokenTimestamp + 7200)) >= MINUTES_15
-        return (currentTimeInSeconds - (accessTokenTimestamp + 7200)) >= 0
+        Log.i(TAG, "ISLAM isAccessTokenExpired: Expiration time  ${accessTokenTimestamp}")
+        Log.i(TAG, "ISLAM isAccessTokenExpired: Differenece time  ${accessTokenTimestamp - currentTimeInSeconds}")
+        return currentTimeInSeconds - accessTokenTimestamp >= 0
+//        return (currentTimeInSeconds - (accessTokenTimestamp + 7200)) >= 0
     }
 
     private fun isRefreshTokenExpired(refreshTokenTimestamp: Long): Boolean {
         val currentTimeInSeconds = System.currentTimeMillis() / 1000
-//        return (currentTimeInSeconds - (refreshTokenTimestamp + 7200)) >= DAYS_14
         return (currentTimeInSeconds - (refreshTokenTimestamp + 7200)) >= 0
     }
 
-    fun getNewAccessToken(oldAccessToken: String, oldRefreshToken: String) {
+    private fun getNewAccessToken(oldAccessToken: String, oldRefreshToken: String) {
         // Toast.makeText(this, "I am getting new access token", Toast.LENGTH_SHORT).show()
         val refreshTokenObj = RefreshToken(oldAccessToken, oldRefreshToken)
         lifecycleScope.launch {

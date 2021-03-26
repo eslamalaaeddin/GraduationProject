@@ -1,17 +1,13 @@
 package com.example.graduationproject.adapters
 
 import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.graduationproject.R
 import com.example.graduationproject.helper.listeners.FavoritePlaceClickListener
-import com.example.graduationproject.helper.listeners.RecommendedPlaceClickListener
-import com.example.graduationproject.model.places.FavoritePlace
-import com.example.graduationproject.model.places.Place
+import com.example.graduationproject.model.products.FavoritePlace
 import com.example.graduationproject.ui.activities.PlaceActivity
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.home_place_item.view.*

@@ -32,7 +32,7 @@ object Utils {
             "    {\n" +
             "        \"comment_id\": 10646718831028,\n" +
             "        \"rate\": null,\n" +
-            "        \"text\": \"Good Place 2\",\n" +
+            "        \"text\": \"Good Product 2\",\n" +
             "        \"time\": \"Wed, 27 Jan 2021 11:34:00 GMT\",\n" +
             "        \"user_id\": 98136921416171,\n" +
             "        \"user_image\": \"user.png\",\n" +
@@ -41,7 +41,7 @@ object Utils {
             "    {\n" +
             "        \"comment_id\": 61328149395118,\n" +
             "        \"rate\": null,\n" +
-            "        \"text\": \"Good Place\",\n" +
+            "        \"text\": \"Good Product\",\n" +
             "        \"time\": \"Wed, 27 Jan 2021 11:18:00 GMT\",\n" +
             "        \"user_id\": 98136921416171,\n" +
             "        \"user_image\": \"user.png\",\n" +

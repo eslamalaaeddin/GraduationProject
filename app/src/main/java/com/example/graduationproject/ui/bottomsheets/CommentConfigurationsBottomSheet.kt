@@ -12,7 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.graduationproject.R
 import com.example.graduationproject.databinding.CommentConfigurationsBottomSheetBinding
 import com.example.graduationproject.model.comments.PlaceComment
-import com.example.graduationproject.model.places.Comment
+import com.example.graduationproject.model.products.Comment
 import com.example.graduationproject.model.rating.Rate
 import com.example.graduationproject.ui.activities.SplashActivity
 import com.example.graduationproject.viewmodel.PlaceActivityViewModel
@@ -79,7 +79,7 @@ class CommentConfigurationsBottomSheet(private val comment: Comment, private val
             if (commentContent.isNotEmpty()) {
                 val placeComment = PlaceComment(placeId, commentContent)
                 lifecycleScope.launch {
-                    val responseMessage = placeActivityViewModel.updateCommentOnPlace(
+                    val responseMessage = placeActivityViewModel.updateCommentOnProduct(
                         comment.commentId.toString(),
                         placeComment,
                         accessToken
@@ -115,7 +115,7 @@ class CommentConfigurationsBottomSheet(private val comment: Comment, private val
 
         deleteButton.setOnClickListener {
             lifecycleScope.launch {
-                val responseMessage = placeActivityViewModel.deleteCommentOnPlace(
+                val responseMessage = placeActivityViewModel.deleteCommentFromProduct(
                     comment.commentId.toString(),
                     accessToken
                 )
@@ -153,7 +153,7 @@ class CommentConfigurationsBottomSheet(private val comment: Comment, private val
             if (comment.rate == null) {
                 lifecycleScope.launch {
                     val responseMessage =
-                        placeActivityViewModel.addRatingToPlace(rate, placeId.toString(), accessToken)
+                        placeActivityViewModel.addRatingToProduct(rate, placeId.toString(), accessToken)
                     responseMessage?.let {
                         Toast.makeText(requireContext(), "Rate added", Toast.LENGTH_SHORT).show()
                         dialog.dismiss()
@@ -164,7 +164,7 @@ class CommentConfigurationsBottomSheet(private val comment: Comment, private val
             else{
                 lifecycleScope.launch {
                     val responseMessage =
-                        placeActivityViewModel.updateRatingToPlace(rate, placeId.toString(), accessToken)
+                        placeActivityViewModel.updateRatingToProduct(rate, placeId.toString(), accessToken)
                     responseMessage?.let {
                         Toast.makeText(requireContext(), "Rate updated", Toast.LENGTH_SHORT).show()
                         dialog.dismiss()

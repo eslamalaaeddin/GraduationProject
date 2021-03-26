@@ -4,6 +4,8 @@
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <application
         android:allowBackup="true"
@@ -19,7 +21,14 @@
             android:name="com.example.graduationproject.ui.activities.PlaceActivity"
             android:parentActivityName="com.example.graduationproject.ui.activities.MainActivity" />
 
-        <activity android:name="com.example.graduationproject.ui.activities.TestingActivity"/>
+        <activity android:name="com.example.graduationproject.ui.activities.TestingActivity">
+<!--                         <intent-filter>-->
+<!--                         <action android:name="android.intent.action.MAIN" />-->
+
+<!--                         <category android:name="android.intent.category.LAUNCHER" />-->
+<!--                         </intent-filter>-->
+
+        </activity>
 
         <activity android:name="com.example.graduationproject.ui.activities.RegisterActivity" />
         <activity android:name="com.example.graduationproject.ui.activities.WelcomeActivity" />

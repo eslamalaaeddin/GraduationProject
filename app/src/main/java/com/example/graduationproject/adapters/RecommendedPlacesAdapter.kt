@@ -5,19 +5,18 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.graduationproject.R
 import com.example.graduationproject.helper.listeners.RecommendedPlaceClickListener
-import com.example.graduationproject.model.places.Place
+import com.example.graduationproject.model.products.Product
 import com.example.graduationproject.ui.activities.PlaceActivity
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.home_place_item.view.*
-private const val BASE_IMAGE_URL = "http://10.0.3.2:3000/images/places/"
+private const val BASE_IMAGE_URL = "http://10.0.3.2:3000/images/products/"
 private const val TAG = "RecommendedPlacesAdapte"
 const val imageLocation = "https://st2.depositphotos.com/3974537/10978/v/600/depositphotos_109787082-stock-video-pyramids-at-night-with-moon.jpg"
 class RecommendedPlacesAdapter(
-    private val recommendedPlaces: List<Place>,
+    private val recommendedProducts: List<Product>,
     private val recommendedPlaceClickListener: RecommendedPlaceClickListener
     ) :
     RecyclerView.Adapter<RecommendedPlacesAdapter.RecommendedPlacesViewHolder>() {
@@ -27,19 +26,19 @@ class RecommendedPlacesAdapter(
             init {
                 itemView.setOnClickListener(this)
                 itemView.add_to_favorite_image_view.setOnClickListener {
-                    val place = recommendedPlaces[adapterPosition]
+                    val place = recommendedProducts[adapterPosition]
                     recommendedPlaceClickListener.onFavoriteIconClicked(place)
                 }
             }
 
-            fun bind(place: Place){
-                itemView.home_place_name_text_view.text = place.name
-                itemView.home_rating_bar.rating = place.rating?.toFloat() ?: 0F
-//                val placeImageUrl = "$BASE_IMAGE_URL${place.id}/${place.image}"
-                val placeImageUrl = "$BASE_IMAGE_URL${place.id}/${place.image}"
+            fun bind(product: Product){
+                itemView.home_place_name_text_view.text = product.name
+                itemView.home_rating_bar.rating = product.rating?.toFloat() ?: 0F
+//                val placeImageUrl = "$BASE_IMAGE_URL${product.id}/${product.image}"
+                val placeImageUrl = "$BASE_IMAGE_URL/${product.image}"
                 Log.i(TAG, "bind: $placeImageUrl")
                 Picasso.get().load(placeImageUrl).into(itemView.place_image_view)
-                if (place.isFavorite == 1){
+                if (product.isFavorite == 1){
                     itemView.add_to_favorite_image_view.setImageResource(R.drawable.ic_heart_filled)
                 }
                 else{
@@ -49,7 +48,7 @@ class RecommendedPlacesAdapter(
 
             override fun onClick(v: View?) {
                 //Temp
-                val place = recommendedPlaces[adapterPosition]
+                val place = recommendedProducts[adapterPosition]
                 val intent = Intent(itemView.context, PlaceActivity::class.java)
                 intent.putExtra("placeId", place.id)
                 itemView.context.startActivity(intent)
@@ -63,9 +62,9 @@ class RecommendedPlacesAdapter(
     }
 
     override fun onBindViewHolder(holder: RecommendedPlacesViewHolder, position: Int) {
-        val place = recommendedPlaces[holder.adapterPosition]
+        val place = recommendedProducts[holder.adapterPosition]
         holder.bind(place)
     }
 
-    override fun getItemCount(): Int = recommendedPlaces.size
+    override fun getItemCount(): Int = recommendedProducts.size
 }

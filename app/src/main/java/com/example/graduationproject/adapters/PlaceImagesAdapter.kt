@@ -3,18 +3,19 @@ package com.example.graduationproject.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.graduationproject.R
-import com.example.graduationproject.model.places.PlaceImage
+import com.example.graduationproject.model.products.PlaceImage
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.place_details_item_layout.view.*
 
 //const val BASE_PLACE_IMAGE_URL = "http://10.0.0.2:3000/images/places/"
-const val BASE_PLACE_IMAGE_URL = "http://10.0.3.2:3000/images/places/"
+const val BASE_PLACE_IMAGE_URL = "http://10.0.3.2:3000/images/products/"
+
+//http://127.0.0.1:3000/images/products/product.png
 
 class PlaceImagesAdapter(
     private val placeId: String,
@@ -37,7 +38,8 @@ class PlaceImagesAdapter(
 
         fun bind(placeImage: PlaceImage) {
             if (placeImage.name?.isNotEmpty() == true) {
-                Picasso.get().load("${BASE_PLACE_IMAGE_URL}$placeId/${placeImage.name}").into(itemView.detail_place_image_view)
+//                Picasso.get().load("${BASE_PLACE_IMAGE_URL}$placeId/${placeImage.name}").into(itemView.detail_place_image_view)
+                Picasso.get().load("${BASE_PLACE_IMAGE_URL}${placeImage.name}").into(itemView.detail_place_image_view)
 //                Picasso.get().load(placeImage.name).into(itemView.detail_place_image_view)
             }
 

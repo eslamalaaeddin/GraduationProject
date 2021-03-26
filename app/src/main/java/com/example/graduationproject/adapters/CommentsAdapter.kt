@@ -1,6 +1,5 @@
 package com.example.graduationproject.adapters
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,7 +7,7 @@ import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
 import com.example.graduationproject.R
 import com.example.graduationproject.helper.listeners.CommentClickListener
-import com.example.graduationproject.model.places.Comment
+import com.example.graduationproject.model.products.Comment
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.comment_item_layout.view.*

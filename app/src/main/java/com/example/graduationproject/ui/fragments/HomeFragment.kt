@@ -1,33 +1,23 @@
 package com.example.graduationproject.ui.fragments
 
-import com.example.graduationproject.ui.activities.PlaceActivity
-import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import android.widget.ImageView
-import android.widget.RatingBar
-import android.widget.TextView
-import android.widget.Toast
-import androidx.annotation.RequiresApi
-import androidx.cardview.widget.CardView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.graduationproject.R
 import com.example.graduationproject.adapters.RecommendedPlacesAdapter
 import com.example.graduationproject.databinding.FragmentHomeBinding
 import com.example.graduationproject.helper.listeners.RecommendedPlaceClickListener
-import com.example.graduationproject.model.places.Place
-import com.example.graduationproject.model.places.VisitedPlace
+import com.example.graduationproject.model.products.Product
+import com.example.graduationproject.model.products.VisitedPlace
 import com.example.graduationproject.ui.activities.SplashActivity
 import com.example.graduationproject.viewmodel.HomeFragmentViewModel
 import com.example.graduationproject.viewmodel.PlaceActivityViewModel
-import kotlinx.android.synthetic.main.activity_place.*
+import kotlinx.android.synthetic.main.activity_product.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -38,7 +28,7 @@ class HomeFragment : Fragment(), RecommendedPlaceClickListener {
     private val homeFragmentViewModel by viewModel<HomeFragmentViewModel>()
     private val placeActivityViewModel by viewModel<PlaceActivityViewModel>()
     private lateinit var fragmentBinding: FragmentHomeBinding
-    var recommendedPlaces = mutableListOf<Place>()
+    var recommendedPlaces = mutableListOf<Product>()
     private var accessToken = ""
     var tempClicked = false
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,7 +66,7 @@ class HomeFragment : Fragment(), RecommendedPlaceClickListener {
 //        }
 
 //          lifecycleScope.launch {
-//              homeFragmentViewModel.addNewPlace(Place(name = "place name", country = "Egypt", city = "Zagazig", latitude = -12.5, longitude = 10.24), accessToken).message.toString()
+//              homeFragmentViewModel.addNewPlace(Product(name = "place name", country = "Egypt", city = "Zagazig", latitude = -12.5, longitude = 10.24), accessToken).message.toString()
 //          }
 
 //        testButton.setOnClickListener {
@@ -98,7 +88,7 @@ class HomeFragment : Fragment(), RecommendedPlaceClickListener {
 //            }
 //        }
 
-            getRecommendedPlaces()
+
 
 //        lifecycleScope.launch {
 //            homeFragmentViewModel.getPlaceImages("1",accessToken).observe(viewLifecycleOwner){
@@ -150,42 +140,49 @@ class HomeFragment : Fragment(), RecommendedPlaceClickListener {
 
     }
 
-    override fun onFavoriteIconClicked(place: Place) {
-        val isPlaceFavorite = place.isFavorite == 1
+    override fun onStart() {
+        super.onStart()
+        //I moved it to onStart so that i can see the effect of adding a place to favorite or removing it from fav
+        //when i make the effect from place activity
+        getRecommendedPlaces()
+    }
+
+    override fun onFavoriteIconClicked(product: Product) {
+        val isPlaceFavorite = product.isFavorite == 1
         if (isPlaceFavorite) {
-            lifecycleScope.launch { deletePlaceFromFavorite(place) }
+            lifecycleScope.launch { deletePlaceFromFavorite(product) }
         } else {
-            lifecycleScope.launch { addPlaceToFavorite(place) }
+            lifecycleScope.launch { addPlaceToFavorite(product) }
         }
     }
 
-    private suspend fun addPlaceToFavorite(place: Place) {
-        val responseMessage = placeActivityViewModel.addPlaceToUserFavoritePlaces(
-            VisitedPlace(pid = place.id),
+    private suspend fun addPlaceToFavorite(product: Product) {
+        val responseMessage = placeActivityViewModel.addProductToFavorites(
+            VisitedPlace(pid = product.id),
             accessToken
         )
         responseMessage?.let {
             add_to_favorite_image_view.setImageResource(R.drawable.ic_heart_filled)
-//                getPlaceDetails(place)
+//                getPlaceDetails(product)
                getRecommendedPlaces()
         }
     }
 
-    private suspend fun deletePlaceFromFavorite(place: Place) {
-        val responseMessage = placeActivityViewModel.deleteUserFavoritePlace(
-            place.id.toString(),
+    private suspend fun deletePlaceFromFavorite(product: Product) {
+        val responseMessage = placeActivityViewModel.deleteProductFromFavorites(
+            product.id.toString(),
             accessToken
         )
         responseMessage?.let {
             add_to_favorite_image_view.setImageResource(R.drawable.ic_heart)
-//                getPlaceDetails(place)
+//                getPlaceDetails(product)
             getRecommendedPlaces()
         }
     }
 
     private fun getRecommendedPlaces() {
         lifecycleScope.launch {
-            homeFragmentViewModel.getRecommendedPlaces(1, accessToken)
+            homeFragmentViewModel.getRecommendedProducts(1, accessToken)
                 ?.observe(viewLifecycleOwner) { recPlaces ->
                     recPlaces?.let {
                         fragmentBinding.homePlacesRecyclerView.apply {
@@ -200,12 +197,12 @@ class HomeFragment : Fragment(), RecommendedPlaceClickListener {
         }
     }
 
-    private suspend fun getPlaceDetails(place: Place) {
+    private suspend fun getPlaceDetails(product: Product) {
         val placeDetailsLiveData =
-            placeActivityViewModel.getPlaceDetails(place.id.toString(), accessToken)
+            placeActivityViewModel.getProductDetails(product.id.toString(), accessToken)
         placeDetailsLiveData?.observe(viewLifecycleOwner) { p ->
             p?.let {
-                recommendedPlaces.remove(place)
+                recommendedPlaces.remove(product)
                 recommendedPlaces.add(p)
                 fragmentBinding.homePlacesRecyclerView.apply {
                     layoutManager = GridLayoutManager(context, 2)

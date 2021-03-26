@@ -3,6 +3,7 @@ package com.example.graduationproject.di
 import android.content.Context
 import com.example.graduationproject.network.Api
 import com.example.graduationproject.network.RetrofitInstance
+import com.example.graduationproject.network.TokenAuthenticator
 import com.example.graduationproject.repository.*
 import com.example.graduationproject.viewmodel.*
 import org.koin.android.ext.koin.androidContext
@@ -19,6 +20,13 @@ val apiModule = module {
     single { provideApi() }
 }
 
+
+//val tokenAuthenticatorModule = module {
+//    fun provideTokenAuthenticatorModule(context: Context): TokenAuthenticator{
+//        return TokenAuthenticator( context)
+//    }
+//    single { provideTokenAuthenticatorModule(androidContext()) }
+//}
 
 
 val authenticationRepositoryModule = module {
@@ -64,4 +72,5 @@ val splashActivityViewModelModule = module { viewModel { SplashActivityViewModel
 val placeActivityViewModelModule = module { viewModel { PlaceActivityViewModel(get(), get(), get()) } }
 val addPlaceViewModelModule = module { viewModel { AddPlaceViewModel(get()) } }
 val userProfileActivityViewModelModule = module { viewModel { UserProfileViewModel(get()) } }
+val navigationDrawerViewModelModule = module { viewModel { NavigationDrawerViewModel(get()) } }
 

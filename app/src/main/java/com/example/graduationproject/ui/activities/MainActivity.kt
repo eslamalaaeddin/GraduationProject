@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.graduationproject.R
+import com.example.graduationproject.ui.bottomsheets.NavigationDrawerBottomSheet
 import com.example.graduationproject.ui.bottomsheets.SearchBottomSheet
 import com.example.graduationproject.ui.fragments.FavoritesFragment
 import com.example.graduationproject.ui.fragments.HomeFragment
@@ -43,12 +44,15 @@ class MainActivity : AppCompatActivity() {
                 R.id.favoritesFragment -> {
                     navigateToFavoritesFragment()
                 }
-                R.id.addPlaces -> {
-                    navigateToAddPlacesActivity()
-                }
-                R.id.searchFragment -> {
-//                    navigateToSearchFragment()
-                    navigateToSearchBottomSheet()
+//                R.id.addPlaces -> {
+//                    navigateToAddPlacesActivity()
+//                }
+//                R.id.searchFragment -> {
+////                    navigateToSearchFragment()
+//                    navigateToSearchBottomSheet()
+//                }
+                R.id.moreNavigationDrawer -> {
+                    openNavigationDrawerBottomSheet()
                 }
             }
             true
@@ -101,6 +105,11 @@ class MainActivity : AppCompatActivity() {
     private fun navigateToAddPlacesActivity() {
         val intent = Intent(this, AddPlaceActivity::class.java)
         startActivity(intent)
+    }
+
+    private fun openNavigationDrawerBottomSheet(){
+        val navigationDrawerBottomSheet = NavigationDrawerBottomSheet()
+        navigationDrawerBottomSheet.show(supportFragmentManager, navigationDrawerBottomSheet.tag)
     }
 
     override fun onBackPressed() {

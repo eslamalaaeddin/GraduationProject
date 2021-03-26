@@ -36,10 +36,6 @@ open class BaseRepository (context: Context){
         if(response.isSuccessful) {
             return Result.Success(response.body()!!)
         }
-        // return Result.Error(IOException("Code: ${response.code()} Error Occurred during getting safe Api result - $errorMessage"))
-        //instead of returning some constant error message i preferred to throw an HTTP exception,
-        //and handle it in each of BaseRepository derived class
-
         throw HttpException(response)
     }
 }
