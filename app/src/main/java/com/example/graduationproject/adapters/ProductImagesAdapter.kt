@@ -8,7 +8,7 @@ import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.graduationproject.R
-import com.example.graduationproject.model.products.PlaceImage
+import com.example.graduationproject.model.products.ProductImage
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.place_details_item_layout.view.*
 
@@ -19,7 +19,7 @@ const val BASE_PLACE_IMAGE_URL = "http://10.0.3.2:3000/images/products/"
 
 class PlaceImagesAdapter(
     private val placeId: String,
-    private var placeImages: List<PlaceImage>
+    private var productImages: List<ProductImage>
     ) :
     RecyclerView.Adapter<PlaceImagesAdapter.PlacesImagesViewHolder>() {
 
@@ -36,11 +36,11 @@ class PlaceImagesAdapter(
         }
 
 
-        fun bind(placeImage: PlaceImage) {
-            if (placeImage.name?.isNotEmpty() == true) {
-//                Picasso.get().load("${BASE_PLACE_IMAGE_URL}$placeId/${placeImage.name}").into(itemView.detail_place_image_view)
-                Picasso.get().load("${BASE_PLACE_IMAGE_URL}${placeImage.name}").into(itemView.detail_place_image_view)
-//                Picasso.get().load(placeImage.name).into(itemView.detail_place_image_view)
+        fun bind(productImage: ProductImage) {
+            if (productImage.name?.isNotEmpty() == true) {
+//                Picasso.get().load("${BASE_PLACE_IMAGE_URL}$placeId/${productImage.name}").into(itemView.detail_place_image_view)
+                Picasso.get().load("${BASE_PLACE_IMAGE_URL}${productImage.name}").into(itemView.detail_place_image_view)
+//                Picasso.get().load(productImage.name).into(itemView.detail_place_image_view)
             }
 
         }
@@ -68,11 +68,11 @@ class PlaceImagesAdapter(
     }
 
     override fun getItemCount(): Int {
-        return placeImages.size
+        return productImages.size
     }
 
     override fun onBindViewHolder(holder: PlacesImagesViewHolder, position: Int) {
-        val place = placeImages[holder.adapterPosition]
+        val place = productImages[holder.adapterPosition]
         holder.bind(place)
     }
 }

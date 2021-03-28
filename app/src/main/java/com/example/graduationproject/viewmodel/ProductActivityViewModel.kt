@@ -4,33 +4,33 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import com.example.graduationproject.model.ResponseMessage
-import com.example.graduationproject.model.comments.PlaceComment
+import com.example.graduationproject.model.comments.ProductComment
 import com.example.graduationproject.model.products.*
 import com.example.graduationproject.model.rating.Rate
 import com.example.graduationproject.repository.CommentsRepository
 import com.example.graduationproject.repository.PlacesRepository
 import com.example.graduationproject.repository.RatingRepository
 
-class PlaceActivityViewModel(
+class ProductActivityViewModel(
     private val commentsRepository: CommentsRepository,
     private val placesRepository: PlacesRepository,
     private val ratingRepository: RatingRepository
 ) : ViewModel() {
     var commentsLiveData : LiveData<List<Comment>?>? = null
-    var placeImagesLiveData: LiveData<List<PlaceImage>?>? = null
+    var productImagesLiveData: LiveData<List<ProductImage>?>? = null
     var productLiveData : LiveData<Product?>? = null
-    var favoritePlacesLiveData: LiveData<List<FavoritePlace>?>? = null
+    var favoritePlacesLiveData: LiveData<List<FavoriteProduct>?>? = null
     var userSpecificPlaceRate: Rate? = null
 
-//    suspend fun getPlaceImages(placeId: String, accessToken: String): LiveData<List<PlaceImage>?>? {
-//        if (placeImagesLiveData != null) {
-//            return placeImagesLiveData
+//    suspend fun getPlaceImages(placeId: String, accessToken: String): LiveData<List<ProductImage>?>? {
+//        if (productImagesLiveData != null) {
+//            return productImagesLiveData
 //        }
-//        placeImagesLiveData = liveData {
+//        productImagesLiveData = liveData {
 //            val data = placesRepository.getPlaceImages(placeId, accessToken)
 //            emit(data)
 //        }
-//        return placeImagesLiveData
+//        return productImagesLiveData
 //    }
 
     suspend fun getProductComments(placeId: String, page: Int, accessToken: String): LiveData<List<Comment>?>?{
@@ -58,7 +58,7 @@ class PlaceActivityViewModel(
         return productLiveData
     }
 
-    suspend fun getFavoriteProducts(accessToken: String): LiveData<List<FavoritePlace>?>?{
+    suspend fun getFavoriteProducts(accessToken: String): LiveData<List<FavoriteProduct>?>?{
         if (favoritePlacesLiveData != null) {
             return favoritePlacesLiveData
         }
@@ -78,18 +78,18 @@ class PlaceActivityViewModel(
     }
 
     suspend fun addCommentOnProduct(
-        placeComment: PlaceComment,
+        productComment: ProductComment,
         accessToken: String
     ): ResponseMessage? {
-        return commentsRepository.addCommentOnProduct(placeComment, accessToken)
+        return commentsRepository.addCommentOnProduct(productComment, accessToken)
     }
 
     suspend fun updateCommentOnProduct(
         commentId: String,
-        placeComment: PlaceComment,
+        productComment: ProductComment,
         accessToken: String
     ): ResponseMessage? {
-        return commentsRepository.updateCommentOnProduct(commentId, placeComment, accessToken)
+        return commentsRepository.updateCommentOnProduct(commentId, productComment, accessToken)
     }
 
     suspend fun deleteCommentFromProduct(commentId: String, accessToken: String): ResponseMessage? {
@@ -104,8 +104,8 @@ class PlaceActivityViewModel(
         return ratingRepository.updateRatingToProduct(rate, placeId, accessToken)
     }
 
-    suspend fun addProductToFavorites(favoritePlace: VisitedPlace, accessToken: String): ResponseMessage?{
-        return placesRepository.addProductToFavorites(favoritePlace, accessToken)
+    suspend fun addProductToFavorites(favoriteProduct: VisitedProduct, accessToken: String): ResponseMessage?{
+        return placesRepository.addProductToFavorites(favoriteProduct, accessToken)
     }
 
     suspend fun deleteProductFromFavorites(placeId: String, accessToken: String): ResponseMessage?{

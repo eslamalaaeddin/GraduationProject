@@ -1,6 +1,6 @@
 package com.example.graduationproject.model.products
 
-data class FavoritePlace(
+data class FavoriteProduct(
     var id: Long? = null,
     var image: String? = null,
     var name: String? = null

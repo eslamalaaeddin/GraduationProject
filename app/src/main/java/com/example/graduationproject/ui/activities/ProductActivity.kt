@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.observe
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -20,14 +21,14 @@ import com.example.graduationproject.R
 import com.example.graduationproject.adapters.CommentsAdapter
 import com.example.graduationproject.adapters.PlaceImagesAdapter
 import com.example.graduationproject.databinding.ActivityProductBinding
-import com.example.graduationproject.helper.listeners.CommentClickListener
-import com.example.graduationproject.model.comments.PlaceComment
+import com.example.graduationproject.helper.listeners.CommentListener
+import com.example.graduationproject.model.comments.ProductComment
 import com.example.graduationproject.model.products.Comment
-import com.example.graduationproject.model.products.PlaceImage
-import com.example.graduationproject.model.products.VisitedPlace
+import com.example.graduationproject.model.products.ProductImage
+import com.example.graduationproject.model.products.VisitedProduct
 import com.example.graduationproject.model.rating.Rate
-import com.example.graduationproject.ui.bottomsheets.CommentConfigurationsBottomSheet
-import com.example.graduationproject.viewmodel.PlaceActivityViewModel
+import com.example.graduationproject.ui.bottomsheets.CommentConfigsBottomSheet
+import com.example.graduationproject.viewmodel.ProductActivityViewModel
 import kotlinx.android.synthetic.main.activity_product.*
 import kotlinx.android.synthetic.main.place_details_item_layout.view.*
 import kotlinx.coroutines.launch
@@ -47,9 +48,9 @@ const val image6 =
 
 
 private const val TAG = "PlaceActivity"
-class PlaceActivity : AppCompatActivity(), CommentClickListener {
+class PlaceActivity : AppCompatActivity(), CommentListener {
     private lateinit var placeDetailsBinding: ActivityProductBinding
-    private val placeActivityViewModel by viewModel<PlaceActivityViewModel>()
+    private val placeActivityViewModel by viewModel<ProductActivityViewModel>()
     private var placeId: Long = 0
     private lateinit var accessToken :String
     var isPlaceFavorite = false
@@ -62,7 +63,6 @@ class PlaceActivity : AppCompatActivity(), CommentClickListener {
 
         setUpToolbar()
         placeId = intent.getLongExtra("placeId", 0)
-        Toast.makeText(this, "Product id: $placeId", Toast.LENGTH_SHORT).show()
         placeDetailsBinding.addRatingToPlaceBar.setOnRatingBarChangeListener { _, rating, _ ->
             val rate = Rate(rate = rating.toInt())
             if (placeRate == null) {
@@ -72,6 +72,7 @@ class PlaceActivity : AppCompatActivity(), CommentClickListener {
                 deleteRateFromPlace(rate)
             }
         }
+
 
         //Get place Rate by user or zero if null
         lifecycleScope.launch { getPlaceRate() }
@@ -89,35 +90,35 @@ class PlaceActivity : AppCompatActivity(), CommentClickListener {
             }
         }
 
-        snapHelper = object : LinearSnapHelper() {
-            override fun findTargetSnapPosition(
-                layoutManager: RecyclerView.LayoutManager,
-                velocityX: Int,
-                velocityY: Int
-            ): Int {
-                val centerView = findSnapView(layoutManager) ?: return RecyclerView.NO_POSITION
-                val position = layoutManager.getPosition(centerView)
-                var targetPosition = -1
-                if (layoutManager.canScrollHorizontally()) {
-                    targetPosition = if (velocityX < 0) {
-                        position - 1
-                    } else {
-                        position + 1
-                    }
-                }
-                if (layoutManager.canScrollVertically()) {
-                    targetPosition = if (velocityY < 0) {
-                        position - 1
-                    } else {
-                        position + 1
-                    }
-                }
-                val firstItem = 0
-                val lastItem = layoutManager.itemCount - 1
-                targetPosition = lastItem.coerceAtMost(targetPosition.coerceAtLeast(firstItem))
-                return targetPosition
-            }
-        }
+//        snapHelper = object : LinearSnapHelper() {
+//            override fun findTargetSnapPosition(
+//                layoutManager: RecyclerView.LayoutManager,
+//                velocityX: Int,
+//                velocityY: Int
+//            ): Int {
+//                val centerView = findSnapView(layoutManager) ?: return RecyclerView.NO_POSITION
+//                val position = layoutManager.getPosition(centerView)
+//                var targetPosition = -1
+//                if (layoutManager.canScrollHorizontally()) {
+//                    targetPosition = if (velocityX < 0) {
+//                        position - 1
+//                    } else {
+//                        position + 1
+//                    }
+//                }
+//                if (layoutManager.canScrollVertically()) {
+//                    targetPosition = if (velocityY < 0) {
+//                        position - 1
+//                    } else {
+//                        position + 1
+//                    }
+//                }
+//                val firstItem = 0
+//                val lastItem = layoutManager.itemCount - 1
+//                targetPosition = lastItem.coerceAtMost(targetPosition.coerceAtLeast(firstItem))
+//                return targetPosition
+//            }
+//        }
 
         //lifecycleScope.launch { getPlaceImages() }
 
@@ -178,9 +179,27 @@ class PlaceActivity : AppCompatActivity(), CommentClickListener {
     }
 
     override fun onMoreOnCommentClicked(comment: Comment) {
-        val commentConfigsBottomSheet = CommentConfigurationsBottomSheet(comment, placeId)
+        comment.rate = placeRate?.toFloat()
+        val commentConfigsBottomSheet = CommentConfigsBottomSheet(this, comment, placeId)
         commentConfigsBottomSheet.show(supportFragmentManager, commentConfigsBottomSheet.tag)
     }
+
+    //when user delete or add comment it will take effect immediately
+    override fun onCommentModified() {
+        lifecycleScope.launch {
+            getComments()
+        }
+    }
+
+    //when user rate or update rating it will take effect immediately
+    override fun onProductRated() {
+        lifecycleScope.launch {
+            getPlaceDetails()
+            getPlaceRate()
+            getComments()
+        }
+    }
+
 
     private suspend fun getPlaceDetails(){
             val placeDetailsLiveData =
@@ -200,11 +219,11 @@ class PlaceActivity : AppCompatActivity(), CommentClickListener {
                     }
 
                     placeDetailsBinding.placeImagesRecyclerView.apply {
-                        val placeImages = mutableListOf<PlaceImage>()
-                        placeImages.add(PlaceImage(name = place.image))
+                        val placeImages = mutableListOf<ProductImage>()
+                        placeImages.add(ProductImage(name = place.image))
                         layoutManager = LinearLayoutManager(this@PlaceActivity,LinearLayoutManager.HORIZONTAL,false)
                         adapter = PlaceImagesAdapter(placeId.toString(), placeImages)
-                        snapHelper.attachToRecyclerView(this)
+                        //snapHelper.attachToRecyclerView(this)
                     }
                 }
                 Log.i(TAG, "getPlaceDetails: $place" )
@@ -212,7 +231,7 @@ class PlaceActivity : AppCompatActivity(), CommentClickListener {
     }
 
     private fun addCommentAndUpdateComments(){
-        val placeComment = PlaceComment(
+        val placeComment = ProductComment(
             placeId = placeId,
             comment = placeDetailsBinding.placeCommentEditText.text.toString()
         )
@@ -247,8 +266,8 @@ class PlaceActivity : AppCompatActivity(), CommentClickListener {
     }
 
 //    private suspend fun getPlaceImages(){
-//        val placeImagesLiveData =  placeActivityViewModel.getPlaceImages(placeId.toString(), accessToken)
-//        placeImagesLiveData?.observe(this@PlaceActivity){placeImages ->
+//        val productImagesLiveData =  placeActivityViewModel.getPlaceImages(placeId.toString(), accessToken)
+//        productImagesLiveData?.observe(this@PlaceActivity){placeImages ->
 //            placeDetailsBinding.placeImagesRecyclerView.apply {
 //                layoutManager = LinearLayoutManager(this@PlaceActivity,LinearLayoutManager.HORIZONTAL,false)
 //                adapter = PlaceImagesAdapter(placeId.toString(),placeImages.orEmpty())
@@ -259,7 +278,7 @@ class PlaceActivity : AppCompatActivity(), CommentClickListener {
 
     private suspend fun addPlaceToFavorite(){
             val responseMessage = placeActivityViewModel.addProductToFavorites(
-                VisitedPlace(pid = placeId),
+                VisitedProduct(pid = placeId),
                 accessToken
             )
             responseMessage?.let {

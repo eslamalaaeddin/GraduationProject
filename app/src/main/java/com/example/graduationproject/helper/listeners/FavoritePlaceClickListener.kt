@@ -1,7 +1,7 @@
 package com.example.graduationproject.helper.listeners
 
-import com.example.graduationproject.model.products.FavoritePlace
+import com.example.graduationproject.model.products.FavoriteProduct
 
 interface FavoritePlaceClickListener {
-   fun onFavoriteIconClicked(favoritePlace: FavoritePlace)
+   fun onFavoriteIconClicked(favoriteProduct: FavoriteProduct)
 }

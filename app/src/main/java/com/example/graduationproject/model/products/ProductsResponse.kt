@@ -1,5 +1,5 @@
 package com.example.graduationproject.model.products
 
-data class PlacesResponse (
+data class ProductsResponse (
     val results : List<Product>
 )

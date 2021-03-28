@@ -1,13 +1,11 @@
 package com.example.graduationproject.ui.fragments
 
 import android.content.Intent
-import android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.core.app.ActivityCompat.finishAffinity
-import androidx.core.content.IntentCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -54,7 +52,7 @@ class VerificationFragment : Fragment(R.layout.fragment_verification) {
         }
         else {
 //            val email = "islamalaaeddin1998@gmail.com"
-            val email = SignUpFragment.getUserEmail(requireContext())
+            val email = SignUpFragment.getEmailFromPrefs(requireContext())
             Toast.makeText(requireContext(), "$email", Toast.LENGTH_SHORT).show()
 //            if(code.length < 4){
 //                Toast.makeText(requireContext(), "Verification code must contains four characters", Toast.LENGTH_SHORT).show()

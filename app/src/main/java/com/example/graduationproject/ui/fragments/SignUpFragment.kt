@@ -3,25 +3,19 @@ package com.example.graduationproject.ui.fragments
 import android.content.Context
 import android.os.Bundle
 import android.preference.PreferenceManager
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.graduationproject.R
-import com.example.graduationproject.model.ResponseMessage
 import com.example.graduationproject.model.authentication.SignUp
-import com.example.graduationproject.network.RetrofitInstance
 import com.example.graduationproject.viewmodel.SignUpViewModel
 import kotlinx.android.synthetic.main.fragment_up_sign.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 
 private const val TAG = "SignUpFragment"
 
@@ -64,15 +58,27 @@ class SignUpFragment : Fragment(R.layout.fragment_up_sign) {
         if (firstName.isEmpty() || lastName.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
             Toast.makeText(requireContext(), "Enter all information first", Toast.LENGTH_SHORT)
                 .show()
-        } else {
-            setUserEmail(requireContext(), email)
+        }
+        else if(!isEmailValid(email)){
+            Toast.makeText(requireContext(), "Enter valid email", Toast.LENGTH_SHORT)
+                .show()
+        }
+        else if (password != confirmPassword){
+            Toast.makeText(requireContext(), "Passwords don't match", Toast.LENGTH_SHORT).show()
+        }
+        else {
+            saveEmailInPrefs(requireContext(), email)
             val signUp = SignUp(firstName, lastName, email, password)
             lifecycleScope.launch {
                val responseMessage = signUpViewModel.signUp(signUp)
-//               if(responseMessage != null){
-                   Toast.makeText(requireContext(), "Account created successfully", Toast.LENGTH_SHORT).show()
+               if(responseMessage != null){
+                   Toast.makeText(
+                       requireContext(),
+                       "Account created successfully",
+                       Toast.LENGTH_SHORT
+                   ).show()
                    navigateToVerificationFragment()
-//               }
+               }
             }
 
         }
@@ -84,17 +90,24 @@ class SignUpFragment : Fragment(R.layout.fragment_up_sign) {
     }
 
     companion object{
-        fun setUserEmail(context: Context?, userEmail: String) {
+        fun saveEmailInPrefs(context: Context?, userEmail: String) {
             PreferenceManager.getDefaultSharedPreferences(context)
                 .edit()
                 .putString(USER_EMAIL, userEmail)
                 .apply()
         }
 
-        fun getUserEmail(context: Context?): String? {
+        fun getEmailFromPrefs(context: Context?): String? {
             val prefs = PreferenceManager.getDefaultSharedPreferences(context)
             return prefs.getString(USER_EMAIL, "")
         }
+    }
+
+    private fun isEmailValid(email: String?): Boolean {
+        val expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$"
+        val pattern: Pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE)
+        val matcher: Matcher = pattern.matcher(email)
+        return matcher.matches()
     }
 
 }

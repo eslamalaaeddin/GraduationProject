@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
 import com.example.graduationproject.R
-import com.example.graduationproject.helper.listeners.CommentClickListener
+import com.example.graduationproject.helper.listeners.CommentListener
 import com.example.graduationproject.model.products.Comment
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
@@ -17,7 +17,7 @@ private const val BASE_IMAGE_URL = "http://10.0.3.2:3000/images/users/"
 class CommentsAdapter(
     private val userId: Long,
     private val comments: List<Comment>,
-    private val commentClickListener: CommentClickListener
+    private val commentListener: CommentListener
     ) : RecyclerView.Adapter<CommentsAdapter.CommentsHolder>() {
     inner class CommentsHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener, View.OnLongClickListener {
         private val personNameTextView : TextView = itemView.findViewById(R.id.comment_person_name_text_view)
@@ -31,7 +31,7 @@ class CommentsAdapter(
         init {
             moreOnCommentButton.setOnClickListener {
                 val comment = comments[adapterPosition]
-                commentClickListener.onMoreOnCommentClicked(comment)
+                commentListener.onMoreOnCommentClicked(comment)
             }
             itemView.setOnClickListener(this)
             itemView.setOnLongClickListener(this)

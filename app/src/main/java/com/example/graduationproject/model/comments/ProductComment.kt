@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 import java.text.SimpleDateFormat
 import java.util.*
 
-data class PlaceComment(
+data class ProductComment(
     @SerializedName("pid")
     var placeId: Long? = null,
     var comment: String? = null

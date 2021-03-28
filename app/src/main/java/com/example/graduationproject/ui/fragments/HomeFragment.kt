@@ -13,10 +13,10 @@ import com.example.graduationproject.adapters.RecommendedPlacesAdapter
 import com.example.graduationproject.databinding.FragmentHomeBinding
 import com.example.graduationproject.helper.listeners.RecommendedPlaceClickListener
 import com.example.graduationproject.model.products.Product
-import com.example.graduationproject.model.products.VisitedPlace
+import com.example.graduationproject.model.products.VisitedProduct
 import com.example.graduationproject.ui.activities.SplashActivity
 import com.example.graduationproject.viewmodel.HomeFragmentViewModel
-import com.example.graduationproject.viewmodel.PlaceActivityViewModel
+import com.example.graduationproject.viewmodel.ProductActivityViewModel
 import kotlinx.android.synthetic.main.activity_product.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.coroutines.launch
@@ -26,7 +26,7 @@ private const val TAG = "HomeFragment"
 
 class HomeFragment : Fragment(), RecommendedPlaceClickListener {
     private val homeFragmentViewModel by viewModel<HomeFragmentViewModel>()
-    private val placeActivityViewModel by viewModel<PlaceActivityViewModel>()
+    private val placeActivityViewModel by viewModel<ProductActivityViewModel>()
     private lateinit var fragmentBinding: FragmentHomeBinding
     var recommendedPlaces = mutableListOf<Product>()
     private var accessToken = ""
@@ -112,7 +112,7 @@ class HomeFragment : Fragment(), RecommendedPlaceClickListener {
 //        }
 
 //        lifecycleScope.launch {
-//            Log.i(TAG, "ISLAM onViewCreated: ${homeFragmentViewModel.addPlaceToUserVisitedPlaces(VisitedPlace(123), accessToken).message.toString()}")
+//            Log.i(TAG, "ISLAM onViewCreated: ${homeFragmentViewModel.addPlaceToUserVisitedPlaces(VisitedProduct(123), accessToken).message.toString()}")
 //        }
 
 //        lifecycleScope.launch {
@@ -127,7 +127,7 @@ class HomeFragment : Fragment(), RecommendedPlaceClickListener {
 //        }
 
 //        lifecycleScope.launch {
-//            //homeFragmentViewModel.addPlaceToUserFavoritePlaces(FavoritePlace())
+//            //homeFragmentViewModel.addPlaceToUserFavoritePlaces(FavoriteProduct())
 //            /*
 //                I HAVE TO SOLVE BODY PROBLEM ==> WATCH FORM URL ENCODED
 //             */
@@ -158,7 +158,7 @@ class HomeFragment : Fragment(), RecommendedPlaceClickListener {
 
     private suspend fun addPlaceToFavorite(product: Product) {
         val responseMessage = placeActivityViewModel.addProductToFavorites(
-            VisitedPlace(pid = product.id),
+            VisitedProduct(pid = product.id),
             accessToken
         )
         responseMessage?.let {

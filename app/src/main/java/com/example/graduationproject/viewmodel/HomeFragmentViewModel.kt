@@ -44,7 +44,7 @@ class HomeFragmentViewModel(private val placesRepository: PlacesRepository): Vie
 //        }
 //    }
 
-//    suspend fun addPlaceToUserVisitedPlaces(visitedPlace: VisitedPlace, accessToken: String): ResponseMessage?{
+//    suspend fun addPlaceToUserVisitedPlaces(visitedPlace: VisitedProduct, accessToken: String): ResponseMessage?{
 //        return placesRepository.addPlaceToUserVisitedPlaces(visitedPlace, accessToken)
 //    }
 //

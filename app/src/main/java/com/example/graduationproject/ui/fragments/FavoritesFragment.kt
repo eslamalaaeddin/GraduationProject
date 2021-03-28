@@ -11,18 +11,18 @@ import com.example.graduationproject.R
 import com.example.graduationproject.adapters.FavoritePlacesAdapter
 import com.example.graduationproject.databinding.FragmentFavoritesBinding
 import com.example.graduationproject.helper.listeners.FavoritePlaceClickListener
-import com.example.graduationproject.model.products.FavoritePlace
+import com.example.graduationproject.model.products.FavoriteProduct
 import com.example.graduationproject.ui.activities.SplashActivity
-import com.example.graduationproject.viewmodel.PlaceActivityViewModel
+import com.example.graduationproject.viewmodel.ProductActivityViewModel
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 private const val TAG = "FavoritesFragment"
 class FavoritesFragment: Fragment(), FavoritePlaceClickListener {
     private lateinit var fragmentFavoritesBinding: FragmentFavoritesBinding
-    private val placeActivityViewModel by viewModel<PlaceActivityViewModel>()
+    private val placeActivityViewModel by viewModel<ProductActivityViewModel>()
     private lateinit var accessToken: String
-    private var favoritePlaces = mutableListOf<FavoritePlace>()
+    private var favoritePlaces = mutableListOf<FavoriteProduct>()
     private lateinit var favoritePlacesAdapter: FavoritePlacesAdapter
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,13 +46,19 @@ class FavoritesFragment: Fragment(), FavoritePlaceClickListener {
             val favoritePlacesLiveData = placeActivityViewModel.getFavoriteProducts(accessToken)
             favoritePlacesLiveData?.observe(viewLifecycleOwner){favPlaces ->
                 favPlaces?.let {
-                    fragmentFavoritesBinding.homePlacesRecyclerView.apply {
-                        layoutManager = LinearLayoutManager(requireContext())
-                        favoritePlacesAdapter = FavoritePlacesAdapter(
-                            favPlaces.sortedBy { it.id },
-                            this@FavoritesFragment
-                        )
-                        adapter = favoritePlacesAdapter
+                    if (favPlaces.isNullOrEmpty()){
+                        fragmentFavoritesBinding.noFavoriteProductsTextView.visibility = View.VISIBLE
+                    }
+                    else{
+                        fragmentFavoritesBinding.noFavoriteProductsTextView.visibility = View.GONE
+                        fragmentFavoritesBinding.favoriteProductsRecyclerView.apply {
+                            layoutManager = LinearLayoutManager(requireContext())
+                            favoritePlacesAdapter = FavoritePlacesAdapter(
+                                favPlaces.sortedBy { it.id },
+                                this@FavoritesFragment
+                            )
+                            adapter = favoritePlacesAdapter
+                        }
                     }
                 }
 
@@ -61,8 +67,8 @@ class FavoritesFragment: Fragment(), FavoritePlaceClickListener {
 
     }
 
-    override fun onFavoriteIconClicked(favoritePlace: FavoritePlace) {
-        favoritePlaces.remove(favoritePlace)
+    override fun onFavoriteIconClicked(favoriteProduct: FavoriteProduct) {
+        favoritePlaces.remove(favoriteProduct)
         favoritePlacesAdapter.notifyDataSetChanged()
     }
 

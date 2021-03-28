@@ -2,7 +2,7 @@ package com.example.graduationproject.network
 
 import com.example.graduationproject.model.ResponseMessage
 import com.example.graduationproject.model.authentication.*
-import com.example.graduationproject.model.comments.PlaceComment
+import com.example.graduationproject.model.comments.ProductComment
 import com.example.graduationproject.model.products.*
 import com.example.graduationproject.model.rating.Rate
 import com.example.graduationproject.model.user.User
@@ -73,7 +73,7 @@ interface Api {
     suspend fun getPlaceImages(
         @Path("id") placeId: String,
         @Header("Authorization") accessToken: String
-    ): Response<List<PlaceImage>>
+    ): Response<List<ProductImage>>
 
 
 
@@ -95,7 +95,7 @@ interface Api {
 
 //    @POST("places/visited")
 //    suspend fun addPlaceToUserVisitedPlaces(
-//        @Body visitedPlace: VisitedPlace,
+//        @Body visitedPlace: VisitedProduct,
 //        @Header("Authorization") accessToken: String
 //    ): Response<ResponseMessage>
 //
@@ -111,12 +111,12 @@ interface Api {
     @GET("products/fav")
     suspend fun getFavoriteProducts(
         @Header("Authorization") accessToken: String
-    ): Response<List<FavoritePlace>>
+    ): Response<List<FavoriteProduct>>
 
-    //Here i used VisitedPlace as the body object as it has the field that i want
+    //Here i used VisitedProduct as the body object as it has the field that i want
     @POST("products/fav")
     suspend fun addPlaceToUserFavoritePlaces(
-        @Body favoritePlace: VisitedPlace,
+        @Body favoriteProduct: VisitedProduct,
         @Header("Authorization") accessToken: String
     ): Response<ResponseMessage>
 
@@ -139,14 +139,14 @@ interface Api {
 
     @POST("comments")
     suspend fun addCommentOnProduct(
-        @Body placeComment: PlaceComment,
+        @Body productComment: ProductComment,
         @Header("Authorization") accessToken: String
     ): Response<ResponseMessage>
 
     @PUT("comments/{id}")
     suspend fun updateCommentOnProduct(
         @Path("id") commentId: String,
-        @Body placeComment: PlaceComment,
+        @Body productComment: ProductComment,
         @Header("Authorization") accessToken: String
     ): Response<ResponseMessage>
 
