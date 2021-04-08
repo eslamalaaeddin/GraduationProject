@@ -32,14 +32,11 @@
                 app:contentScrim="?attr/colorPrimary"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/place_images_recycler_view"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         app:layout_collapseMode="parallax" />
-
-
 
                 <androidx.appcompat.widget.Toolbar
                     android:id="@+id/main_toolbar"
@@ -113,6 +110,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:paddingStart="4dp"
+                            android:textStyle="bold"
                             android:textColor="@color/black"
                             android:textSize="18sp"
                             tools:text="Place name" />
@@ -123,7 +121,7 @@
                             android:layout_height="wrap_content"
                             android:paddingStart="4dp"
                             android:textColor="@color/black"
-                            android:textSize="18sp"
+                            android:textSize="14sp"
                             tools:text="THis is a description of this place made by islam alaaeddin" />
 
                         <RatingBar

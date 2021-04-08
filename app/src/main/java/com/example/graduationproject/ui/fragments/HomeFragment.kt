@@ -50,7 +50,7 @@ class HomeFragment : Fragment(), RecommendedProductClickListener {
         super.onViewCreated(view, savedInstanceState)
         accessToken = SplashActivity.getAccessToken(requireContext()).orEmpty()
 
-        android:nestedScrollingEnabled="false"
+//        android:nestedScrollingEnabled="false"
 
     }
 

@@ -36,11 +36,13 @@ class RecommendedPlacesAdapter(
 
             fun bind(product: Product){
                 itemView.home_place_name_text_view.text = product.name
-                itemView.home_rating_bar.rating = product.rating?.toFloat() ?: 0F
+//                overallProductRate = rate?.toFloat() ?: 0F
+                Log.i(TAG, "PPPP bind: $product")
+                itemView.home_rating_bar.rating = product.rating ?: 0F
 //                val placeImageUrl = "$BASE_IMAGE_URL${product.id}/${product.image}"
                 val placeImageUrl = "$BASE_PRODUCT_IMAGE_URL/${product.image}"
                 Log.i(TAG, "bind: $placeImageUrl")
-                Picasso.get().load(placeImageUrl).into(itemView.place_image_view)
+                Picasso.get().load(product.image).into(itemView.place_image_view)
                 if (product.isFavorite == 1){
                     itemView.add_to_favorite_image_view.setImageResource(R.drawable.ic_heart_filled)
                 }

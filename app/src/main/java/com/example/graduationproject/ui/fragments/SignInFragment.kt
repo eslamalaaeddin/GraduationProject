@@ -1,9 +1,11 @@
 package com.example.graduationproject.ui.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -11,7 +13,9 @@ import com.example.graduationproject.R
 import com.example.graduationproject.model.authentication.Login
 import com.example.graduationproject.model.authentication.RefreshToken
 import com.example.graduationproject.model.authentication.Token
+import com.example.graduationproject.model.authentication.Verify
 import com.example.graduationproject.network.RetrofitInstance
+import com.example.graduationproject.ui.activities.MainActivity
 import com.example.graduationproject.ui.activities.SplashActivity
 import com.example.graduationproject.viewmodel.LoginViewModel
 import com.example.graduationproject.viewmodel.NavigationDrawerViewModel
@@ -33,7 +37,6 @@ class SignInFragment : Fragment(R.layout.fragment_in_sign) {
         super.onViewCreated(view, savedInstanceState)
 
         mail_edit_text.setText(SplashActivity.getEmailFromPrefs(requireContext()))
-//        password_edit_text.setText("123456")
 
         doNotHaveAccountTextView.setOnClickListener {
             val action = SignInFragmentDirections.actionSignInFragmentToSignUpFragment()
@@ -70,8 +73,6 @@ class SignInFragment : Fragment(R.layout.fragment_in_sign) {
                     val user = navigationDrawerViewModel.getUser(accessToken)
                     user?.let {
                         val userId : Long = it.id ?: 0
-                        Log.i(TAG, "qqqqq validateVerificationCodeAndNavigateToMainActivity: $user")
-                        Log.i(TAG, "qqqqq validateVerificationCodeAndNavigateToMainActivity: $userId")
                         saveUserAsLoggedInAndSaveTokens(
                             accessToken,
                             refreshToken,
@@ -112,4 +113,5 @@ class SignInFragment : Fragment(R.layout.fragment_in_sign) {
         findNavController().navigate(action)
         activity?.finish()
     }
+
 }

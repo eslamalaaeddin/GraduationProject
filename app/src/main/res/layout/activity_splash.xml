@@ -13,6 +13,6 @@
         android:layout_width="128dp"
         android:layout_height="128dp"
         android:layout_gravity="center"
-        android:src="@drawable/ic_travel_splash"/>
+        android:src="@drawable/ic_splash_logo"/>
 
 </FrameLayout>

@@ -61,7 +61,10 @@ class SplashActivity : AppCompatActivity() {
                 }
 
                 signedInORSignedUpVerified -> {
-                    tokenizeUser(accessTokenExTime, refreshTokenExTime)
+//                    tokenizeUser(accessTokenExTime, refreshTokenExTime)
+                    startActivity(Intent(this, MainActivity::class.java))
+                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+                    finish()
                 }
                 welcomed -> {
                     startActivity(Intent(this, RegisterActivity::class.java))
@@ -246,7 +249,7 @@ class SplashActivity : AppCompatActivity() {
     private fun isAccessTokenExpired(accessTokenTimestamp: Long): Boolean {
         val currentTimeInSeconds = System.currentTimeMillis() / 1000
         Log.i(TAG, "ISLAM isAccessTokenExpired: Current time $currentTimeInSeconds")
-        Log.i(TAG, "ISLAM isAccessTokenExpired: Expiration time  ${accessTokenTimestamp}")
+        Log.i(TAG, "ISLAM isAccessTokenExpired: Expiration time  $accessTokenTimestamp")
         Log.i(TAG, "ISLAM isAccessTokenExpired: Differenece time  ${accessTokenTimestamp - currentTimeInSeconds}")
         return currentTimeInSeconds - accessTokenTimestamp >= 0
 //        return (currentTimeInSeconds - (accessTokenTimestamp + 7200)) >= 0

@@ -1,19 +1,15 @@
 package com.example.graduationproject.helper
 
 object Constants {
+
+//    private const val HOST = "http://10.0.3.2:" //GenyMotion
+    private const val HOST = "http://10.0.2.2:" //Emulator
+//    private const val url = "http://rec-sys.ddns.net:5000/api/"
+//    private const val HOST = "http://rec-sys.ddns.net:"
     private const val PORT = 5000
-    private const val HOST = "http://10.0.3.2:"
     const val BASE_USER_IMAGE_URL = "$HOST$PORT/images/users/"
     const val BASE_PRODUCT_IMAGE_URL = "$HOST$PORT/images/products/"
     const val BASE_URL = "$HOST$PORT/api/" //GenyMotion
-    //const val BASE_URL = "$HOST$PORT/api/" //Emulator
-
-
-    ///Splach
-    const val accessTokenExpirationTime = "Sun, 27 Dec 2020 15:42:25 GMT"
-    const val refreshTokenExpirationTime = "Sat, 12 Dec 2020 15:27:25 GMT"
-    const val MINUTES_15 = 900
-    const val DAYS_14 = 1209600
 
 
     const val SIGNED_UP_VERIFIED_SIGNED_IN = "signed up verified signed in"

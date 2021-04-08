@@ -62,7 +62,9 @@
                     android:layout_width="24dp"
                     android:layout_height="match_parent"
                     style="@style/Widget.AppCompat.Button.Borderless.Colored"
-                    android:src="@drawable/ic_more_colored"
+                    android:src="@drawable/ic_more__comment"
+                    android:visibility="visible"
+                    android:tint="@color/colorPrimary"
                     android:layout_gravity="end|center"/>
 
             </LinearLayout>

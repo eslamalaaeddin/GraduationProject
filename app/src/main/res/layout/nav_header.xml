@@ -24,7 +24,7 @@
             android:cropToPadding="true"
             android:visibility="visible"
             app:civ_border_color="@android:color/transparent"
-            app:srcCompat="@drawable/cat" />
+            app:srcCompat="@drawable/avatar" />
 
         <TextView
             android:layout_width="wrap_content"

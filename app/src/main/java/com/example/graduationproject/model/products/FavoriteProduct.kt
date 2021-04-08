@@ -4,5 +4,5 @@ data class FavoriteProduct(
     var id: Long? = null,
     var image: String? = null,
     var name: String? = null,
-    var rating: Double? = null
+    var rating: Float? = null
 )

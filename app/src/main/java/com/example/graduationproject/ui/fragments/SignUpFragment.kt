@@ -1,15 +1,20 @@
 package com.example.graduationproject.ui.fragments
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.graduationproject.R
 import com.example.graduationproject.model.authentication.SignUp
+import com.example.graduationproject.model.authentication.Verify
+import com.example.graduationproject.ui.activities.MainActivity
 import com.example.graduationproject.ui.activities.SplashActivity
 import com.example.graduationproject.viewmodel.NavigationDrawerViewModel
 import com.example.graduationproject.viewmodel.SignUpViewModel
@@ -91,15 +96,13 @@ class SignUpFragment : Fragment(R.layout.fragment_up_sign) {
         findNavController().navigate(action)
     }
 
-    companion object{
-
-    }
-
     private fun isEmailValid(email: String?): Boolean {
         val expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$"
         val pattern: Pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE)
         val matcher: Matcher = pattern.matcher(email)
         return matcher.matches()
     }
+
+
 
 }

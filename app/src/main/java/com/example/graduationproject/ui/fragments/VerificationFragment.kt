@@ -52,14 +52,7 @@ class VerificationFragment : Fragment(R.layout.fragment_verification) {
             Toast.makeText(requireContext(), "Enter verification code first", Toast.LENGTH_SHORT).show()
         }
         else {
-//            val email = "islamalaaeddin1998@gmail.com"
             val email = SplashActivity.getEmailFromPrefs(requireContext())
-//            Toast.makeText(requireContext(), "$email", Toast.LENGTH_SHORT).show()
-//            if(code.length < 4){
-//                Toast.makeText(requireContext(), "Verification code must contains four characters", Toast.LENGTH_SHORT).show()
-//            }
-//            else{
-//                val verCode = code.trim().substring(0,4).toInt()
                 Log.i(TAG, "AHMAD validateVerificationCodeAndNavigateToMainActivity: $code")
                 val verify = Verify(email, code.trim().toInt())
             Log.i(TAG, "PPPP: $verify")

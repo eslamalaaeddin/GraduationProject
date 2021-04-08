@@ -172,8 +172,8 @@ class PlaceActivity : AppCompatActivity(), CommentListener {
 
                     val rate =  it.rating
                     Log.i(TAG, "PPPP getProductDetails: $rate")
-                    placeDetailsBinding.detailsPlaceRatingBar.rating = rate?.toFloat() ?: 0F
-                    overallProductRate = rate?.toFloat() ?: 0F
+                    placeDetailsBinding.detailsPlaceRatingBar.rating = rate ?: 0F
+                    overallProductRate = rate ?: 0F
                     Log.i(TAG, "PPPP OverallRATE: ${overallProductRate}")
 
                     isPlaceFavorite = it.isFavorite == 1

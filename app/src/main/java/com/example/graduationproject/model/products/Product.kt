@@ -9,7 +9,7 @@ data class Product(
     @SerializedName("is_favorite")
     var isFavorite: Int? = null,
     var name: String? = null,
-    var rating: Double? = null,
+    var rating: Float? = null,
 //    var city: String? = null,
 //    var country: String? = null,
 //    @SerializedName("lat")
