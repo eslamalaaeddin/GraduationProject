@@ -13,6 +13,15 @@ import android.view.WindowManager
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import com.example.graduationproject.R
+import com.example.graduationproject.helper.Constants.ACCESS_TOKEN
+import com.example.graduationproject.helper.Constants.ACCESS_TOKEN_EX_TIME
+import com.example.graduationproject.helper.Constants.LOGGED_OUT
+import com.example.graduationproject.helper.Constants.REFRESH_TOKEN
+import com.example.graduationproject.helper.Constants.REFRESH_TOKEN_EX_TIME
+import com.example.graduationproject.helper.Constants.SIGNED_UP_VERIFIED_SIGNED_IN
+import com.example.graduationproject.helper.Constants.USER_EMAIL
+import com.example.graduationproject.helper.Constants.USER_ID
+import com.example.graduationproject.helper.Constants.WELCOMED
 import com.example.graduationproject.model.authentication.RefreshToken
 import com.example.graduationproject.viewmodel.SplashActivityViewModel
 import kotlinx.coroutines.launch
@@ -22,18 +31,7 @@ import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
-const val accessTokenExpirationTime = "Sun, 27 Dec 2020 15:42:25 GMT"
-const val refreshTokenExpirationTime = "Sat, 12 Dec 2020 15:27:25 GMT"
-const val MINUTES_15 = 900
-const val DAYS_14 = 1209600
 
-
-private const val SIGNED_UP_VERIFIED_SIGNED_IN = "signed up verified signed in"
-private const val WELCOMED = "welcomed"
-private const val ACCESS_TOKEN = "access token"
-private const val ACCESS_TOKEN_EX_TIME = "access token expiration time"
-private const val REFRESH_TOKEN = "refresh token"
-private const val REFRESH_TOKEN_EX_TIME = "refresh token expiration time"
 
 private const val TAG = "SplashActivity"
 
@@ -48,12 +46,20 @@ class SplashActivity : AppCompatActivity() {
 
         val signedInORSignedUpVerified = getSignedIn(this)
         val welcomed = getWelcomed(this)
+        val loggedOut  = getLoggedOut(this)
 
         val accessTokenExTime = getAccessTokenExpirationTime(this).orEmpty()
         val refreshTokenExTime = getRefreshTokenExpirationTime(this).orEmpty()
 
         Handler().postDelayed({
             when {
+                loggedOut -> {
+//                    Toast.makeText(this, "Logged out", Toast.LENGTH_SHORT).show()
+                    startActivity(Intent(this, RegisterActivity::class.java))
+                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+                    finish()
+                }
+
                 signedInORSignedUpVerified -> {
                     tokenizeUser(accessTokenExTime, refreshTokenExTime)
                 }
@@ -62,6 +68,7 @@ class SplashActivity : AppCompatActivity() {
                     overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
                     finish()
                 }
+
                 else -> {
                     setWelcomed(this, true)
                     startActivity(Intent(this, WelcomeActivity::class.java))
@@ -104,6 +111,18 @@ class SplashActivity : AppCompatActivity() {
                 .apply()
         }
 
+        fun setLoggedOut(context: Context?, state: Boolean) {
+            PreferenceManager.getDefaultSharedPreferences(context)
+                .edit()
+                .putBoolean(LOGGED_OUT, state)
+                .apply()
+        }
+
+        fun getLoggedOut(context: Context?): Boolean {
+            val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+            return prefs.getBoolean(LOGGED_OUT, false)
+        }
+
         fun setWelcomed(context: Context?, state: Boolean) {
             PreferenceManager.getDefaultSharedPreferences(context)
                 .edit()
@@ -116,6 +135,30 @@ class SplashActivity : AppCompatActivity() {
                 .edit()
                 .putString(ACCESS_TOKEN, accessToken)
                 .apply()
+        }
+
+        fun setUserId(context: Context?, userId: Long) {
+            PreferenceManager.getDefaultSharedPreferences(context)
+                .edit()
+                .putLong(USER_ID, userId)
+                .apply()
+        }
+
+        fun getUserId(context: Context?): Long {
+            val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+            return prefs.getLong(USER_ID, 0)
+        }
+
+        fun saveEmailInPrefs(context: Context?, userEmail: String) {
+            PreferenceManager.getDefaultSharedPreferences(context)
+                .edit()
+                .putString(USER_EMAIL, userEmail)
+                .apply()
+        }
+
+        fun getEmailFromPrefs(context: Context?): String? {
+            val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+            return prefs.getString(USER_EMAIL, "")
         }
 
         fun setAccessTokenExpirationTime(context: Context?, accessTokenExTime: String) {
@@ -166,25 +209,26 @@ class SplashActivity : AppCompatActivity() {
         val accessTokenExTimestamp = convertServerTimeToTimestamp(accessTokenExTime.orEmpty())
         val refreshTokenExTimestamp = convertServerTimeToTimestamp(refreshTokenExTime.orEmpty())
 
-        Toast.makeText(this, "${isAccessTokenExpired(accessTokenExTimestamp)}", Toast.LENGTH_SHORT)
-            .show()
-        if (isAccessTokenExpired(accessTokenExTimestamp)) {
-            if (isRefreshTokenExpired(refreshTokenExTimestamp)) {
-                Toast.makeText(this, "Navigate to Login", Toast.LENGTH_SHORT).show()
-                startActivity(Intent(this, RegisterActivity::class.java))
+//        Toast.makeText(this, "${isAccessTokenExpired(accessTokenExTimestamp)}", Toast.LENGTH_SHORT).show()
+        if (!getAccessToken(this).isNullOrEmpty()) {
+            if (isAccessTokenExpired(accessTokenExTimestamp)) {
+                if (isRefreshTokenExpired(refreshTokenExTimestamp)) {
+                    Toast.makeText(this, "Navigate to Login", Toast.LENGTH_SHORT).show()
+                    startActivity(Intent(this, RegisterActivity::class.java))
+                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+                    finish()
+                } else {
+                    val oldAccessToken = getAccessToken(this).toString()
+                    val refreshToken = getRefreshToken(this).toString()
+                    Log.i(TAG, "TOKEN old access token: $oldAccessToken")
+                    Log.i(TAG, "TOKEN refresh token: $refreshToken")
+                    getNewAccessToken(oldAccessToken, refreshToken)
+                }
+            } else {
+                startActivity(Intent(this, MainActivity::class.java))
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
                 finish()
-            } else {
-                val oldAccessToken = getAccessToken(this).toString()
-                val refreshToken = getRefreshToken(this).toString()
-                Log.i(TAG, "TOKEN old access token: $oldAccessToken")
-                Log.i(TAG, "TOKEN refresh token: $refreshToken")
-                getNewAccessToken(oldAccessToken, refreshToken)
             }
-        } else {
-            startActivity(Intent(this, MainActivity::class.java))
-            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
-            finish()
         }
     }
 

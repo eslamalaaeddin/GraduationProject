@@ -47,10 +47,12 @@ class MainActivity : AppCompatActivity() {
 //                R.id.addPlaces -> {
 //                    navigateToAddPlacesActivity()
 //                }
-//                R.id.searchFragment -> {
-////                    navigateToSearchFragment()
+                R.id.logOutIcon -> {
+//                    navigateToSearchFragment()
 //                    navigateToSearchBottomSheet()
-//                }
+//                    updateStateAndLogOut()
+                    showLogoutDialog()
+                }
                 R.id.moreNavigationDrawer -> {
                     openNavigationDrawerBottomSheet()
                 }
@@ -61,9 +63,30 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    override fun onStart() {
-        super.onStart()
+    private fun showLogoutDialog() {
+        val dialog = Dialog(this)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(true)
+        dialog.setContentView(R.layout.logout_dialog)
 
+        val cancelButton = dialog.findViewById(R.id.cancelLogoutButton) as Button
+        val logoutButton = dialog.findViewById(R.id.confirmLogoutButton) as Button
+        cancelButton.setOnClickListener {
+            dialog.dismiss()
+        }
+        logoutButton.setOnClickListener {
+            updateStateAndLogOut()
+        }
+        dialog.show()
+
+    }
+
+    private fun updateStateAndLogOut() {
+        SplashActivity.setLoggedOut(this, true)
+        SplashActivity.setAccessToken(this, "")
+        SplashActivity.setRefreshToken(this, "")
+        startActivity(Intent(this, RegisterActivity::class.java))
+        finish()
     }
 
     private fun setupBottomNavMenu(navController: NavController) {
@@ -102,10 +125,6 @@ class MainActivity : AppCompatActivity() {
         searchBottomSheet.show(supportFragmentManager, searchBottomSheet.tag)
     }
 
-    private fun navigateToAddPlacesActivity() {
-        val intent = Intent(this, AddPlaceActivity::class.java)
-        startActivity(intent)
-    }
 
     private fun openNavigationDrawerBottomSheet(){
         val navigationDrawerBottomSheet = NavigationDrawerBottomSheet()

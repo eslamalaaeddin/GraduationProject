@@ -29,6 +29,6 @@
     <item android:title="Log out"
         android:id="@+id/log_out"
         app:showAsAction="always"
-        android:icon="@drawable/ic_logout"
+        android:icon="@drawable/ic_logout_colored"
         />
 </menu>

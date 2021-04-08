@@ -1,12 +1,12 @@
 package com.example.graduationproject.ui.activities
 
+import android.R.attr
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -16,9 +16,8 @@ import com.example.graduationproject.databinding.ActivityTestingBinding
 import com.example.graduationproject.helper.FileUtils
 import com.example.graduationproject.network.RetrofitInstance
 import com.example.graduationproject.viewmodel.UserProfileViewModel
-import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_testing.*
-import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
@@ -26,9 +25,8 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.http.Multipart
+import java.io.File
 import java.io.IOException
-import java.util.jar.Manifest
 
 
 private const val IMAGE_REQUEST_CODE = 123
@@ -47,8 +45,16 @@ class TestingActivity : AppCompatActivity() {
 
         accessToken = SplashActivity.getAccessToken(this).orEmpty()
 
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE), MY_PERMISSION_REQUEST)
+
+        if (ContextCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.READ_EXTERNAL_STORAGE
+            ) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE),
+                MY_PERMISSION_REQUEST
+            )
         }
 
         selectProfilePicture.setOnClickListener {
@@ -70,10 +76,9 @@ class TestingActivity : AppCompatActivity() {
     ) {
         when(requestCode){
             MY_PERMISSION_REQUEST -> {
-                if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     //Permission Granted
-                }
-                else{
+                } else {
                     //Not Granted
                 }
             }
@@ -81,41 +86,46 @@ class TestingActivity : AppCompatActivity() {
     }
 
     private fun uploadImage(imageUri: Uri, accessToken: String) {
-//        val descriptionPart = RequestBody.create(MultipartBody.FORM, "Nice image")
-//        val originalFile =  FileUtils.getFile(this, imageUri)
-//        val filePart = RequestBody.create(MediaType.parse(contentResolver.getType(imageUri)),
-//           originalFile
-//        )
-//
-//        val file = MultipartBody.Part.createFormData(
-//            "place.png",
-//            originalFile?.name,
-//            filePart
-//        )
-//
-//        val retrofit = RetrofitInstance.api
-//        val call = retrofit.uploadImage(description = descriptionPart,
-//            image = file,
-//            accessToken = accessToken,
-//            placeId = "1"
-//        )
-//
-//        call?.enqueue(object : Callback<ResponseBody?> {
-//            override fun onResponse(call: Call<ResponseBody?>, response: Response<ResponseBody?>) {
-//                Log.i(TAG, "TTTT onResponse: Success")
-//                Log.i(TAG, "TTTT onResponse: $response")
-//                Log.i(TAG, "TTTT onResponse: $response.")
-//
-////                Picasso.get().load(response.body())
-//            }
-//
-//            override fun onFailure(call: Call<ResponseBody?>, t: Throwable) {
-//                Log.i(TAG, "TTTT onResponse: ${t.localizedMessage}")
-//            }
-//
-//        })
-//
-//
+
+
+        val descriptionPart = RequestBody.create(MultipartBody.FORM, "image")
+        val originalFile =  FileUtils.getFile(this, imageUri)
+        val filePart = originalFile?.let {
+            RequestBody.create(
+                contentResolver.getType(imageUri)?.toMediaTypeOrNull(),
+                it
+            )
+        }
+
+        val file = filePart?.let {
+            MultipartBody.Part.createFormData(
+                "image",
+                originalFile.name,
+                it
+            )
+        }
+
+        val retrofit = RetrofitInstance.api
+        val call = retrofit.uploadImage(
+            image = file,
+            accessToken = accessToken,
+            description = descriptionPart
+        )
+
+        call?.enqueue(object : Callback<ResponseBody?> {
+            override fun onResponse(call: Call<ResponseBody?>, response: Response<ResponseBody?>) {
+                Log.i(TAG, "TTTT onResponse: Success")
+                Log.i(TAG, "TTTT onResponse: $response")
+                Log.i(TAG, "TTTT onResponse: $response.")
+
+//                Picasso.get().load(response.body())
+            }
+
+            override fun onFailure(call: Call<ResponseBody?>, t: Throwable) {
+                Log.i(TAG, "TTTT onResponse: ${t.localizedMessage}")
+            }
+
+        })
 
     }
 
@@ -123,16 +133,33 @@ class TestingActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == IMAGE_REQUEST_CODE && resultCode == RESULT_OK && data != null && data.data != null) {
-            val imageUri = data.data!!
-
-            try {
-                val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, imageUri)
-                //uploadImage(imageUri, accessToken)
-                //imageView.setImageBitmap(bitmap)
-            } catch (ex: IOException) {
-                Log.i(TAG, "onActivityResult: ${ex.localizedMessage}", ex)
+            val selectedImageURI: Uri? = data.data
+            val imageStringPath = FileUtils.getPath(this, selectedImageURI)
+            if (selectedImageURI != null && imageStringPath != null) {
+                val imgFile = File(imageStringPath)
+                try {
+                    val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedImageURI)
+                    uploadImage(selectedImageURI, accessToken)
+                    if (bitmap != null){
+                        imageView.setImageBitmap(bitmap)
+                    }
+                } catch (ex: IOException) {
+                    Log.i(TAG, "PPPP onActivityResult: ${ex.localizedMessage}", ex)
+                }
             }
         }
+//        if (requestCode == IMAGE_REQUEST_CODE && resultCode == RESULT_OK && data != null && data.data != null) {
+//            val imageUri = data.data!!
+//            try {
+//                val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, imageUri)
+//                uploadImage(imageUri, accessToken)
+//                if (bitmap != null){
+//                    imageView.setImageBitmap(bitmap)
+//                }
+//            } catch (ex: IOException) {
+//                Log.i(TAG, "PPPP onActivityResult: ${ex.localizedMessage}", ex)
+//            }
+//        }
     }
 
 }

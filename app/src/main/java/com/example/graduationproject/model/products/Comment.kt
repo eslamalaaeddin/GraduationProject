@@ -1,5 +1,6 @@
 package com.example.graduationproject.model.products
 
+import androidx.recyclerview.widget.DiffUtil
 import com.google.gson.annotations.SerializedName
 
 /*
@@ -24,4 +25,8 @@ data class Comment(
     var userImage: String? = null,
     @SerializedName("username")
     var userName: String? = null
-)
+){
+
+
+
+}

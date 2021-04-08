@@ -4,5 +4,5 @@ import com.google.gson.annotations.SerializedName
 
 data class Rate(
 //    @SerializedName("pid") var placeId: Long? = null,
-    var rate: Int? = null
+    var rate: Float? = null
 )

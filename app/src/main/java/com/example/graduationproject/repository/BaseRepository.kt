@@ -5,12 +5,16 @@ import android.util.Log
 import android.widget.Toast
 import com.example.graduationproject.helper.ExceptionHandler
 import com.example.graduationproject.helper.Result
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import retrofit2.HttpException
 import retrofit2.Response
 import java.io.IOException
 
 private const val TAG = "BaseRepository"
 open class BaseRepository (context: Context){
+
+    var mContext = context
 
     val exceptionHandler = ExceptionHandler(context)
 

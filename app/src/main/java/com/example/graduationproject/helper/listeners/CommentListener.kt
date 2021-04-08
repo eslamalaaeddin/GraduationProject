@@ -4,6 +4,6 @@ import com.example.graduationproject.model.products.Comment
 
 interface CommentListener {
     fun onMoreOnCommentClicked(comment: Comment)
-    fun onCommentModified()
-    fun onProductRated()
+    fun onCommentModified(comment: String? = null)
+//    fun onProductRated()
 }

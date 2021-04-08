@@ -76,7 +76,7 @@ class CommentConfigsBottomSheet(private val commentListener: CommentListener, pr
         updateCommentEditText.setSelection(updateCommentEditText.text.length)
 
         updateButton.setOnClickListener {
-            val commentContent = updateCommentEditText.text.toString()
+            val commentContent = updateCommentEditText.text.toString().trim()
             if (commentContent.isNotEmpty()) {
                 val placeComment = ProductComment(placeId, commentContent)
                 lifecycleScope.launch {
@@ -88,7 +88,7 @@ class CommentConfigsBottomSheet(private val commentListener: CommentListener, pr
                     responseMessage?.let {
                         Toast.makeText(requireContext(), "Comment updated", Toast.LENGTH_SHORT).show()
                         //call an interface to get tell Product activity that comments has been updated
-                        commentListener.onCommentModified()
+                        commentListener.onCommentModified(commentContent)
                         dialog.dismiss()
                         dismiss()
                     }

@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/noFavoriteProductsTextView"
             android:text="No Favorites added"
-            android:visibility="visible"
+            android:visibility="gone"
             android:layout_gravity="center"
             android:gravity="center"
             android:textColor="@color/black"

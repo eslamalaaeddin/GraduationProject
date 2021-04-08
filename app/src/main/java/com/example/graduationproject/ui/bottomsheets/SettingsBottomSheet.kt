@@ -13,8 +13,11 @@ import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.graduationproject.R
 import com.example.graduationproject.databinding.SettingBottomSheetBinding
+import com.example.graduationproject.helper.Constants.BASE_USER_IMAGE_URL
 import com.example.graduationproject.model.user.User
 import com.example.graduationproject.model.user.UserName
 import com.example.graduationproject.model.user.UserPassword
@@ -27,7 +30,6 @@ import com.squareup.picasso.Picasso
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-private const val BASE_USER_IMAGE_URL = "http://10.0.3.2:3000/images/users/"
 class SettingsBottomSheet(private val user: User): BottomSheetDialogFragment() {
     private lateinit var bindingInstance: SettingBottomSheetBinding
     private lateinit var accessToken: String
@@ -142,7 +144,11 @@ class SettingsBottomSheet(private val user: User): BottomSheetDialogFragment() {
     private fun updateUserUi(){
         val userImageUrl = "$BASE_USER_IMAGE_URL${user.image}"
         if (userImageUrl.isNotEmpty()){
-            Picasso.get().load(userImageUrl).into(bindingInstance.userImageView)
+            Glide.with(requireContext())
+                .load(userImageUrl)
+                .skipMemoryCache(true)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .into(bindingInstance.userImageView)
         }
         bindingInstance.firstNameEditText.setText(user.firstName)
         bindingInstance.firstNameEditText.setSelection(bindingInstance.firstNameEditText.text.length)

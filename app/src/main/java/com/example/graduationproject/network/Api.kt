@@ -61,8 +61,6 @@ interface Api {
 
 
 
-
-
     @GET("products/{id}")
     suspend fun getProductDetails(
         @Path("id") placeId: String,
@@ -76,7 +74,7 @@ interface Api {
     ): Response<List<ProductImage>>
 
 
-
+    //it was suspend and i modified it
     @GET("products/{id}/comments")
     suspend fun getProductComments(
         @Path("id") placeId: String,
@@ -111,7 +109,7 @@ interface Api {
     @GET("products/fav")
     suspend fun getFavoriteProducts(
         @Header("Authorization") accessToken: String
-    ): Response<List<FavoriteProduct>>
+    ): Response<MutableList<FavoriteProduct>>
 
     //Here i used VisitedProduct as the body object as it has the field that i want
     @POST("products/fav")
@@ -159,7 +157,7 @@ interface Api {
     //////////////////////////////////////////////////////////////////////////////////
 
     @GET("ratings/{id}")
-    suspend fun getProductRate(
+    suspend fun getUserSpecificRate(
         @Path("id") placeId: String,
         @Header("Authorization") accessToken: String
     ): Response<Rate>
@@ -214,10 +212,9 @@ interface Api {
 //    ): Call<RequestBody?>?
 
     @Multipart
-    @POST("places/{id}/images")
+    @PUT("user/change_image")
     fun uploadImage(
         @Part image: MultipartBody.Part?,
-        @Path("id") placeId: String?,
         @Header("Authorization") accessToken: String,
         @Part("description") description: RequestBody
     ): Call<ResponseBody?>?

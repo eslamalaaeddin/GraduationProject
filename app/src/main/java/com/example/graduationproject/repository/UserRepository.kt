@@ -6,17 +6,22 @@ import com.example.graduationproject.model.user.User
 import com.example.graduationproject.model.user.UserName
 import com.example.graduationproject.model.user.UserPassword
 import com.example.graduationproject.network.Api
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 
-class UserRepository(private val api: Api, private val context: Context): BaseRepository(context) {
+class UserRepository(private val api: Api,
+                     private val context: Context,
+                     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+): BaseRepository(context) {
 
     suspend fun getUser(accessToken: String): User?{
         var user: User? = null
+
         try {
             user = safeApiCall(
-                call = { withContext(Dispatchers.IO){api.getUser(accessToken)}},
+                call = { withContext(ioDispatcher){api.getUser(accessToken)}},
                 errorMessage = "Error getting user info"
             )
         }
@@ -31,7 +36,7 @@ class UserRepository(private val api: Api, private val context: Context): BaseRe
         var responseMessage: ResponseMessage? = null
         try {
             responseMessage = safeApiCall(
-                call = { withContext(Dispatchers.IO){api.updateUserName(userName, accessToken)}},
+                call = { withContext(ioDispatcher){api.updateUserName(userName, accessToken)}},
                 errorMessage = "Error changing user name"
             )
         }
@@ -46,7 +51,7 @@ class UserRepository(private val api: Api, private val context: Context): BaseRe
         var responseMessage: ResponseMessage? = null
         try {
             responseMessage = safeApiCall(
-                call = { withContext(Dispatchers.IO){api.changeUserPassword(userPassword, accessToken)}},
+                call = { withContext(ioDispatcher){api.changeUserPassword(userPassword, accessToken)}},
                 errorMessage = "Error changing user password"
             )
         }

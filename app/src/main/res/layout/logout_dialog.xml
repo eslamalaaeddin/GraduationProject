@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_gravity="center"
+    android:padding="8dp"
+    android:gravity="center"
+    >
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Are you sure you want to logout?"
+        android:gravity="center|start"
+        android:textColor="@color/black"
+        android:padding="8dp"
+        android:textSize="21sp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end|center"
+        >
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/cancelLogoutButton"
+            android:text="Cancel"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            android:textAllCaps="false"
+            android:layout_margin="8dp"
+            android:textColor="@color/black"
+            android:textSize="16sp"/>
+
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/confirmLogoutButton"
+            android:text="Logout"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            android:layout_margin="8dp"
+            android:textAllCaps="false"
+            android:textColor="@color/red"
+            android:textSize="16sp"/>
+    </LinearLayout>
+
+</LinearLayout>

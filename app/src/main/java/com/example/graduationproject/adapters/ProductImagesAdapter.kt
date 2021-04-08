@@ -8,12 +8,11 @@ import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.graduationproject.R
+import com.example.graduationproject.helper.Constants.BASE_PRODUCT_IMAGE_URL
 import com.example.graduationproject.model.products.ProductImage
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.place_details_item_layout.view.*
+import kotlinx.android.synthetic.main.product_details_item_layout.view.*
 
-//const val BASE_PLACE_IMAGE_URL = "http://10.0.0.2:3000/images/places/"
-const val BASE_PLACE_IMAGE_URL = "http://10.0.3.2:3000/images/products/"
 
 //http://127.0.0.1:3000/images/products/product.png
 
@@ -39,7 +38,7 @@ class PlaceImagesAdapter(
         fun bind(productImage: ProductImage) {
             if (productImage.name?.isNotEmpty() == true) {
 //                Picasso.get().load("${BASE_PLACE_IMAGE_URL}$placeId/${productImage.name}").into(itemView.detail_place_image_view)
-                Picasso.get().load("${BASE_PLACE_IMAGE_URL}${productImage.name}").into(itemView.detail_place_image_view)
+                Picasso.get().load("${BASE_PRODUCT_IMAGE_URL}${productImage.name}").into(itemView.detail_place_image_view)
 //                Picasso.get().load(productImage.name).into(itemView.detail_place_image_view)
             }
 
@@ -59,7 +58,7 @@ class PlaceImagesAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlacesImagesViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(
-            R.layout.place_details_item_layout,
+            R.layout.product_details_item_layout,
             parent,
             false
         ) as CardView

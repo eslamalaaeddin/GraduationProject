@@ -28,6 +28,11 @@
         android:icon="@drawable/more_selector"
         android:title="More" />
 
+        <item
+            android:id="@+id/logOutIcon"
+            android:icon="@drawable/logout_selector"
+            android:title="Logout" />
+
 
     <!--    <item android:title="NavDrawer" android:id="@+id/nav_drawer"-->
     <!--        android:icon="@drawable/ic_menu" app:showAsAction="always"/>-->

@@ -4,6 +4,7 @@ import android.content.Context
 import com.example.graduationproject.model.ResponseMessage
 import com.example.graduationproject.model.products.*
 import com.example.graduationproject.network.Api
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
@@ -11,8 +12,9 @@ import retrofit2.HttpException
 /*
     This repo. is for the second section of our api, which deals with places in general.
  */
-private const val TAG = "PlacesRepository"
-class PlacesRepository(private val api: Api, private val context: Context): BaseRepository(context) {
+private const val TAG = "ProductsRepository"
+class ProductsRepository(private val api: Api, private val context: Context, private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO): BaseRepository(context) {
+
 
 //    suspend fun addNewPlace(product: Product, accessToken: String): ResponseMessage?{
 //        var responseMessage : ResponseMessage? = null
@@ -31,7 +33,7 @@ class PlacesRepository(private val api: Api, private val context: Context): Base
         var response : List<Product>? = null
         try {
              response = safeApiCall(
-                call = { withContext(Dispatchers.IO){api.getRecommendedPlaces(page, accessToken)}},
+                call = { withContext(ioDispatcher){api.getRecommendedPlaces(page, accessToken)}},
                 errorMessage = "Error Fetching Recommended Places")
         }
         catch (ex: Throwable) {
@@ -57,7 +59,7 @@ class PlacesRepository(private val api: Api, private val context: Context): Base
     suspend fun getProductDetails(placeId: String, accessToken: String): Product? {
         var product : Product? = null
         try {
-            product = safeApiCall(call = { withContext(Dispatchers.IO){api.getProductDetails(placeId, accessToken)}})
+            product = safeApiCall(call = { withContext(ioDispatcher){api.getProductDetails(placeId, accessToken)}})
         }
         catch (ex: Throwable) {
             if (ex is HttpException){exceptionHandler.handleException(ex, ex.code().toString())}
@@ -69,7 +71,7 @@ class PlacesRepository(private val api: Api, private val context: Context): Base
     suspend fun getPlaceImages(placeId: String, accessToken: String): List<ProductImage>?{
         var productImages : List<ProductImage>? = null
         try {
-            productImages = safeApiCall(call = {withContext(Dispatchers.IO){api.getPlaceImages(placeId, accessToken)}})
+            productImages = safeApiCall(call = {withContext(ioDispatcher){api.getPlaceImages(placeId, accessToken)}})
         }
         catch (ex: Throwable) {
             if (ex is HttpException){exceptionHandler.handleException(ex, ex.code().toString())}
@@ -81,7 +83,7 @@ class PlacesRepository(private val api: Api, private val context: Context): Base
     suspend fun getProductComments(placeId: String, page: Int, accessToken: String): List<Comment>?{
         var placeComments : List<Comment>? = null
         try {
-            placeComments = safeApiCall({ withContext(Dispatchers.IO){api.getProductComments(placeId, page, accessToken)}})
+            placeComments = safeApiCall({ withContext(ioDispatcher){api.getProductComments(placeId, page, accessToken)}})
         }
         catch (ex: Throwable) {
             if (ex is HttpException){exceptionHandler.handleException(ex, ex.code().toString())}
@@ -128,10 +130,10 @@ class PlacesRepository(private val api: Api, private val context: Context): Base
 //        return responseMessage
 //    }
 
-    suspend fun getFavoriteProducts(accessToken: String): List<FavoriteProduct>?{
-        var favoriteProducts : List<FavoriteProduct>? = null
+    suspend fun getFavoriteProducts(accessToken: String): MutableList<FavoriteProduct>?{
+        var favoriteProducts : MutableList<FavoriteProduct>? = null
         try {
-            favoriteProducts = safeApiCall({ withContext(Dispatchers.IO){api.getFavoriteProducts(accessToken)} })
+            favoriteProducts = safeApiCall({ withContext(ioDispatcher){api.getFavoriteProducts(accessToken)} })
         }
         catch (ex: Throwable) {
             if (ex is HttpException){exceptionHandler.handleException(ex, ex.code().toString())}
@@ -143,7 +145,7 @@ class PlacesRepository(private val api: Api, private val context: Context): Base
     suspend fun addProductToFavorites(favoriteProduct: VisitedProduct, accessToken: String): ResponseMessage?{
         var responseMessage: ResponseMessage? = null
         try {
-            responseMessage = safeApiCall({ withContext(Dispatchers.IO){api.addPlaceToUserFavoritePlaces(favoriteProduct, accessToken)} })
+            responseMessage = safeApiCall({ withContext(ioDispatcher){api.addPlaceToUserFavoritePlaces(favoriteProduct, accessToken)} })
         }
         catch (ex: Throwable) {
             if (ex is HttpException){exceptionHandler.handleException(ex, ex.code().toString())}
@@ -155,7 +157,7 @@ class PlacesRepository(private val api: Api, private val context: Context): Base
     suspend fun deleteProductFromFavorites(placeId: String, accessToken: String): ResponseMessage?{
         var responseMessage : ResponseMessage? = null
         try {
-            responseMessage = safeApiCall({ withContext(Dispatchers.IO){api.deleteUserFavoritePlace(placeId, accessToken)}})
+            responseMessage = safeApiCall({ withContext(ioDispatcher){api.deleteUserFavoritePlace(placeId, accessToken)}})
         }
         catch (ex: Throwable) {
             if (ex is HttpException){exceptionHandler.handleException(ex, ex.code().toString())}

@@ -8,15 +8,12 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.observe
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
-import androidx.recyclerview.widget.RecyclerView
 import com.example.graduationproject.R
 import com.example.graduationproject.adapters.CommentsAdapter
 import com.example.graduationproject.adapters.PlaceImagesAdapter
@@ -30,21 +27,8 @@ import com.example.graduationproject.model.rating.Rate
 import com.example.graduationproject.ui.bottomsheets.CommentConfigsBottomSheet
 import com.example.graduationproject.viewmodel.ProductActivityViewModel
 import kotlinx.android.synthetic.main.activity_product.*
-import kotlinx.android.synthetic.main.place_details_item_layout.view.*
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
-
-
-const val image1 =
-    "https://www.history.com/.image/c_fill%2Ccs_srgb%2Cfl_progressive%2Ch_400%2Cq_auto:good%2Cw_620/MTU3ODc5MDg2NDMxODcyNzM1/egyptian-pyramids-hero.jpg"
-const val image2 =
-    "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/sunset-at-the-pyramids-giza-cairo-egypt-royalty-free-image-1588090066.jpg?crop=1.00xw:0.891xh;0,0.101xh&resize=640:*"
-const val image3 = "https://images.memphistours.com/large/34d5b5a3fbaa4b3b5d9487bf924b0145.jpg"
-const val image4 =
-    "https://st2.depositphotos.com/3974537/10978/v/600/depositphotos_109787082-stock-video-pyramids-at-night-with-moon.jpg"
-const val image5 = image1
-const val image6 =
-    "https://t3.ftcdn.net/jpg/02/66/45/50/360_F_266455083_yASCBTitC7vtyI7dBL9kzk1SDXLS3m6s.jpg"
 
 
 private const val TAG = "PlaceActivity"
@@ -53,76 +37,48 @@ class PlaceActivity : AppCompatActivity(), CommentListener {
     private val placeActivityViewModel by viewModel<ProductActivityViewModel>()
     private var placeId: Long = 0
     private lateinit var accessToken :String
+    private var userId :Long = 0
     var isPlaceFavorite = false
-    var placeRate : Int? = 0
+    private var overallProductRate : Float = 0.0F
+    private var userRate : Float = 0.0F
+    private var commentsAdapter : CommentsAdapter? = null
     private lateinit var snapHelper: LinearSnapHelper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         accessToken = SplashActivity.getAccessToken(this).orEmpty()
+        userId = SplashActivity.getUserId(this)
+
+
+        Log.i(TAG, "CCCC getProductDetails: $userId")
+
         placeDetailsBinding = DataBindingUtil.setContentView(this, R.layout.activity_product)
 
         setUpToolbar()
         placeId = intent.getLongExtra("placeId", 0)
+
         placeDetailsBinding.addRatingToPlaceBar.setOnRatingBarChangeListener { _, rating, _ ->
-            val rate = Rate(rate = rating.toInt())
-            if (placeRate == null) {
+            val rate = Rate(rate = rating)
+
+            if (userRate == 0.0F) {
                 addRateToPlace(rate)
             }
-            else{
-                deleteRateFromPlace(rate)
+            else {
+                updateRateFromPlace(rate)
             }
-        }
 
+        }
 
         //Get place Rate by user or zero if null
-        lifecycleScope.launch { getPlaceRate() }
-
-        placeDetailsBinding.dummyFinish.setOnClickListener {
-            finish()
-        }
+        lifecycleScope.launch { getUserSpecificRate() }
 
         //Add Product to favorite or remove it from fav.
         placeDetailsBinding.addToFavoriteImageView.setOnClickListener {
             if (isPlaceFavorite) {
-                lifecycleScope.launch { deletePlaceFromFavorite() }
+                lifecycleScope.launch { deleteProductFromFavorite() }
             } else {
                 lifecycleScope.launch { addPlaceToFavorite() }
             }
         }
-
-//        snapHelper = object : LinearSnapHelper() {
-//            override fun findTargetSnapPosition(
-//                layoutManager: RecyclerView.LayoutManager,
-//                velocityX: Int,
-//                velocityY: Int
-//            ): Int {
-//                val centerView = findSnapView(layoutManager) ?: return RecyclerView.NO_POSITION
-//                val position = layoutManager.getPosition(centerView)
-//                var targetPosition = -1
-//                if (layoutManager.canScrollHorizontally()) {
-//                    targetPosition = if (velocityX < 0) {
-//                        position - 1
-//                    } else {
-//                        position + 1
-//                    }
-//                }
-//                if (layoutManager.canScrollVertically()) {
-//                    targetPosition = if (velocityY < 0) {
-//                        position - 1
-//                    } else {
-//                        position + 1
-//                    }
-//                }
-//                val firstItem = 0
-//                val lastItem = layoutManager.itemCount - 1
-//                targetPosition = lastItem.coerceAtMost(targetPosition.coerceAtLeast(firstItem))
-//                return targetPosition
-//            }
-//        }
-
-        //lifecycleScope.launch { getPlaceImages() }
-
-
 
 
         placeDetailsBinding.placeCommentEditText.addTextChangedListener(object : TextWatcher {
@@ -145,11 +101,6 @@ class PlaceActivity : AppCompatActivity(), CommentListener {
             addCommentAndUpdateComments()
         }
 
-//        placeDetailsBinding.swipeRefreshLayout.setOnRefreshListener {
-//            onStart()
-//            placeDetailsBinding.swipeRefreshLayout.isRefreshing = false
-//        }
-
         placeDetailsBinding.upButtonImageButton.setOnClickListener { finish() }
 
     }
@@ -157,8 +108,9 @@ class PlaceActivity : AppCompatActivity(), CommentListener {
     override fun onStart() {
         super.onStart()
         lifecycleScope.launch { getComments() }
-        lifecycleScope.launch{ getPlaceDetails() }
+        lifecycleScope.launch{ getProductDetails() }
     }
+
 
     private fun setUpToolbar() {
         setSupportActionBar(placeDetailsBinding.mainToolbar)
@@ -179,37 +131,51 @@ class PlaceActivity : AppCompatActivity(), CommentListener {
     }
 
     override fun onMoreOnCommentClicked(comment: Comment) {
-        comment.rate = placeRate?.toFloat()
+        comment.rate = overallProductRate
         val commentConfigsBottomSheet = CommentConfigsBottomSheet(this, comment, placeId)
         commentConfigsBottomSheet.show(supportFragmentManager, commentConfigsBottomSheet.tag)
     }
 
     //when user delete or add comment it will take effect immediately
-    override fun onCommentModified() {
+    override fun onCommentModified(comment: String?) {
         lifecycleScope.launch {
+            //comment deleted --> updated the adapter, and delete that item
+            if (comment == null){
+
+            }
+            //comment updated
+            else{
+
+            }
             getComments()
         }
     }
 
     //when user rate or update rating it will take effect immediately
-    override fun onProductRated() {
-        lifecycleScope.launch {
-            getPlaceDetails()
-            getPlaceRate()
-            getComments()
-        }
-    }
+//    override fun onProductRated() {
+//        lifecycleScope.launch {
+//            getPlaceDetails()
+//            getPlaceRate()
+//            getComments()
+//        }
+//    }
 
 
-    private suspend fun getPlaceDetails(){
-            val placeDetailsLiveData =
+    private suspend fun getProductDetails(){
+            val productDetailsLiveData =
                 placeActivityViewModel.getProductDetails(placeId.toString(), accessToken)
-            placeDetailsLiveData?.observe(this@PlaceActivity) { place ->
-                place?.let {
+            productDetailsLiveData?.observe(this@PlaceActivity) { product ->
+                product?.let {
                     placeDetailsBinding.detailsPlaceNameTextView.text = it.name
                     placeDetailsBinding.placeDescriptionTextView.text = it.description
+
+
                     val rate =  it.rating
-                    placeDetailsBinding.detailsPlaceRatingBar.rating =rate?.toFloat() ?: 0F
+                    Log.i(TAG, "PPPP getProductDetails: $rate")
+                    placeDetailsBinding.detailsPlaceRatingBar.rating = rate?.toFloat() ?: 0F
+                    overallProductRate = rate?.toFloat() ?: 0F
+                    Log.i(TAG, "PPPP OverallRATE: ${overallProductRate}")
+
                     isPlaceFavorite = it.isFavorite == 1
 
                     if (isPlaceFavorite) {
@@ -220,13 +186,13 @@ class PlaceActivity : AppCompatActivity(), CommentListener {
 
                     placeDetailsBinding.placeImagesRecyclerView.apply {
                         val placeImages = mutableListOf<ProductImage>()
-                        placeImages.add(ProductImage(name = place.image))
+                        placeImages.add(ProductImage(name = product.image))
                         layoutManager = LinearLayoutManager(this@PlaceActivity,LinearLayoutManager.HORIZONTAL,false)
                         adapter = PlaceImagesAdapter(placeId.toString(), placeImages)
                         //snapHelper.attachToRecyclerView(this)
                     }
                 }
-                Log.i(TAG, "getPlaceDetails: $place" )
+                Log.i(TAG, "PPPP getPlaceDetails: $product" )
             }
     }
 
@@ -242,25 +208,47 @@ class PlaceActivity : AppCompatActivity(), CommentListener {
             )
             responseMessage?.let {
                 placeDetailsBinding.placeCommentEditText.text.clear()
+//                TODO("NOTIFY ITEM INSERTED")
+
                 getComments()
             }
         }
     }
 
+//    private suspend fun getComments(){
+//        val placeCommentsLiveData = placeActivityViewModel.getProductComments(
+//            placeId.toString(),
+//            1,
+//            accessToken
+//        )
+//        placeCommentsLiveData?.observe(this@PlaceActivity) { comments ->
+//            placeDetailsBinding.commentsRecyclerView.apply {
+//                layoutManager = LinearLayoutManager(this@PlaceActivity)
+//                adapter = CommentsAdapter(
+//                    79312841268376,
+//                    comments.orEmpty(),
+//                    this@PlaceActivity
+//                )
+//            }
+//        }
+//    }
+
     private suspend fun getComments(){
-        val placeCommentsLiveData = placeActivityViewModel.getProductComments(
+        val productCommentsLiveData = placeActivityViewModel.getCommentsPagedList(
             placeId.toString(),
-            1,
             accessToken
         )
-        placeCommentsLiveData?.observe(this@PlaceActivity) { comments ->
+        productCommentsLiveData?.observe(this@PlaceActivity) { comments ->
             placeDetailsBinding.commentsRecyclerView.apply {
                 layoutManager = LinearLayoutManager(this@PlaceActivity)
-                adapter = CommentsAdapter(
-                    79312841268376,
-                    comments.orEmpty(),
+                commentsAdapter = CommentsAdapter(
+                    userId,
                     this@PlaceActivity
                 )
+                commentsAdapter?.let {
+                    it.submitList(comments)
+                    adapter = it
+                }
             }
         }
     }
@@ -287,7 +275,7 @@ class PlaceActivity : AppCompatActivity(), CommentListener {
             }
     }
 
-    private suspend fun deletePlaceFromFavorite(){
+    private suspend fun deleteProductFromFavorite(){
             val responseMessage = placeActivityViewModel.deleteProductFromFavorites(
                 placeId.toString(),
                 accessToken
@@ -298,15 +286,16 @@ class PlaceActivity : AppCompatActivity(), CommentListener {
             }
     }
 
-    private suspend fun getPlaceRate(){
-        val rate = placeActivityViewModel.getProductRate(
+    private suspend fun getUserSpecificRate(){
+        val rate = placeActivityViewModel.getUserSpecificRate(
             placeId.toString(),
             accessToken
         )
         rate?.let {
-            addRatingToPlaceBar.visibility = View.VISIBLE
-            placeRate = it.rate ?: 0
-            placeDetailsBinding.addRatingToPlaceBar.rating = it.rate?.toFloat() ?: 0F
+            Log.i(TAG, "llll USER RATE BEFORE INITIALIZING : $userRate")
+            userRate = it.rate ?: 0F
+            Log.i(TAG, "llll USER RATE AFTER INITIALIZING: $userRate")
+            placeDetailsBinding.addRatingToPlaceBar.rating = it.rate ?: 0F
         }
 
     }
@@ -321,7 +310,7 @@ class PlaceActivity : AppCompatActivity(), CommentListener {
         }
     }
 
-    private fun deleteRateFromPlace(rate: Rate){
+    private fun updateRateFromPlace(rate: Rate){
         lifecycleScope.launch {
             val responseMessage =
                 placeActivityViewModel.updateRatingToProduct(rate, placeId.toString(), accessToken)
@@ -330,5 +319,6 @@ class PlaceActivity : AppCompatActivity(), CommentListener {
             }
         }
     }
+
 
 }

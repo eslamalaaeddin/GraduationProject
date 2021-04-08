@@ -7,10 +7,10 @@
 
     </data>
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipeRefreshLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+<!--    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout-->
+<!--        android:id="@+id/swipeRefreshLayout"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content">-->
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/coordinator"
@@ -134,18 +134,9 @@
                             android:layout_marginStart="3dp"
                             android:numStars="5"
                             android:progressTint="@color/orange"
-                            android:rating="3" />
+                            android:rating="0.0" />
 
                     </LinearLayout>
-
-                    <ImageView
-                        android:id="@+id/dummyFinish"
-                        android:layout_width="36dp"
-                        android:layout_height="36dp"
-                        android:layout_gravity="center"
-                        android:layout_marginEnd="16dp"
-                        android:src="@drawable/ic_place_24"
-                        app:tint="@color/blue" />
 
 
                 </LinearLayout>
@@ -158,9 +149,9 @@
                     android:layout_margin="16dp"
                     android:numStars="5"
                     android:progressTint="@color/orange"
-                    android:rating="4"
-                    android:stepSize="1"
-                    android:visibility="gone" />
+                    android:rating="0.0"
+                    android:stepSize="1.0"
+                     />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -221,5 +212,5 @@
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+<!--</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>-->
 </layout>

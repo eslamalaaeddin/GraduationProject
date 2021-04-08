@@ -36,8 +36,8 @@ val authenticationRepositoryModule = module {
 }
 
 val placesRepositoryModule = module {
-    fun providePlacesRepository(context: Context): PlacesRepository{
-        return PlacesRepository(RetrofitInstance.api, context)
+    fun providePlacesRepository(context: Context): ProductsRepository{
+        return ProductsRepository(RetrofitInstance.api, context)
     }
     single { providePlacesRepository(androidContext()) }
 }

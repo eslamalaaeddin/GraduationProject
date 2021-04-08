@@ -5,29 +5,32 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.paging.PagedListAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.graduationproject.R
-import com.example.graduationproject.helper.listeners.RecommendedPlaceClickListener
+import com.example.graduationproject.helper.Constants.BASE_PRODUCT_IMAGE_URL
+import com.example.graduationproject.helper.listeners.RecommendedProductClickListener
 import com.example.graduationproject.model.products.Product
 import com.example.graduationproject.ui.activities.PlaceActivity
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.home_place_item.view.*
-private const val BASE_IMAGE_URL = "http://10.0.3.2:3000/images/products/"
+import kotlinx.android.synthetic.main.home_product_item.view.*
+
 private const val TAG = "RecommendedPlacesAdapte"
-const val imageLocation = "https://st2.depositphotos.com/3974537/10978/v/600/depositphotos_109787082-stock-video-pyramids-at-night-with-moon.jpg"
 class RecommendedPlacesAdapter(
-    private val recommendedProducts: List<Product>,
-    private val recommendedPlaceClickListener: RecommendedPlaceClickListener
+    private val recommendedProductClickListener: RecommendedProductClickListener
     ) :
-    RecyclerView.Adapter<RecommendedPlacesAdapter.RecommendedPlacesViewHolder>() {
+    PagedListAdapter<Product, RecommendedPlacesAdapter.RecommendedPlacesViewHolder>(CALLBACK) {
 
         inner class RecommendedPlacesViewHolder(itemView: View): RecyclerView.ViewHolder(itemView), View.OnClickListener{
 
             init {
                 itemView.setOnClickListener(this)
                 itemView.add_to_favorite_image_view.setOnClickListener {
-                    val place = recommendedProducts[adapterPosition]
-                    recommendedPlaceClickListener.onFavoriteIconClicked(place)
+                    val place = getItem(adapterPosition)
+                    place?.let {
+                        recommendedProductClickListener.onFavoriteIconClicked(place, adapterPosition)
+                    }
                 }
             }
 
@@ -35,7 +38,7 @@ class RecommendedPlacesAdapter(
                 itemView.home_place_name_text_view.text = product.name
                 itemView.home_rating_bar.rating = product.rating?.toFloat() ?: 0F
 //                val placeImageUrl = "$BASE_IMAGE_URL${product.id}/${product.image}"
-                val placeImageUrl = "$BASE_IMAGE_URL/${product.image}"
+                val placeImageUrl = "$BASE_PRODUCT_IMAGE_URL/${product.image}"
                 Log.i(TAG, "bind: $placeImageUrl")
                 Picasso.get().load(placeImageUrl).into(itemView.place_image_view)
                 if (product.isFavorite == 1){
@@ -48,23 +51,41 @@ class RecommendedPlacesAdapter(
 
             override fun onClick(v: View?) {
                 //Temp
-                val place = recommendedProducts[adapterPosition]
+                val place = getItem(adapterPosition)
                 val intent = Intent(itemView.context, PlaceActivity::class.java)
-                intent.putExtra("placeId", place.id)
-                itemView.context.startActivity(intent)
+                place?.let {
+                    intent.putExtra("placeId", place.id)
+                    itemView.context.startActivity(intent)
+                }
+
             }
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecommendedPlacesViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
-        val view = layoutInflater.inflate(R.layout.home_place_item, parent, false)
+        val view = layoutInflater.inflate(R.layout.home_product_item, parent, false)
         return RecommendedPlacesViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: RecommendedPlacesViewHolder, position: Int) {
-        val place = recommendedProducts[holder.adapterPosition]
-        holder.bind(place)
+        val place = getItem(position)
+        place?.let {
+            holder.bind(place)
+        }
     }
 
-    override fun getItemCount(): Int = recommendedProducts.size
+    companion object {
+        val CALLBACK: DiffUtil.ItemCallback<Product?> = object : DiffUtil.ItemCallback<Product?>() {
+            override fun areItemsTheSame(oldItem: Product, newItem: Product): Boolean {
+                return oldItem === newItem
+            }
+
+            override fun areContentsTheSame(oldItem: Product, newItem: Product): Boolean {
+                return oldItem == newItem
+            }
+
+
+        }
+    }
+
 }

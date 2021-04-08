@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.graduationproject.R
 import com.example.graduationproject.adapters.RecommendedPlacesAdapter
 import com.example.graduationproject.databinding.FragmentHomeBinding
-import com.example.graduationproject.helper.listeners.RecommendedPlaceClickListener
+import com.example.graduationproject.helper.listeners.RecommendedProductClickListener
 import com.example.graduationproject.model.products.Product
 import com.example.graduationproject.model.products.VisitedProduct
 import com.example.graduationproject.ui.activities.SplashActivity
@@ -24,17 +24,15 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 private const val TAG = "HomeFragment"
 
-class HomeFragment : Fragment(), RecommendedPlaceClickListener {
+class HomeFragment : Fragment(), RecommendedProductClickListener {
     private val homeFragmentViewModel by viewModel<HomeFragmentViewModel>()
     private val placeActivityViewModel by viewModel<ProductActivityViewModel>()
     private lateinit var fragmentBinding: FragmentHomeBinding
     var recommendedPlaces = mutableListOf<Product>()
+    private var recProductsAdapter : RecommendedPlacesAdapter? = null
     private var accessToken = ""
     var tempClicked = false
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
 
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -52,91 +50,7 @@ class HomeFragment : Fragment(), RecommendedPlaceClickListener {
         super.onViewCreated(view, savedInstanceState)
         accessToken = SplashActivity.getAccessToken(requireContext()).orEmpty()
 
-//        newAdapter = RecommendedPlacesAdapter()
-//        fragmentBinding.homePlacesRecyclerView.apply {
-////            layoutManager = LinearLayoutManager(context)
-//            layoutManager = GridLayoutManager(context,2)
-//            adapter = placesAdapter
-//        }
-
-        // Toast.makeText(requireContext(), "${SplashActivity.getAccessToken(requireContext())}", Toast.LENGTH_LONG).show()
-
-//        homeBinding.addPlacesFab.setOnClickListener {
-//            startActivity(Intent(context, AddPlaceActivity::class.java))
-//        }
-
-//          lifecycleScope.launch {
-//              homeFragmentViewModel.addNewPlace(Product(name = "place name", country = "Egypt", city = "Zagazig", latitude = -12.5, longitude = 10.24), accessToken).message.toString()
-//          }
-
-//        testButton.setOnClickListener {
-//           startActivity(Intent(requireContext(), TestingActivity::class.java))
-//        }
-
-
-//
-//        lifecycleScope.launch {
-//            homeFragmentViewModel.searchForPlaceInCountry("beach", "egypt", accessToken).observe(viewLifecycleOwner){
-//                Log.i(TAG, "ISLAM onViewCreated: $it")
-//                Log.i(TAG, "ISLAM onViewCreated: ${it.size}")
-//            }
-//        }
-
-//        lifecycleScope.launch {
-//            homeFragmentViewModel.searchForSpecificPlace(1,accessToken).observe(viewLifecycleOwner){
-//                Log.i(TAG, "onViewCreated: $it")
-//            }
-//        }
-
-
-
-//        lifecycleScope.launch {
-//            homeFragmentViewModel.getPlaceImages("1",accessToken).observe(viewLifecycleOwner){
-//                Log.i(TAG, "onViewCreated: $it")
-//                Log.i(TAG, "onViewCreated: ${it.size}")
-//            }
-//        }
-
-//        lifecycleScope.launch {
-//            homeFragmentViewModel.getPlaceComments("1", 1, accessToken).observe(viewLifecycleOwner){
-//                Log.i(TAG, "ISLAM onViewCreated: $it")
-//                Log.i(TAG, "ISLAM onViewCreated: ${it.size}")
-//            }
-//        }
-
-//        lifecycleScope.launch {
-//            homeFragmentViewModel.getUserVisitedPlaces(accessToken).observe(viewLifecycleOwner){
-//                Log.i(TAG, "ISLAM onViewCreated: $it")
-//                Log.i(TAG, "ISLAM onViewCreated: ${it.size}")
-//            }
-//        }
-
-//        lifecycleScope.launch {
-//            Log.i(TAG, "ISLAM onViewCreated: ${homeFragmentViewModel.addPlaceToUserVisitedPlaces(VisitedProduct(123), accessToken).message.toString()}")
-//        }
-
-//        lifecycleScope.launch {
-//            Log.i(TAG, "ISLAM onViewCreated: ${homeFragmentViewModel.deleteVisitedPlace("1", accessToken).message.toString()}")
-//        }
-
-//        lifecycleScope.launch {
-//            homeFragmentViewModel.getUserFavoritePlaces(accessToken).observe(viewLifecycleOwner){
-//                Log.i(TAG, "ISLAM onViewCreated: $it")
-//                Log.i(TAG, "ISLAM onViewCreated: ${it.size}")
-//            }
-//        }
-
-//        lifecycleScope.launch {
-//            //homeFragmentViewModel.addPlaceToUserFavoritePlaces(FavoriteProduct())
-//            /*
-//                I HAVE TO SOLVE BODY PROBLEM ==> WATCH FORM URL ENCODED
-//             */
-//        }
-
-//        lifecycleScope.launch {
-//            Log.i(TAG, "ISLAM onViewCreated: ${homeFragmentViewModel.deleteUserFavoritePlace("1", accessToken).message.toString()}")
-//        }
-
+        android:nestedScrollingEnabled="false"
 
     }
 
@@ -147,71 +61,74 @@ class HomeFragment : Fragment(), RecommendedPlaceClickListener {
         getRecommendedPlaces()
     }
 
-    override fun onFavoriteIconClicked(product: Product) {
+    override fun onFavoriteIconClicked(product: Product, productPosition: Int) {
         val isPlaceFavorite = product.isFavorite == 1
         if (isPlaceFavorite) {
-            lifecycleScope.launch { deletePlaceFromFavorite(product) }
+            lifecycleScope.launch { deletePlaceFromFavorite(product, productPosition) }
         } else {
-            lifecycleScope.launch { addPlaceToFavorite(product) }
+            lifecycleScope.launch { addPlaceToFavorite(product, productPosition) }
         }
     }
 
-    private suspend fun addPlaceToFavorite(product: Product) {
+    private suspend fun addPlaceToFavorite(product: Product, productPosition: Int) {
         val responseMessage = placeActivityViewModel.addProductToFavorites(
             VisitedProduct(pid = product.id),
             accessToken
         )
         responseMessage?.let {
-            add_to_favorite_image_view.setImageResource(R.drawable.ic_heart_filled)
-//                getPlaceDetails(product)
-               getRecommendedPlaces()
+            //this line has no effect as you can't modify a state of items of a recycler view
+//            add_to_favorite_image_view.setImageResource(R.drawable.ic_heart_filled)
+            //the following two lines are meant to only change the state of a specific item
+            product.isFavorite = if (product.isFavorite == 0) 1 else 0
+            recProductsAdapter?.notifyItemChanged(productPosition, product)
+              // getRecommendedPlaces()
         }
     }
 
-    private suspend fun deletePlaceFromFavorite(product: Product) {
+    private suspend fun deletePlaceFromFavorite(product: Product, productPosition: Int) {
         val responseMessage = placeActivityViewModel.deleteProductFromFavorites(
             product.id.toString(),
             accessToken
         )
         responseMessage?.let {
-            add_to_favorite_image_view.setImageResource(R.drawable.ic_heart)
-//                getPlaceDetails(product)
-            getRecommendedPlaces()
+//            add_to_favorite_image_view.setImageResource(R.drawable.ic_heart)
+           // getRecommendedPlaces()
+            product.isFavorite = if (product.isFavorite == 0) 1 else 0
+            recProductsAdapter?.notifyItemChanged(productPosition, product)
+
         }
     }
 
-    private fun getRecommendedPlaces() {
-        lifecycleScope.launch {
-            homeFragmentViewModel.getRecommendedProducts(1, accessToken)
-                ?.observe(viewLifecycleOwner) { recPlaces ->
-                    recPlaces?.let {
+//    private fun getRecommendedPlaces() {
+//        lifecycleScope.launch {
+//            homeFragmentViewModel.getRecommendedProducts(1, accessToken)
+//                ?.observe(viewLifecycleOwner) { recPlaces ->
+//                    recPlaces?.let {
+//                        fragmentBinding.homePlacesRecyclerView.apply {
+//                            layoutManager = GridLayoutManager(context, 2)
+//                            adapter = RecommendedPlacesAdapter(
+//                                it.sortedBy { it.id },
+//                                this@HomeFragment
+//                            )
+//                        }
+//                    }
+//                }
+//        }
+
+        private fun getRecommendedPlaces() {
+            lifecycleScope.launch {
+                homeFragmentViewModel.getRecommendedProductsPagedList( accessToken)
+                    ?.observe(viewLifecycleOwner) {recProducts ->
                         fragmentBinding.homePlacesRecyclerView.apply {
                             layoutManager = GridLayoutManager(context, 2)
-                            adapter = RecommendedPlacesAdapter(
-                                it.sortedBy { it.id },
-                                this@HomeFragment
-                            )
+                            recProductsAdapter = RecommendedPlacesAdapter(this@HomeFragment)
+                            recProductsAdapter?.let {
+                                it.submitList(recProducts)
+                                adapter = it
+                            }
+
                         }
                     }
-                }
-        }
-    }
-
-    private suspend fun getPlaceDetails(product: Product) {
-        val placeDetailsLiveData =
-            placeActivityViewModel.getProductDetails(product.id.toString(), accessToken)
-        placeDetailsLiveData?.observe(viewLifecycleOwner) { p ->
-            p?.let {
-                recommendedPlaces.remove(product)
-                recommendedPlaces.add(p)
-                fragmentBinding.homePlacesRecyclerView.apply {
-                    layoutManager = GridLayoutManager(context, 2)
-                    adapter = RecommendedPlacesAdapter(
-                        recommendedPlaces.sortedBy { it.id },
-                        this@HomeFragment
-                    )
-                }
             }
         }
     }
-}

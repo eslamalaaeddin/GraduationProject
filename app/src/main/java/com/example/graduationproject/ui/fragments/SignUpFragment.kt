@@ -10,6 +10,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.graduationproject.R
 import com.example.graduationproject.model.authentication.SignUp
+import com.example.graduationproject.ui.activities.SplashActivity
+import com.example.graduationproject.viewmodel.NavigationDrawerViewModel
 import com.example.graduationproject.viewmodel.SignUpViewModel
 import kotlinx.android.synthetic.main.fragment_up_sign.*
 import kotlinx.coroutines.launch
@@ -19,9 +21,9 @@ import java.util.regex.Pattern
 
 private const val TAG = "SignUpFragment"
 
-const val USER_EMAIL = "user email"
 class SignUpFragment : Fragment(R.layout.fragment_up_sign) {
     private val signUpViewModel by viewModel<SignUpViewModel>()
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         haveAccountTextView.setOnClickListener {
@@ -67,9 +69,9 @@ class SignUpFragment : Fragment(R.layout.fragment_up_sign) {
             Toast.makeText(requireContext(), "Passwords don't match", Toast.LENGTH_SHORT).show()
         }
         else {
-            saveEmailInPrefs(requireContext(), email)
             val signUp = SignUp(firstName, lastName, email, password)
             lifecycleScope.launch {
+                SplashActivity.saveEmailInPrefs(requireContext(), email)
                val responseMessage = signUpViewModel.signUp(signUp)
                if(responseMessage != null){
                    Toast.makeText(
@@ -90,17 +92,7 @@ class SignUpFragment : Fragment(R.layout.fragment_up_sign) {
     }
 
     companion object{
-        fun saveEmailInPrefs(context: Context?, userEmail: String) {
-            PreferenceManager.getDefaultSharedPreferences(context)
-                .edit()
-                .putString(USER_EMAIL, userEmail)
-                .apply()
-        }
 
-        fun getEmailFromPrefs(context: Context?): String? {
-            val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-            return prefs.getString(USER_EMAIL, "")
-        }
     }
 
     private fun isEmailValid(email: String?): Boolean {

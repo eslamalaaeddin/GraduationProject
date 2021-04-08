@@ -2,6 +2,9 @@ package com.example.graduationproject.helper
 
 import android.content.Context
 import android.widget.Toast
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
 
@@ -25,6 +28,8 @@ class ExceptionHandler(private val context: Context) {
     }
 
     private fun showErrorMessage(message: String?) {
-        Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+        CoroutineScope(Dispatchers.Main).launch{
+            Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+        }
     }
 }

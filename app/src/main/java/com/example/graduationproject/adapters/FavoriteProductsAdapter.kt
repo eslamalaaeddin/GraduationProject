@@ -6,18 +6,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.graduationproject.R
-import com.example.graduationproject.helper.listeners.FavoritePlaceClickListener
+import com.example.graduationproject.helper.Constants.BASE_PRODUCT_IMAGE_URL
+import com.example.graduationproject.helper.listeners.FavoriteProductClickListener
 import com.example.graduationproject.model.products.FavoriteProduct
 import com.example.graduationproject.ui.activities.PlaceActivity
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.home_place_item.view.*
-private const val BASE_IMAGE_URL = "http://10.0.3.2:3000/images/places/"
+import kotlinx.android.synthetic.main.home_product_item.view.*
+//private const val BASE_PRODUCT_IMAGE_URL = "http://10.0.3.2:3000/images/products/"
 private const val TAG = "FavoritePlacesAdapte"
-class FavoritePlacesAdapter(
-    private val favoriteProducts: List<FavoriteProduct>,
-    private val favoritePlaceClickListener: FavoritePlaceClickListener
-) :
-    RecyclerView.Adapter<FavoritePlacesAdapter.FavoritePlacesViewHolder>() {
+class FavoriteProductsAdapter(
+    private val favoriteProducts: MutableList<FavoriteProduct>,
+    private val favoriteProductClickListener: FavoriteProductClickListener
+) : RecyclerView.Adapter<FavoriteProductsAdapter.FavoritePlacesViewHolder>() {
 
     inner class FavoritePlacesViewHolder(itemView: View): RecyclerView.ViewHolder(itemView), View.OnClickListener{
 
@@ -25,15 +25,16 @@ class FavoritePlacesAdapter(
             itemView.setOnClickListener(this)
             itemView.add_to_favorite_image_view.setOnClickListener {
                 val place = favoriteProducts[adapterPosition]
-                favoritePlaceClickListener.onFavoriteIconClicked(place)
+                favoriteProductClickListener.onFavoriteIconClicked(place, adapterPosition)
             }
         }
 
         fun bind(product: FavoriteProduct){
-            itemView.add_to_favorite_image_view.setImageResource(R.drawable.ic_heart_filled)
-            itemView.home_place_name_text_view.text = product.name
-            val placeImageUrl = "$BASE_IMAGE_URL${product.id}/${product.image}"
-            Picasso.get().load(placeImageUrl).into(itemView.place_image_view)
+                itemView.add_to_favorite_image_view.setImageResource(R.drawable.ic_heart_filled)
+                itemView.home_rating_bar.rating = product.rating?.toFloat() ?: 0F
+                itemView.home_place_name_text_view.text = product.name
+                val placeImageUrl = "$BASE_PRODUCT_IMAGE_URL/${product.image}"
+                Picasso.get().load(placeImageUrl).into(itemView.place_image_view)
         }
 
         override fun onClick(v: View?) {
@@ -47,7 +48,7 @@ class FavoritePlacesAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoritePlacesViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
-        val view = layoutInflater.inflate(R.layout.home_place_item, parent, false)
+        val view = layoutInflater.inflate(R.layout.home_product_item, parent, false)
         return FavoritePlacesViewHolder(view)
     }
 
@@ -57,4 +58,10 @@ class FavoritePlacesAdapter(
     }
 
     override fun getItemCount(): Int = favoriteProducts.size
+
+    fun removeItem(position: Int) {
+        favoriteProducts.removeAt(position)
+        notifyItemRemoved(position)
+        notifyItemRangeChanged(position, favoriteProducts.size)
+    }
 }
