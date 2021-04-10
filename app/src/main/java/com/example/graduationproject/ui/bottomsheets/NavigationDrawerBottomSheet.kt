@@ -25,11 +25,9 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.graduationproject.R
 import com.example.graduationproject.databinding.NavigationDrawerBottomSheetBinding
 import com.example.graduationproject.dummy.AddToPostBottomSheet
-import com.example.graduationproject.dummy.FiloUtils
 import com.example.graduationproject.dummy.PostAttachmentListener
 import com.example.graduationproject.helper.Constants.BASE_USER_IMAGE_URL
 import com.example.graduationproject.helper.FileUtils
-import com.example.graduationproject.helper.FileUtils.getFile
 import com.example.graduationproject.model.user.User
 import com.example.graduationproject.network.RetrofitInstance
 import com.example.graduationproject.ui.activities.SplashActivity
