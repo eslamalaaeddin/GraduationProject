@@ -26,7 +26,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:background="@color/view_page_color"
+                android:background="@color/colorPrimary"
                 android:gravity="center"
                 android:id="@+id/dots_layout">
 

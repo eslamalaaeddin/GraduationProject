@@ -1,22 +1,14 @@
 package com.example.graduationproject.ui.fragments
 
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
-import android.preference.PreferenceManager
-import android.util.Log
 import android.view.View
 import android.widget.Toast
-import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.graduationproject.R
 import com.example.graduationproject.model.authentication.SignUp
-import com.example.graduationproject.model.authentication.Verify
-import com.example.graduationproject.ui.activities.MainActivity
 import com.example.graduationproject.ui.activities.SplashActivity
-import com.example.graduationproject.viewmodel.NavigationDrawerViewModel
 import com.example.graduationproject.viewmodel.SignUpViewModel
 import kotlinx.android.synthetic.main.fragment_up_sign.*
 import kotlinx.coroutines.launch
@@ -84,15 +76,15 @@ class SignUpFragment : Fragment(R.layout.fragment_up_sign) {
                        "Account created successfully",
                        Toast.LENGTH_SHORT
                    ).show()
-                   navigateToVerificationFragment()
+                   navigateToSignInFragment()
                }
             }
 
         }
     }
 
-    private fun navigateToVerificationFragment(){
-        val action = SignUpFragmentDirections.actionSignUpFragmentToVerificationFragment()
+    private fun navigateToSignInFragment(){
+        val action = SignUpFragmentDirections.actionSignUpFragmentToSignInFragment()
         findNavController().navigate(action)
     }
 

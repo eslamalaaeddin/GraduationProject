@@ -11,9 +11,9 @@ import androidx.viewpager.widget.PagerAdapter
 import com.example.graduationproject.R
 
 val IMAGES = arrayOf(
-    R.drawable.ic_travel_splash,
-    R.drawable.ic_travel_splash,
-    R.drawable.ic_travel_splash
+    R.drawable.ic_splash_logo,
+    R.drawable.ic_splash_logo,
+    R.drawable.ic_splash_logo
 )
 val HEADINGS = arrayOf("Heading 1","Heading 2","Heading 3")
 val DESCRIPTIONS =

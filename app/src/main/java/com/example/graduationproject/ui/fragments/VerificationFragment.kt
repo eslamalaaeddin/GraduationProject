@@ -36,10 +36,10 @@ class VerificationFragment : Fragment(R.layout.fragment_verification) {
             ).show()
         }
 
-        haveAccountTextView.setOnClickListener {
-            val action = VerificationFragmentDirections.actionVerificationFragmentToSignInFragment()
-            findNavController().navigate(action)
-        }
+//        haveAccountTextView.setOnClickListener {
+//            val action = VerificationFragmentDirections.actionVerificationFragmentToSignInFragment()
+//            findNavController().navigate(action)
+//        }
 
         verifyButton.setOnClickListener {
             val verificationCode = verification_code_edit_text.text.toString()

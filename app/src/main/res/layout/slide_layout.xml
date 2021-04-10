@@ -4,14 +4,14 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:gravity="center"
-    android:background="@color/view_page_color"
+    android:background="@color/white"
     android:orientation="vertical">
 
     <ImageView
         android:layout_width="128dp"
         android:layout_height="128dp"
         android:id="@+id/logo_image_view"
-        android:src="@drawable/ic_travel_splash"/>
+        android:src="@drawable/ic_splash_logo"/>
 
     <TextView
         android:layout_width="match_parent"
@@ -20,7 +20,7 @@
         tools:text="Travel App"
         android:textSize="36sp"
         android:gravity="center"
-        android:textColor="@color/white"
+        android:textColor="@color/black"
         android:layout_margin="16dp"
         />
 
@@ -30,7 +30,7 @@
         android:id="@+id/heading_description_text_view"
         tools:text="doaj;fdoasfjaodfj;ofjsdfnd;salfjad;fjdl;kafjdsalkfjlsdaflkdsj;flsdajklflkdasfjdkslafdsaf;lsadfjksd;flsdafjl;kasdl;kfsd;klfajlksdfjsdfjsdkl;fa;ldjflkdsjflsdkafsjda;flkdsjaflk;sadjfalksdjfasdlkfjlkdsjflsadjf;sadfdslkf;lasdfjklds;flkdslkfsadljkf;a;kdsl;l"
         android:textSize="16sp"
-        android:textColor="@color/white"
+        android:textColor="@color/black"
         android:layout_margin="16dp"
         />
 

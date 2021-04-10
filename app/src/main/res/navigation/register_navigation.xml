@@ -57,14 +57,6 @@
         android:name="com.example.graduationproject.ui.fragments.SignUpFragment"
         android:label="SignUpFragment" >
         <action
-            android:id="@+id/action_signUpFragment_to_verificationFragment"
-            app:destination="@id/verificationFragment"
-            app:enterAnim="@anim/fragment_fade_enter"
-            app:exitAnim="@anim/fragment_fade_exit"
-            app:popEnterAnim="@anim/fragment_fade_enter"
-            app:popExitAnim="@anim/fragment_fade_exit"
-            />
-        <action
             android:id="@+id/action_signUpFragment_to_signInFragment"
             app:destination="@id/signInFragment"
             app:enterAnim="@anim/slide_in_left"
@@ -72,22 +64,6 @@
             app:popEnterAnim="@anim/slide_in_right"
             app:popExitAnim="@anim/slide_out_left"
             />
-    </fragment>
-    <fragment
-        android:id="@+id/verificationFragment"
-        android:name="com.example.graduationproject.ui.fragments.VerificationFragment"
-        android:label="VerificationFragment" >
-        <action
-            android:id="@+id/action_verificationFragment_to_signInFragment"
-            app:destination="@id/signInFragment"
-            app:enterAnim="@anim/fragment_fade_enter"
-            app:exitAnim="@anim/fragment_fade_exit"
-            app:popEnterAnim="@anim/fragment_fade_enter"
-            app:popExitAnim="@anim/fragment_fade_exit"
-            />
-        <action
-            android:id="@+id/action_verificationFragment_to_mainActivity"
-            app:destination="@id/mainActivity" />
     </fragment>
     <activity
         android:id="@+id/mainActivity"
