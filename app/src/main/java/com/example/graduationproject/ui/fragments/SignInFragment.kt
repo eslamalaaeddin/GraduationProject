@@ -59,7 +59,7 @@ class SignInFragment : Fragment(R.layout.fragment_in_sign) {
     }
 
     private fun validateUserAndNavigateToMainActivity(mail: String, password: String) {
-        if (mail.isEmpty() || password.isEmpty()) {
+        if (mail.trim().isEmpty() || password.trim().isEmpty()) {
             Toast.makeText(requireContext(), "Enter all information first", Toast.LENGTH_SHORT)
                 .show()
         } else {
@@ -85,10 +85,16 @@ class SignInFragment : Fragment(R.layout.fragment_in_sign) {
                             userId,
                             mail
                         )
-                        progressBar.visibility = View.GONE
+
                         navigateToMainActivity()
                     }
+                    if (user == null){
+                        progressBar.visibility = View.GONE
+                    }
 
+                }
+                if (token == null){
+                    progressBar.visibility = View.GONE
                 }
             }
             dismissProgressAfterTimeOut()
@@ -100,6 +106,11 @@ class SignInFragment : Fragment(R.layout.fragment_in_sign) {
             progressBar.visibility = View.GONE
         }, Constants.TIME_OUT_SECONDS)
 
+    }
+
+    override fun onStop() {
+        super.onStop()
+        progressBar.visibility = View.GONE
     }
 
     private fun saveUserAsLoggedInAndSaveTokens(
@@ -121,6 +132,7 @@ class SignInFragment : Fragment(R.layout.fragment_in_sign) {
     }
 
     private fun navigateToMainActivity() {
+        progressBar.visibility = View.GONE
         val action = SignInFragmentDirections.actionSignInFragmentToMainActivity()
         findNavController().navigate(action)
         activity?.finish()

@@ -14,8 +14,6 @@ import com.example.graduationproject.paging.comments.CommentsSource
 import com.example.graduationproject.paging.comments.CommentsSourceFactory
 import com.example.graduationproject.paging.favorites.FavoritesSource
 import com.example.graduationproject.paging.favorites.FavoritesSourceFactory
-import com.example.graduationproject.paging.products.RecommendedProductsSource
-import com.example.graduationproject.paging.products.RecommendedProductsSourceFactory
 import com.example.graduationproject.repository.CommentsRepository
 import com.example.graduationproject.repository.ProductsRepository
 import com.example.graduationproject.repository.RatingRepository
@@ -38,22 +36,25 @@ class ProductActivityViewModel(
     var favoritesSourceLiveData : LiveData<FavoritesSource>? = null
     var favoriteProductsPagedList :  LiveData<PagedList<FavoriteProduct>>? = null
 
-    var page = 1
+    var favoritePages = 1
+    var commentPages = 1
 
-//    suspend fun getProductComments(placeId: String, page: Int, accessToken: String): LiveData<List<Comment>?>?{
-//        // i hide it as i want comment to be real time
-////        if (commentsLiveData != null) {
-////            return commentsLiveData
-////        }
-//
-//        commentsLiveData = liveData {
-//            val data = productsRepository.getProductComments(placeId, page, accessToken)
-//            emit(data)
+    suspend fun getProductComments(placeId: String, accessToken: String): LiveData<List<Comment>?>?{
+        // i hide it as i want comment to be real time
+//        if (commentsLiveData != null) {
+//            return commentsLiveData
 //        }
-//        return commentsLiveData
-//
-//
-//    }
+
+        commentsLiveData = liveData {
+            Log.i(TAG, "ccc BEFORE PAGE: $commentPages")
+            val data = productsRepository.getProductComments(placeId, commentPages++, accessToken)
+            Log.i(TAG, "ccc AFTER PAGE: $commentPages")
+            emit(data)
+        }
+        return commentsLiveData
+
+
+    }
 
     suspend fun getCommentsPagedList(productId: String, accessToken: String) : LiveData<PagedList<Comment>>?{
         val commentsSourceFactory = CommentsSourceFactory(productsRepository, productId, accessToken)
@@ -95,9 +96,9 @@ class ProductActivityViewModel(
 //            return favoritePlacesLiveData
 //        }
         favoritePlacesLiveData = liveData {
-            Log.i(TAG, "FFF BeforePage: $page")
-            val data = productsRepository.getFavoriteProducts(page++ , accessToken)
-            Log.i(TAG, "FFF AfterPage: $page")
+            Log.i(TAG, "FFF BeforePage: $favoritePages")
+            val data = productsRepository.getFavoriteProducts(favoritePages++ , accessToken)
+            Log.i(TAG, "FFF AfterPage: $favoritePages")
             emit(data)
         }
         return favoritePlacesLiveData

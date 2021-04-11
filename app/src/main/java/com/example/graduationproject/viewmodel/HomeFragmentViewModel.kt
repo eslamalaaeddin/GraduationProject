@@ -41,9 +41,9 @@ class HomeFragmentViewModel(private val productsRepository: ProductsRepository):
         //Making configs
         val config: PagedList.Config = PagedList.Config.Builder()
             .setEnablePlaceholders(true) //no items
-            .setInitialLoadSizeHint(3)
+            .setInitialLoadSizeHint(10)
             .setPageSize(2)
-            .setPrefetchDistance(1)
+            .setPrefetchDistance(4)
             .build()
 
 //        val executor: Executor = Executors.newFixedThreadPool(5)

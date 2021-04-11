@@ -4,11 +4,13 @@ import android.os.Bundle
 import android.os.Handler
 import android.util.Log
 import android.view.*
+import android.widget.AbsListView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.graduationproject.R
 import com.example.graduationproject.adapters.RecommendedPlacesAdapter
 import com.example.graduationproject.databinding.FragmentHomeBinding
@@ -21,9 +23,7 @@ import com.example.graduationproject.viewmodel.HomeFragmentViewModel
 import com.example.graduationproject.viewmodel.ProductActivityViewModel
 import kotlinx.android.synthetic.main.activity_product.*
 import kotlinx.android.synthetic.main.fragment_home.*
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 private const val TAG = "HomeFragment"
@@ -33,6 +33,7 @@ class HomeFragment : Fragment(), RecommendedProductClickListener {
     private val placeActivityViewModel by viewModel<ProductActivityViewModel>()
     private lateinit var fragmentBinding: FragmentHomeBinding
     var recommendedPlaces = mutableListOf<Product>()
+    private lateinit var gridLayoutManager : GridLayoutManager
     private var recProductsAdapter: RecommendedPlacesAdapter? = null
     private var accessToken = ""
     var tempClicked = false
@@ -45,7 +46,6 @@ class HomeFragment : Fragment(), RecommendedProductClickListener {
     ): View? {
         fragmentBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
-        // (activity as AppCompatActivity?)?.setSupportActionBar(fragmentBinding.mainToolbar)
         Log.i(TAG, "onCreateView: Home")
         return fragmentBinding.root
     }
@@ -53,9 +53,33 @@ class HomeFragment : Fragment(), RecommendedProductClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         accessToken = SplashActivity.getAccessToken(requireContext()).orEmpty()
+        gridLayoutManager = GridLayoutManager(context, 2)
+        fragmentBinding.progressBar.visibility = View.VISIBLE
         getRecommendedPlaces()
-//        android:nestedScrollingEnabled="false"
+        Log.i(TAG, "onViewCreated: LLLLLL")
+        fragmentBinding.arrowUpImageButton.setOnClickListener {
+            fragmentBinding.homePlacesRecyclerView.smoothScrollToPosition(0)
+            fragmentBinding.arrowUpImageButton.visibility = View.GONE
+        }
 
+        fragmentBinding.homePlacesRecyclerView.addOnScrollListener(object :
+            RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+
+                if (newState == AbsListView.OnScrollListener.SCROLL_STATE_FLING && gridLayoutManager.findFirstCompletelyVisibleItemPosition() != 0) {
+                    fragmentBinding.arrowUpImageButton.visibility = View.VISIBLE
+                } else if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL && gridLayoutManager.findFirstCompletelyVisibleItemPosition() != 0) {
+                    fragmentBinding.arrowUpImageButton.visibility = View.VISIBLE
+                }
+            }
+
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (gridLayoutManager.findFirstCompletelyVisibleItemPosition() < 2 ) {
+                    fragmentBinding.arrowUpImageButton.visibility = View.GONE
+                }
+            }
+        })
     }
 
 
@@ -98,23 +122,30 @@ class HomeFragment : Fragment(), RecommendedProductClickListener {
     }
 
     private fun getRecommendedPlaces() {
-        lifecycleScope.launch {
-            fragmentBinding.progressBar.visibility = View.VISIBLE
-            homeFragmentViewModel.getRecommendedProductsPagedList(accessToken)
-                ?.observe(viewLifecycleOwner)
-                { recProducts ->
-                    fragmentBinding.progressBar.visibility = View.GONE
-                    fragmentBinding.homePlacesRecyclerView.apply {
-                        layoutManager = GridLayoutManager(context, 2)
-                        recProductsAdapter = RecommendedPlacesAdapter(this@HomeFragment)
-                        recProductsAdapter?.let {
-                            it.submitList(recProducts)
-                            adapter = it
+        try {
+            lifecycleScope.launch {
+                fragmentBinding.progressBar.visibility = View.VISIBLE
+                homeFragmentViewModel.getRecommendedProductsPagedList(accessToken)
+                    ?.observe(viewLifecycleOwner)
+                    { recProducts ->
+
+                        fragmentBinding.homePlacesRecyclerView.apply {
+                            layoutManager = gridLayoutManager
+                            recProductsAdapter = RecommendedPlacesAdapter(this@HomeFragment)
+                            recProductsAdapter?.let {
+                                it.submitList(recProducts)
+                                adapter = it
+                            }
                         }
                     }
-                }
+                fragmentBinding.progressBar.visibility = View.GONE
+            }
+        } catch (ex: Throwable) {
+            Log.i(TAG, "getRecommendedPlaces: ${ex.localizedMessage}")
+        } finally {
+            dismissProgressAfterTimeOut()
         }
-        dismissProgressAfterTimeOut()
+
     }
 
     private fun dismissProgressAfterTimeOut() {

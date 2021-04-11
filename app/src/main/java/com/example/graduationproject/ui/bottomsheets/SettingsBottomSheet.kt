@@ -90,18 +90,24 @@ class SettingsBottomSheet(private val user: User): BottomSheetDialogFragment() {
             val oldPassword = oldPasswordEditText.text.toString()
             val newPassword = newPasswordEditText.text.toString()
 
-            if (oldPassword.isEmpty() || newPassword.isEmpty()){
+            if (oldPassword.trim().isEmpty() || newPassword.trim().isEmpty()){
                 Toast.makeText(requireContext(), "Enter all information first.", Toast.LENGTH_SHORT).show()
             }
             else{
                 val userPassword = UserPassword(oldPassword, newPassword)
                 lifecycleScope.launch {
+                    bindingInstance.progressBar?.visibility = View.VISIBLE
+                    submitButton.isEnabled = false
                     val responseMessage = navDrawerViewModel.changeUserPassword(userPassword, accessToken)
                     responseMessage?.let {
+                        bindingInstance.progressBar?.visibility = View.GONE
+                        submitButton.isEnabled = true
                         Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
-                        //I didn't cal the changePassword function as i need to dismiss dialog, ... i can create late init
-                        //dialog and call it.
                         dialog.dismiss()
+                    }
+                    if (responseMessage == null){
+                        bindingInstance.progressBar?.visibility = View.GONE
+                        submitButton.isEnabled = true
                     }
                 }
             }
@@ -132,10 +138,18 @@ class SettingsBottomSheet(private val user: User): BottomSheetDialogFragment() {
 //        if (firstName != user.firstName && lastName != user.lastName) {
             val userName = UserName(firstName, lastName)
             lifecycleScope.launch {
+                bindingInstance.updateInfoButton.isEnabled = false
+                bindingInstance.progressBar?.visibility = View.VISIBLE
                 val responseMessage = navDrawerViewModel.updateUserName(userName, accessToken)
                 responseMessage?.let {
+                    bindingInstance.updateInfoButton.isEnabled = true
+                    bindingInstance.progressBar?.visibility = View.GONE
                     Toast.makeText(requireContext(), "Updated successfully.", Toast.LENGTH_SHORT)
                         .show()
+                }
+                if (responseMessage == null){
+                    bindingInstance.progressBar?.visibility = View.GONE
+                    bindingInstance.updateInfoButton.isEnabled = true
                 }
             }
 //        }

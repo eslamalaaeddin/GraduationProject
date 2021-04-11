@@ -21,7 +21,12 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class CommentConfigsBottomSheet(private val commentListener: CommentListener, private val comment: Comment, private val placeId: Long) :
+class CommentConfigsBottomSheet(
+    private val commentListener: CommentListener,
+    private val comment: Comment,
+    private val placeId: Long,
+    private val position: Int
+) :
     BottomSheetDialogFragment() {
     private lateinit var bindingInstance: CommentConfigurationsBottomSheetBinding
     private val placeActivityViewModel by viewModel<ProductActivityViewModel>()
@@ -86,15 +91,16 @@ class CommentConfigsBottomSheet(private val commentListener: CommentListener, pr
                         accessToken
                     )
                     responseMessage?.let {
-                        Toast.makeText(requireContext(), "Comment updated", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), "Comment updated", Toast.LENGTH_SHORT)
+                            .show()
                         //call an interface to get tell Product activity that comments has been updated
-                        commentListener.onCommentModified(commentContent)
+                        comment.commentContent = commentContent
+                        commentListener.onCommentModified(comment, position)
                         dialog.dismiss()
                         dismiss()
                     }
                 }
-            }
-            else{
+            } else {
                 Toast.makeText(requireContext(), "Enter a comment first", Toast.LENGTH_SHORT).show()
             }
         }
@@ -123,7 +129,7 @@ class CommentConfigsBottomSheet(private val commentListener: CommentListener, pr
                 )
                 responseMessage?.let {
                     Toast.makeText(requireContext(), "Comment deleted", Toast.LENGTH_SHORT).show()
-                    commentListener.onCommentModified()
+                    commentListener.onCommentModified(position = position)
                     dialog.dismiss()
                     dismiss()
                 }

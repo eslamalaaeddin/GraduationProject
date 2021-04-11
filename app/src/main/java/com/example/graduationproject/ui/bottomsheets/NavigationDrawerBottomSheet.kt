@@ -166,6 +166,7 @@ class NavigationDrawerBottomSheet : BottomSheetDialogFragment(), PostAttachmentL
                 val imgFile = File(imageStringPath)
                 Log.i(TAG, "MMMM onActivityResult STRING PATH: $imageStringPath")
                 try {
+                    bindingInstance.progressBar.visibility = View.VISIBLE
                     val bitmap =
                         MediaStore.Images.Media.getBitmap(
                             requireActivity().contentResolver,
@@ -173,10 +174,13 @@ class NavigationDrawerBottomSheet : BottomSheetDialogFragment(), PostAttachmentL
                         )
                     uploadImage(selectedImageURI, accessToken)
                     if (bitmap != null) {
-                        bindingInstance.userImageView.setImageBitmap(bitmap)
+                       // bindingInstance.userImageView.setImageBitmap(bitmap)
                     }
                 } catch (ex: Throwable) {
                     Log.i(TAG, "MMMM onActivityResultERROR : ${ex.localizedMessage}", ex)
+                }
+                finally {
+                    //bindingInstance.progressBar.visibility = View.GONE
                 }
             }
         }
@@ -187,15 +191,16 @@ class NavigationDrawerBottomSheet : BottomSheetDialogFragment(), PostAttachmentL
         user?.let {
             val settingsBottomSheet = SettingsBottomSheet(it)
             settingsBottomSheet.show(activity?.supportFragmentManager!!, settingsBottomSheet.tag)
-            dismiss()
+           // dismiss()
         }
     }
 
-
     private fun getUserAndUpdateUi(){
+        bindingInstance.progressBar.visibility = View.VISIBLE
         val userFromViewModelScopeLiveData =
             navDrawerViewModel.getUserWithViewModelScope(accessToken)
         userFromViewModelScopeLiveData.observe(viewLifecycleOwner) {
+
             it?.let { currentUser ->
                 user = currentUser
                 bindingInstance.userNameTextView.text = "${currentUser.firstName} ${currentUser.lastName}"
@@ -214,6 +219,7 @@ class NavigationDrawerBottomSheet : BottomSheetDialogFragment(), PostAttachmentL
                 } else {
                     bindingInstance.userImageView.setImageResource(R.drawable.avatar)
                 }
+                bindingInstance.progressBar.visibility = View.GONE
 
             }
         }
@@ -265,7 +271,7 @@ class NavigationDrawerBottomSheet : BottomSheetDialogFragment(), PostAttachmentL
                     )
                 }
                 if (bitmap != null) {
-                    bindingInstance.userImageView.setImageBitmap(bitmap)
+//                    bindingInstance.userImageView.setImageBitmap(bitmap)
                     try {
 //                        uploadImage(imageUri, accessToken)
 
@@ -279,7 +285,7 @@ class NavigationDrawerBottomSheet : BottomSheetDialogFragment(), PostAttachmentL
     }
 
     private fun uploadImage(imageUri: Uri, accessToken: String) {
-
+        bindingInstance.progressBar.visibility = View.VISIBLE
         val descriptionPart = RequestBody.create(MultipartBody.FORM, "image")
 //        val theRequiredFile = FiloUtils.getFileFromUri(requireContext(), imageUri)
         val theRequiredFile = FileUtils.getFile(requireContext(), imageUri)
@@ -311,12 +317,13 @@ class NavigationDrawerBottomSheet : BottomSheetDialogFragment(), PostAttachmentL
             override fun onResponse(call: Call<ResponseBody?>, response: Response<ResponseBody?>) {
                 Log.i(TAG, "TTTT onResponse: $response")
                 if (response.isSuccessful) {
-
+                    bindingInstance.progressBar.visibility = View.GONE
                     onStart()
                 }
             }
 
             override fun onFailure(call: Call<ResponseBody?>, t: Throwable) {
+                bindingInstance.progressBar.visibility = View.GONE
                 Log.i(TAG, "TTTT onResponse: ${t.localizedMessage}")
             }
 

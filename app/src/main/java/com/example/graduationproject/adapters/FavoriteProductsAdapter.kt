@@ -39,10 +39,15 @@ class FavoriteProductsAdapter(
         }
 
         fun bind(product: FavoriteProduct) {
-            itemView.add_to_favorite_image_view.setImageResource(R.drawable.ic_heart_filled)
+            if (product.isFavorite == true){
+                itemView.add_to_favorite_image_view.setImageResource(R.drawable.ic_heart_filled)
+            }
+            else{
+                itemView.add_to_favorite_image_view.setImageResource(R.drawable.ic_heart)
+            }
             itemView.home_rating_bar.rating = product.rating ?: 0F
             itemView.home_place_name_text_view.text = product.name
-//            Picasso.get().load(product.image).into(itemView.place_image_view)
+           // Picasso.get().load(product.image).into(itemView.place_image_view)
         }
 
         override fun onClick(v: View?) {

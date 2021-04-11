@@ -1,11 +1,10 @@
 package com.example.graduationproject.adapters
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.paging.PagedListAdapter
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -13,16 +12,15 @@ import com.example.graduationproject.R
 import com.example.graduationproject.helper.Constants.BASE_USER_IMAGE_URL
 import com.example.graduationproject.helper.listeners.CommentListener
 import com.example.graduationproject.model.products.Comment
-import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
-import kotlinx.android.synthetic.main.comment_item_layout.view.*
 
 private const val TAG = "CommentsAdapter"
 //private const val BASE_USER_IMAGE_URL = "http://10.0.3.2:3000/images/users/"
 class CommentsAdapter(
+    private val comments: MutableList<Comment?>,
     private val userId: Long,
     private val commentListener: CommentListener
-    ) : PagedListAdapter<Comment, CommentsAdapter.CommentsHolder>(CALLBACK) {
+    ) : RecyclerView.Adapter< CommentsAdapter.CommentsHolder>() {
 
     inner class CommentsHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener, View.OnLongClickListener {
         private val personNameTextView : TextView = itemView.findViewById(R.id.comment_person_name_text_view)
@@ -33,9 +31,9 @@ class CommentsAdapter(
 
         init {
             moreOnCommentButton.setOnClickListener {
-                val comment = getItem(position)
+                val comment = comments[adapterPosition]
                 comment?.let{
-                    commentListener.onMoreOnCommentClicked(comment)
+                    commentListener.onMoreOnCommentClicked(comment, adapterPosition)
                 }
             }
             itemView.setOnClickListener(this)
@@ -58,6 +56,7 @@ class CommentsAdapter(
                 else{
                     personImage.setImageResource(R.drawable.avatar)
                 }
+            Log.i(TAG, "ddd bind: $comment")
             //Rate
             if (comment.rate == null){
                 placeRatingBar.visibility = View.GONE
@@ -96,28 +95,31 @@ class CommentsAdapter(
 
 
     override fun onBindViewHolder(holder: CommentsHolder, position: Int) {
-        val comment = getItem(position)
+        val comment = comments[holder.adapterPosition]
         comment?.let {
             holder.bind(comment)
         }
     }
 
-//    fun removeItem(position: Int) {
-//        favoriteProducts.removeAt(position)
-//        notifyItemRemoved(position)
-//        notifyItemRangeChanged(position, favoriteProducts.size)
-//    }
+    fun removeItem(position: Int) {
+        comments.removeAt(position)
+        notifyItemRemoved(position)
+       // notifyItemRangeChanged(position, itemCount)
+    }
 
-    companion object {
-        val CALLBACK: DiffUtil.ItemCallback<Comment?> = object : DiffUtil.ItemCallback<Comment?>() {
-            override fun areItemsTheSame(oldItem: Comment, newItem: Comment): Boolean {
-                return oldItem.commentId === newItem.commentId
-            }
+    fun updateItem(position: Int, comment: Comment) {
+        comments[position] = comment
+        notifyItemChanged(position, comment)
+        //notifyItemRangeChanged(position, itemCount)
+    }
 
-            override fun areContentsTheSame(oldItem: Comment, newItem: Comment): Boolean {
-                return oldItem == newItem
-            }
 
-        }
+    override fun getItemCount(): Int {
+        return comments.size
+    }
+
+    fun addComment(comment: Comment) {
+        comments[0] = comment
+        notifyItemChanged(0, comment)
     }
 }

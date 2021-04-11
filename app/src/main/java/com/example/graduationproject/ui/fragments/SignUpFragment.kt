@@ -44,8 +44,6 @@ class SignUpFragment : Fragment(R.layout.fragment_up_sign) {
                 password,
                 confirmPassword
             )
-
-
         }
     }
 
@@ -57,7 +55,7 @@ class SignUpFragment : Fragment(R.layout.fragment_up_sign) {
         confirmPassword: String
     ) {
 
-        if (firstName.isEmpty() || lastName.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
+        if (firstName.trim().isEmpty() || lastName.trim().isEmpty() || email.trim().isEmpty() || password.trim().isEmpty() || confirmPassword.trim().isEmpty()) {
             Toast.makeText(requireContext(), "Enter all information first", Toast.LENGTH_SHORT)
                 .show()
         }
@@ -81,8 +79,11 @@ class SignUpFragment : Fragment(R.layout.fragment_up_sign) {
                        Toast.LENGTH_SHORT
                    ).show()
                    navigateToSignInFragment()
-                   progressBar.visibility = View.GONE
+
                }
+                else{
+                   progressBar.visibility = View.GONE
+                }
             }
             dismissProgressAfterTimeOut()
         }
@@ -91,6 +92,11 @@ class SignUpFragment : Fragment(R.layout.fragment_up_sign) {
     private fun navigateToSignInFragment(){
         val action = SignUpFragmentDirections.actionSignUpFragmentToSignInFragment()
         findNavController().navigate(action)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        progressBar.visibility = View.GONE
     }
 
     private fun isEmailValid(email: String?): Boolean {

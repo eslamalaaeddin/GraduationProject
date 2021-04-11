@@ -10,8 +10,6 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:context=".HomeFragment"
         >
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
@@ -27,6 +25,17 @@
             android:indeterminate="false"
             android:indeterminateTint="@color/colorPrimary"
             android:max="100" />
+
+        <ImageButton
+            android:id="@+id/arrowUpImageButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            android:scaleType="centerCrop"
+            android:visibility="gone"
+            android:layout_marginBottom="8dp"
+            android:src="@drawable/ic_up_arrow"
+            android:layout_gravity="center|bottom"/>
 
     </FrameLayout>
 
