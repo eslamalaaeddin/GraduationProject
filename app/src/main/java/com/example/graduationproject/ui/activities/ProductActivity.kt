@@ -60,7 +60,7 @@ class PlaceActivity : AppCompatActivity(), CommentListener {
             if (userRate == 0.0F) {
                 addRateToPlace(rate)
             }
-            else {
+            else if (rating != userRate) {
                 updateRateFromPlace(rate)
             }
 
