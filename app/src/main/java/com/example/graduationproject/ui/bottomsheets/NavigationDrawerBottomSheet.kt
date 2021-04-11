@@ -89,18 +89,14 @@ class NavigationDrawerBottomSheet : BottomSheetDialogFragment(), PostAttachmentL
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        bindingInstance.settingsLayout.setOnClickListener { openSettingsBottomSheet() }
-//        bindingInstance.logOutLayout.setOnClickListener {
-//            SplashActivity.setLoggedOut(requireContext(), true)
-//            SplashActivity.setAccessToken(requireContext(), "")
-//            SplashActivity.setRefreshToken(requireContext(), "")
-//            startActivity(Intent(requireContext(), RegisterActivity::class.java))
-//            activity?.finish()
-//        }
 
-        bindingInstance.userImageView.setOnClickListener {
-            onClickImage()
-        }
+        accessToken = SplashActivity.getAccessToken(requireContext()).toString()
+
+        getUserAndUpdateUi()
+
+        bindingInstance.settingsLayout.setOnClickListener { openSettingsBottomSheet() }
+
+        bindingInstance.userImageView.setOnClickListener { onClickImage() }
 
         bindingInstance.upButtonView.setOnClickListener { dismiss() }
     }
@@ -195,10 +191,8 @@ class NavigationDrawerBottomSheet : BottomSheetDialogFragment(), PostAttachmentL
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-        accessToken = SplashActivity.getAccessToken(requireContext()).toString()
-//        getUser()
+
+    private fun getUserAndUpdateUi(){
         val userFromViewModelScopeLiveData =
             navDrawerViewModel.getUserWithViewModelScope(accessToken)
         userFromViewModelScopeLiveData.observe(viewLifecycleOwner) {

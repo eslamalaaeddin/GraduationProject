@@ -11,6 +11,7 @@ object Constants {
     const val BASE_PRODUCT_IMAGE_URL = "$HOST$PORT/images/products/"
     const val BASE_URL = "$HOST$PORT/api/" //GenyMotion
 
+    const val TIME_OUT_SECONDS : Long = 30
 
     const val SIGNED_UP_VERIFIED_SIGNED_IN = "signed up verified signed in"
     const val WELCOMED = "welcomed"

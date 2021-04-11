@@ -5,94 +5,111 @@
 
     </data>
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="center"
-        >
+        android:layout_height="match_parent">
 
-<!--        <ImageView-->
-<!--            android:layout_width="128dp"-->
-<!--            android:layout_height="128dp"-->
-<!--            android:src="@drawable/ic_travel_splash"-->
-<!--            android:layout_gravity="center"-->
-<!--            android:layout_marginBottom="32dp"-->
-<!--            />-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            >
 
 
-        <EditText
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/first_name_edit_text"
+                android:hint="First name"
+                android:backgroundTint="@color/grey"
+                android:inputType="text"
+                android:maxLines="1"
+                android:layout_margin="8dp"
+                />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/last_name_edit_text"
+                android:backgroundTint="@color/grey"
+                android:inputType="text"
+                android:maxLines="1"
+                android:hint="Last name"
+                android:layout_margin="8dp"
+                />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/mail_edit_text"
+                android:backgroundTint="@color/grey"
+                android:hint="Email address"
+                android:inputType="text"
+                android:maxLines="1"
+                android:layout_margin="8dp"
+                />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/password_edit_text"
+                android:backgroundTint="@color/grey"
+                android:hint="Password"
+                android:inputType="text"
+                android:maxLines="1"
+                android:layout_margin="8dp"
+                />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/confirm_password_edit_text"
+                android:backgroundTint="@color/grey"
+                android:hint="Confirm password"
+                android:inputType="text"
+                android:maxLines="1"
+                android:layout_margin="8dp"
+                />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/signUpButton"
+                android:text="Sign up"
+                android:background="@drawable/round_button"
+                android:textColor="@color/white"
+                android:textAllCaps="false"
+                android:textSize="18sp"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                />
+
+            <TextView
+                android:id="@+id/haveAccountTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Do you have an account? Sign in"
+                android:textAlignment="center"
+                android:textColor="@color/dark_grey"
+                android:textSize="16sp"
+                />
+
+        </LinearLayout>
+        <ProgressBar
+            android:id="@+id/progressBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/first_name_edit_text"
-            android:hint="First name"
-            android:backgroundTint="@color/grey"
-            android:inputType="text"
-            android:layout_margin="8dp"
-            />
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/last_name_edit_text"
-            android:backgroundTint="@color/grey"
-            android:inputType="text"
-            android:hint="Last name"
-            android:layout_margin="8dp"
-            />
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/mail_edit_text"
-            android:inputType="textEmailAddress"
-            android:backgroundTint="@color/grey"
-            android:hint="Email address"
-            android:layout_margin="8dp"
-            />
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/password_edit_text"
-            android:backgroundTint="@color/grey"
-            android:hint="Password"
-            android:layout_margin="8dp"
-            />
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/confirm_password_edit_text"
-            android:backgroundTint="@color/grey"
-            android:hint="Confirm password"
-            android:layout_margin="8dp"
-            />
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/signUpButton"
-            android:text="Sign up"
-            android:background="@drawable/round_button"
-            android:textColor="@color/white"
-            android:textAllCaps="false"
-            android:textSize="18sp"
-            android:layout_marginStart="32dp"
-            android:layout_marginEnd="32dp"
-            android:layout_marginTop="16dp"
+            android:indeterminate="false"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            android:indeterminateTint="@color/colorPrimary"
             android:layout_marginBottom="16dp"
-            />
+            android:max="100" />
+    </FrameLayout>
 
-        <TextView
-            android:id="@+id/haveAccountTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Do you have an account? Sign in"
-            android:textAlignment="center"
-            android:textColor="@color/dark_grey"
-            android:textSize="16sp"
-            />
 
-    </LinearLayout>
 </layout>

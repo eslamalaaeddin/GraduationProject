@@ -8,6 +8,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
@@ -48,9 +49,6 @@ class PlaceActivity : AppCompatActivity(), CommentListener {
         accessToken = SplashActivity.getAccessToken(this).orEmpty()
         userId = SplashActivity.getUserId(this)
 
-
-        Log.i(TAG, "CCCC getProductDetails: $userId")
-
         placeDetailsBinding = DataBindingUtil.setContentView(this, R.layout.activity_product)
 
         setUpToolbar()
@@ -72,10 +70,12 @@ class PlaceActivity : AppCompatActivity(), CommentListener {
         lifecycleScope.launch { getUserSpecificRate() }
 
         //Add Product to favorite or remove it from fav.
-        placeDetailsBinding.addToFavoriteImageView.setOnClickListener {
+        placeDetailsBinding.addRemoveFavoriteFrameLayout.setOnClickListener {
             if (isPlaceFavorite) {
+                placeDetailsBinding.addToFavoriteImageView.setImageResource(R.drawable.ic_heart)
                 lifecycleScope.launch { deleteProductFromFavorite() }
             } else {
+                placeDetailsBinding.addToFavoriteImageView.setImageResource(R.drawable.ic_heart_filled)
                 lifecycleScope.launch { addPlaceToFavorite() }
             }
         }
@@ -169,6 +169,7 @@ class PlaceActivity : AppCompatActivity(), CommentListener {
                     placeDetailsBinding.detailsPlaceNameTextView.text = it.name
                     placeDetailsBinding.placeDescriptionTextView.text = it.description
 
+                    placeDetailsBinding.productTagsTextView.text = it.tags.toString()
 
                     val rate =  it.rating
                     Log.i(TAG, "PPPP getProductDetails: $rate")
@@ -191,6 +192,10 @@ class PlaceActivity : AppCompatActivity(), CommentListener {
                         adapter = PlaceImagesAdapter(placeId.toString(), placeImages)
                         //snapHelper.attachToRecyclerView(this)
                     }
+
+                    placeDetailsBinding.commentTextView.setOnClickListener {
+                        Toast.makeText(this, product.tags.toString(), Toast.LENGTH_LONG).show()
+                    }
                 }
                 Log.i(TAG, "PPPP getPlaceDetails: $product" )
             }
@@ -208,8 +213,6 @@ class PlaceActivity : AppCompatActivity(), CommentListener {
             )
             responseMessage?.let {
                 placeDetailsBinding.placeCommentEditText.text.clear()
-//                TODO("NOTIFY ITEM INSERTED")
-
                 getComments()
             }
         }
@@ -270,7 +273,8 @@ class PlaceActivity : AppCompatActivity(), CommentListener {
                 accessToken
             )
             responseMessage?.let {
-                add_to_favorite_image_view.setImageResource(R.drawable.ic_heart_filled)
+                //commented to work offline and faster
+               // add_to_favorite_image_view.setImageResource(R.drawable.ic_heart_filled)
                 isPlaceFavorite = true
             }
     }
@@ -281,7 +285,8 @@ class PlaceActivity : AppCompatActivity(), CommentListener {
                 accessToken
             )
             responseMessage?.let {
-                add_to_favorite_image_view.setImageResource(R.drawable.ic_heart)
+                //commented to work offline and faster
+                //add_to_favorite_image_view.setImageResource(R.drawable.ic_heart)
                 isPlaceFavorite = false
             }
     }

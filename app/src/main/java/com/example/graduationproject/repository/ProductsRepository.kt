@@ -44,17 +44,6 @@ class ProductsRepository(private val api: Api, private val context: Context, pri
         return response
     }
 
-//    suspend fun searchForPlaceInCountry(placeName: String, countryName: String, accessToken: String): List<Product>? {
-//        var products: List<Product>? = null
-//        try {
-//            products = safeApiCall(call = { withContext(Dispatchers.IO){api.searchForPlaceInCountry(placeName, countryName, accessToken)} })
-//        }
-//        catch (ex: Throwable) {
-//            if (ex is HttpException){exceptionHandler.handleException(ex, ex.code().toString())}
-//            else{exceptionHandler.handleException(ex)}
-//        }
-//        return products
-//    }
 
     suspend fun getProductDetails(placeId: String, accessToken: String): Product? {
         var product : Product? = null
@@ -92,48 +81,10 @@ class ProductsRepository(private val api: Api, private val context: Context, pri
         return placeComments
     }
 
-//    suspend fun getUserVisitedPlaces(accessToken: String): List<Product>?{
-//        var visitedProducts : List<Product>? = null
-//        try {
-//            visitedProducts = safeApiCall({ withContext(Dispatchers.IO){api.getUserVisitedPlaces(accessToken)} })
-//        }
-//
-//        catch (ex: Throwable) {
-//            if (ex is HttpException){exceptionHandler.handleException(ex, ex.code().toString())}
-//            else{exceptionHandler.handleException(ex)}
-//        }
-//
-//        return visitedProducts
-//    }
-
-//    suspend fun addPlaceToUserVisitedPlaces(visitedPlace: VisitedProduct, accessToken: String): ResponseMessage?{
-//        var responseMessage : ResponseMessage? = null
-//        try {
-//            responseMessage = safeApiCall({ withContext(Dispatchers.IO){api.addPlaceToUserVisitedPlaces(visitedPlace, accessToken)} })
-//        }
-//        catch (ex: Throwable) {
-//            if (ex is HttpException){exceptionHandler.handleException(ex, ex.code().toString())}
-//            else{exceptionHandler.handleException(ex)}
-//        }
-//       return responseMessage
-//    }
-
-//    suspend fun deleteUserVisitedPlace(placeId: String, accessToken: String): ResponseMessage?{
-//        var responseMessage : ResponseMessage? = null
-//        try {
-//            responseMessage = safeApiCall({ withContext(Dispatchers.IO){api.deleteUserVisitedPlace(placeId, accessToken)} })
-//        }
-//        catch (ex: Throwable) {
-//            if (ex is HttpException){exceptionHandler.handleException(ex, ex.code().toString())}
-//            else{exceptionHandler.handleException(ex)}
-//        }
-//        return responseMessage
-//    }
-
-    suspend fun getFavoriteProducts(accessToken: String): MutableList<FavoriteProduct>?{
+    suspend fun getFavoriteProducts(page: Int, accessToken: String): MutableList<FavoriteProduct>?{
         var favoriteProducts : MutableList<FavoriteProduct>? = null
         try {
-            favoriteProducts = safeApiCall({ withContext(ioDispatcher){api.getFavoriteProducts(accessToken)} })
+            favoriteProducts = safeApiCall({ withContext(ioDispatcher){api.getFavoriteProducts(page, accessToken)} })
         }
         catch (ex: Throwable) {
             if (ex is HttpException){exceptionHandler.handleException(ex, ex.code().toString())}

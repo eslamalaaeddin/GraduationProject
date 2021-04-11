@@ -51,7 +51,6 @@ class CommentsSource(
                     Log.i(TAG, "IIII loadInitial: $comments" )
                 }
             }
-
     }
 
 }

@@ -6,9 +6,11 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.graduationproject.R
 import com.example.graduationproject.helper.Constants.BASE_PRODUCT_IMAGE_URL
+import com.example.graduationproject.model.products.Product
 import com.example.graduationproject.model.products.ProductImage
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.product_details_item_layout.view.*
@@ -39,9 +41,8 @@ class PlaceImagesAdapter(
             if (productImage.name?.isNotEmpty() == true) {
 //                Picasso.get().load("${BASE_PLACE_IMAGE_URL}$placeId/${productImage.name}").into(itemView.detail_place_image_view)
 //                Picasso.get().load("${BASE_PRODUCT_IMAGE_URL}${productImage.name}").into(itemView.detail_place_image_view)
-                Picasso.get().load(productImage.name).into(itemView.detail_place_image_view)
+//                Picasso.get().load(productImage.name).into(itemView.detail_place_image_view)
             }
-
         }
 
         override fun onClick(item: View?) {
@@ -74,4 +75,6 @@ class PlaceImagesAdapter(
         val place = productImages[holder.adapterPosition]
         holder.bind(place)
     }
+
+
 }

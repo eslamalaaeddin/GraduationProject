@@ -1,12 +1,14 @@
 package com.example.graduationproject.ui.fragments
 
 import android.os.Bundle
+import android.os.Handler
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.graduationproject.R
+import com.example.graduationproject.helper.Constants
 import com.example.graduationproject.model.authentication.SignUp
 import com.example.graduationproject.ui.activities.SplashActivity
 import com.example.graduationproject.viewmodel.SignUpViewModel
@@ -43,6 +45,7 @@ class SignUpFragment : Fragment(R.layout.fragment_up_sign) {
                 confirmPassword
             )
 
+
         }
     }
 
@@ -68,6 +71,7 @@ class SignUpFragment : Fragment(R.layout.fragment_up_sign) {
         else {
             val signUp = SignUp(firstName, lastName, email, password)
             lifecycleScope.launch {
+                progressBar.visibility = View.VISIBLE
                 SplashActivity.saveEmailInPrefs(requireContext(), email)
                val responseMessage = signUpViewModel.signUp(signUp)
                if(responseMessage != null){
@@ -77,9 +81,10 @@ class SignUpFragment : Fragment(R.layout.fragment_up_sign) {
                        Toast.LENGTH_SHORT
                    ).show()
                    navigateToSignInFragment()
+                   progressBar.visibility = View.GONE
                }
             }
-
+            dismissProgressAfterTimeOut()
         }
     }
 
@@ -93,6 +98,13 @@ class SignUpFragment : Fragment(R.layout.fragment_up_sign) {
         val pattern: Pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE)
         val matcher: Matcher = pattern.matcher(email)
         return matcher.matches()
+    }
+
+    private fun dismissProgressAfterTimeOut() {
+        Handler().postDelayed({
+            progressBar.visibility = View.GONE
+        }, Constants.TIME_OUT_SECONDS)
+
     }
 
 

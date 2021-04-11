@@ -82,32 +82,14 @@ interface Api {
         @Header("Authorization") accessToken: String
     ): Response<List<Comment>>
 
-//    /*
-//        TO BE CHANGED
-//     */
-//    // TODO: 3/26/2021 Delete it
-//    @GET("places/visited")
-//    suspend fun getUserVisitedPlaces(
-//        @Header("Authorization") accessToken: String
-//    ): Response<List<Product>>
-
-//    @POST("places/visited")
-//    suspend fun addPlaceToUserVisitedPlaces(
-//        @Body visitedPlace: VisitedProduct,
-//        @Header("Authorization") accessToken: String
-//    ): Response<ResponseMessage>
-//
-//    @DELETE("places/visited/{id}")
-//    suspend fun deleteUserVisitedPlace(
-//        @Path("id") placeId: String,
-//        @Header("Authorization") accessToken: String
-//    ): Response<ResponseMessage>
-
     /*
        TO BE CHANGED AS IT IS HHH
     */
+
+
     @GET("products/fav")
     suspend fun getFavoriteProducts(
+        @Query("page") page: Int,
         @Header("Authorization") accessToken: String
     ): Response<MutableList<FavoriteProduct>>
 

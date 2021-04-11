@@ -1,5 +1,6 @@
 package com.example.graduationproject.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
@@ -11,10 +12,15 @@ import com.example.graduationproject.model.products.*
 import com.example.graduationproject.model.rating.Rate
 import com.example.graduationproject.paging.comments.CommentsSource
 import com.example.graduationproject.paging.comments.CommentsSourceFactory
+import com.example.graduationproject.paging.favorites.FavoritesSource
+import com.example.graduationproject.paging.favorites.FavoritesSourceFactory
+import com.example.graduationproject.paging.products.RecommendedProductsSource
+import com.example.graduationproject.paging.products.RecommendedProductsSourceFactory
 import com.example.graduationproject.repository.CommentsRepository
 import com.example.graduationproject.repository.ProductsRepository
 import com.example.graduationproject.repository.RatingRepository
 
+private const val TAG = "ProductActivityViewMode"
 class ProductActivityViewModel(
     private val commentsRepository: CommentsRepository,
     private val productsRepository: ProductsRepository,
@@ -28,6 +34,11 @@ class ProductActivityViewModel(
 
     var commentsSourceLiveData : LiveData<CommentsSource>? = null
     var commentsPagedList :  LiveData<PagedList<Comment>>? = null
+
+    var favoritesSourceLiveData : LiveData<FavoritesSource>? = null
+    var favoriteProductsPagedList :  LiveData<PagedList<FavoriteProduct>>? = null
+
+    var page = 1
 
 //    suspend fun getProductComments(placeId: String, page: Int, accessToken: String): LiveData<List<Comment>?>?{
 //        // i hide it as i want comment to be real time
@@ -79,16 +90,43 @@ class ProductActivityViewModel(
         return productLiveData
     }
 
-    suspend fun getFavoriteProducts(accessToken: String): LiveData<MutableList<FavoriteProduct>?>?{
-        if (favoritePlacesLiveData != null) {
-            return favoritePlacesLiveData
-        }
+    suspend fun getFavoriteProducts( accessToken: String): LiveData<MutableList<FavoriteProduct>?>?{
+//        if (favoritePlacesLiveData != null) {
+//            return favoritePlacesLiveData
+//        }
         favoritePlacesLiveData = liveData {
-            val data = productsRepository.getFavoriteProducts(accessToken)
+            Log.i(TAG, "FFF BeforePage: $page")
+            val data = productsRepository.getFavoriteProducts(page++ , accessToken)
+            Log.i(TAG, "FFF AfterPage: $page")
             emit(data)
         }
         return favoritePlacesLiveData
     }
+
+    suspend fun getFavoriteProductsPagedList(accessToken: String) : LiveData<PagedList<FavoriteProduct>>?{
+        val favoriteProductsSourceFactory = FavoritesSourceFactory(productsRepository, accessToken)
+        favoritesSourceLiveData = favoriteProductsSourceFactory.favoritesSourceLiveData
+        //Making configs
+
+        //Making configs
+        val config: PagedList.Config = PagedList.Config.Builder()
+            .setEnablePlaceholders(true) //no items
+            .setInitialLoadSizeHint(3)
+            .setPageSize(2)
+            .setPrefetchDistance(1)
+            .build()
+
+//        val executor: Executor = Executors.newFixedThreadPool(5)
+        //building the paged list
+        //building the paged list
+        favoriteProductsPagedList = LivePagedListBuilder<Int, FavoriteProduct>(favoriteProductsSourceFactory, config)
+//            .setFetchExecutor(executor)
+            .build()
+
+        return favoriteProductsPagedList
+    }
+
+
 
     suspend fun getUserSpecificRate(placeId: String, accessToken: String): Rate? {
 

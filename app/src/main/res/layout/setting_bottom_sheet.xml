@@ -74,6 +74,8 @@
                     android:layout_margin="8dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="8dp"
+                    android:inputType="text"
+                    android:maxLines="1"
                     android:layout_marginBottom="8dp"
                     android:hint="First name"
                     app:layout_constraintBottom_toTopOf="@+id/lastNameEditText"
@@ -89,6 +91,8 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="8dp"
                     android:hint="Last name"
+                    android:inputType="text"
+                    android:maxLines="1"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     tools:layout_editor_absoluteY="356dp" />

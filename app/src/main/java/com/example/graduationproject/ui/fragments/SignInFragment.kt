@@ -2,6 +2,7 @@ package com.example.graduationproject.ui.fragments
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -10,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.graduationproject.R
+import com.example.graduationproject.helper.Constants
 import com.example.graduationproject.model.authentication.Login
 import com.example.graduationproject.model.authentication.RefreshToken
 import com.example.graduationproject.model.authentication.Token
@@ -61,8 +63,10 @@ class SignInFragment : Fragment(R.layout.fragment_in_sign) {
             Toast.makeText(requireContext(), "Enter all information first", Toast.LENGTH_SHORT)
                 .show()
         } else {
+
             val login = Login(mail, password)
             lifecycleScope.launch {
+                progressBar.visibility = View.VISIBLE
                 val token = loginViewModel.login(login)
                 token?.let { t ->
                     val accessToken = t.access_token
@@ -81,13 +85,21 @@ class SignInFragment : Fragment(R.layout.fragment_in_sign) {
                             userId,
                             mail
                         )
+                        progressBar.visibility = View.GONE
                         navigateToMainActivity()
                     }
 
                 }
-
             }
+            dismissProgressAfterTimeOut()
         }
+    }
+
+    private fun dismissProgressAfterTimeOut() {
+        Handler().postDelayed({
+            progressBar.visibility = View.GONE
+        }, Constants.TIME_OUT_SECONDS)
+
     }
 
     private fun saveUserAsLoggedInAndSaveTokens(

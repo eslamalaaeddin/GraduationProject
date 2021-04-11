@@ -7,7 +7,7 @@
 
     </data>
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -15,10 +15,19 @@
         >
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="match_parent"
             android:id="@+id/home_places_recycler_view"/>
 
-    </LinearLayout>
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            android:indeterminate="false"
+            android:indeterminateTint="@color/colorPrimary"
+            android:max="100" />
+
+    </FrameLayout>
 
 </layout>

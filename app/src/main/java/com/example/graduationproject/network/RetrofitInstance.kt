@@ -1,11 +1,12 @@
 package com.example.graduationproject.network
 
-import android.content.Context
 import com.example.graduationproject.helper.Constants.BASE_URL
+import com.example.graduationproject.helper.Constants.TIME_OUT_SECONDS
 import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
+
 
 //private const val BASE_URL = "http://10.0.2.2:3000/api/" //Emulator
 //private const val BASE_URL = "http://10.0.3.2:3000/api/" //GenyMotion
@@ -16,26 +17,17 @@ class RetrofitInstance(){
 
     companion object {
 
-//        private lateinit var context: Context
-//
-//        fun setContext(con: Context) {
-//            context=con
-//        }
-
          val retrofit by lazy {
 
-//             val interceptor =  HttpLoggingInterceptor()
-//             interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
-//             val client =  OkHttpClient.Builder().addInterceptor(interceptor).build()
-//             val client =  OkHttpClient.Builder().authenticator(TokenAuthenticator(context)).build()
-//
-//                 .addInterceptor(interceptor).build()
-//             client.authenticator = TokenAuthenticator(context = )
+             val okHttpClient: OkHttpClient = OkHttpClient.Builder()
+                 .readTimeout(TIME_OUT_SECONDS, TimeUnit.SECONDS)
+                 .connectTimeout(TIME_OUT_SECONDS, TimeUnit.SECONDS)
+                 .build()
 
             Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
-//                .client(client)
+                .client(okHttpClient)
                 .build()
         }
 

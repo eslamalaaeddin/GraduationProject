@@ -11,11 +11,11 @@
         android:layout_width="match_parent"
         android:layout_height="196dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="4dp"
-        app:cardCornerRadius="4dp"
-        app:cardElevation="4dp"
+        android:layout_marginBottom="8dp"
+        app:cardCornerRadius="2dp"
+        app:cardElevation="1dp"
 
         >
 
@@ -69,6 +69,7 @@
                 android:layout_height="30dp"
                 android:layout_gravity="end"
                 android:layout_margin="8dp"
+                android:id="@+id/addToFavoriteFrameLayout"
                 android:background="@drawable/rounded_background_no_stroke">
 
                 <ImageView

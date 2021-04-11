@@ -66,6 +66,8 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="32dp"
                 android:hint="First name"
+                android:inputType="text"
+                android:maxLines="1"
                 app:layout_constraintBottom_toTopOf="@+id/lastNameEditText"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
@@ -93,6 +95,8 @@
                 android:background="@drawable/round_button"
                 android:text="Update"
                 android:textColor="@color/white"
+                android:inputType="text"
+                android:maxLines="1"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@+id/changePasswordImageButton"
                 app:layout_constraintEnd_toEndOf="parent"
