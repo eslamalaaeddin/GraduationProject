@@ -5,6 +5,7 @@ import android.os.Handler
 import android.util.Log
 import android.view.*
 import android.widget.AbsListView
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -16,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import com.example.graduationproject.R
 import com.example.graduationproject.adapters.FavoriteProductsAdapter
 import com.example.graduationproject.databinding.FragmentFavoritesBinding
-import com.example.graduationproject.helper.Constants.TIME_OUT_SECONDS
+import com.example.graduationproject.helper.Constants.TIME_OUT_MILLISECONDS
 import com.example.graduationproject.helper.listeners.FavoriteProductClickListener
 import com.example.graduationproject.model.products.FavoriteProduct
 import com.example.graduationproject.model.products.VisitedProduct
@@ -31,7 +32,7 @@ class FavoritesFragment : Fragment(), FavoriteProductClickListener {
     private lateinit var fragmentFavoritesBinding: FragmentFavoritesBinding
     private val placeActivityViewModel by viewModel<ProductActivityViewModel>()
     private lateinit var accessToken: String
-    private var favoriteProducts: MutableList<FavoriteProduct>? = mutableListOf()
+    private var favoriteProducts: MutableList<FavoriteProduct> = mutableListOf()
     private lateinit var favoriteProductsAdapter: FavoriteProductsAdapter
     private var currentRecProducts: PagedList<FavoriteProduct>? = null
     private lateinit var gridLayoutManager: GridLayoutManager
@@ -57,7 +58,7 @@ class FavoritesFragment : Fragment(), FavoriteProductClickListener {
         super.onViewCreated(view, savedInstanceState)
         accessToken = SplashActivity.getAccessToken(requireContext()).orEmpty()
 
-        getFavoriteProducts()
+        //getFavoriteProducts()
 
         fragmentFavoritesBinding.arrowUpImageButton.setOnClickListener {
             fragmentFavoritesBinding.favoriteProductsRecyclerView.smoothScrollToPosition(0)
@@ -69,10 +70,12 @@ class FavoritesFragment : Fragment(), FavoriteProductClickListener {
                 override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                     super.onScrollStateChanged(recyclerView, newState)
 
-                    if (newState == AbsListView.OnScrollListener.SCROLL_STATE_FLING && gridLayoutManager.findFirstCompletelyVisibleItemPosition() != 0) {
-                        fragmentFavoritesBinding.arrowUpImageButton.visibility = View.VISIBLE
-                    } else if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL && gridLayoutManager.findFirstCompletelyVisibleItemPosition() != 0) {
-                        fragmentFavoritesBinding.arrowUpImageButton.visibility = View.VISIBLE
+                    if (favoriteProducts.isNotEmpty()) {
+                        if (newState == AbsListView.OnScrollListener.SCROLL_STATE_FLING && gridLayoutManager.findFirstCompletelyVisibleItemPosition() != 0) {
+                            fragmentFavoritesBinding.arrowUpImageButton.visibility = View.VISIBLE
+                        } else if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL && gridLayoutManager.findFirstCompletelyVisibleItemPosition() != 0) {
+                            fragmentFavoritesBinding.arrowUpImageButton.visibility = View.VISIBLE
+                        }
                     }
 
                     if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
@@ -93,7 +96,14 @@ class FavoritesFragment : Fragment(), FavoriteProductClickListener {
                     // userScrolled to false
                     if (userScrolled && visibleItemCount + pastVisibleItems == totalItemCount) {
                         userScrolled = false
-                        updateRecyclerView()
+                        if (placeActivityViewModel.favoritePages != -1) {
+                            updateRecyclerView()
+                        }
+
+                    }
+
+                    if (dy < 0) {
+                        fragmentFavoritesBinding.arrowUpImageButton.visibility = View.GONE
                     }
 
                     if (gridLayoutManager.findFirstCompletelyVisibleItemPosition() < 2) {
@@ -104,40 +114,57 @@ class FavoritesFragment : Fragment(), FavoriteProductClickListener {
         )
     }
 
+    override fun onStart() {
+        super.onStart()
+        getFavoriteProducts()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        placeActivityViewModel.favoritePages = 1
+    }
+
     private fun updateRecyclerView() {
         try {
             lifecycleScope.launch {
                 fragmentFavoritesBinding.progressBar.visibility = View.VISIBLE
                 val favoritePlacesLiveData = placeActivityViewModel.getFavoriteProducts(accessToken)
                 favoritePlacesLiveData?.observe(viewLifecycleOwner) { favProducts ->
+                    if (favProducts.isNullOrEmpty()) {
+                        placeActivityViewModel.favoritePages = -1
+                    } else {
+                        favoriteProducts?.addAll(favProducts.orEmpty())
+                        favoriteProductsAdapter.notifyDataSetChanged()
+                    }
                     fragmentFavoritesBinding.noFavoriteProductsTextView.visibility = View.GONE
-                    favoriteProducts?.addAll(favProducts.orEmpty())
-                    favoriteProductsAdapter.notifyDataSetChanged()
                     fragmentFavoritesBinding.progressBar.visibility = View.GONE
                 }
 
             }
         } catch (ex: Throwable) {
             Log.i(TAG, "updateRecyclerView: ${ex.localizedMessage}")
+            fragmentFavoritesBinding.progressBar.visibility = View.GONE
         } finally {
             dismissProgressAfterTimeOut()
         }
 
     }
 
-
     private fun getFavoriteProducts() {
         try {
             lifecycleScope.launch {
                 fragmentFavoritesBinding.progressBar.visibility = View.VISIBLE
+                dismissProgressAfterTimeOut()
                 val favoritePlacesLiveData = placeActivityViewModel.getFavoriteProducts(accessToken)
 
                 favoritePlacesLiveData?.observe(viewLifecycleOwner) { favProducts ->
 
-                    favoriteProducts = favProducts
-                    favProducts.let {
+                    if (favProducts != null) {
+                        favoriteProducts = favProducts
+                    }
+                    favProducts?.let {
 
-                        if (favProducts.isNullOrEmpty()) {
+                        if (favProducts.isEmpty()) {
                             fragmentFavoritesBinding.noFavoriteProductsTextView.visibility =
                                 View.VISIBLE
                         } else {
@@ -155,21 +182,18 @@ class FavoritesFragment : Fragment(), FavoriteProductClickListener {
                             favoriteProductsAdapter.notifyDataSetChanged()
                         }
                     }
+                    if (favProducts == null) {
+                        fragmentFavoritesBinding.progressBar.visibility = View.GONE
+                    }
                     fragmentFavoritesBinding.progressBar.visibility = View.GONE
                 }
             }
         } catch (ex: Throwable) {
             Log.i(TAG, "getFavoriteProducts: ${ex.localizedMessage}")
-        } finally {
-            dismissProgressAfterTimeOut()
+            fragmentFavoritesBinding.progressBar.visibility = View.GONE
         }
 
     }
-
-    override fun onFavoriteIconClicked(favoriteProduct: FavoriteProduct?, productPosition: Int) {
-        handleFavoriteState(productPosition, favoriteProduct)
-    }
-
 
     private fun handleFavoriteState(productPosition: Int, favoriteProduct: FavoriteProduct?) {
         val isFavorite = favoriteProduct?.isFavorite
@@ -177,43 +201,58 @@ class FavoritesFragment : Fragment(), FavoriteProductClickListener {
         if (isFavorite == true) {
             favoriteProduct.isFavorite = false
             favoriteProductsAdapter.notifyItemChanged(productPosition, favoriteProduct)
-            lifecycleScope.launch {
-                placeActivityViewModel.deleteProductFromFavorites(
-                    favoriteProduct.id.toString(),
-                    accessToken
-                )
-            }
+            removeProductFromFavorite(favoriteProduct)
         }
         //Not favorite
         else {
-            lifecycleScope.launch {
-                addPlaceToFavorite(favoriteProduct, productPosition)
-            }
+            addProductToFavorite(favoriteProduct, productPosition)
             favoriteProduct?.isFavorite = true
             favoriteProductsAdapter.notifyItemChanged(productPosition, favoriteProduct)
 
         }
-        //if you want to remove the whole item from the list
-//        favoriteProductsAdapter.removeItem(position = productPosition)
-//        favoriteProductsAdapter.notifyItemRemoved(productPosition)
-        // favoriteProductsAdapter.notifyDataSetChanged()
     }
 
-    private suspend fun addPlaceToFavorite(product: FavoriteProduct?, productPosition: Int) {
-        val responseMessage = placeActivityViewModel.addProductToFavorites(
-            VisitedProduct(pid = product?.id),
-            accessToken
-        )
-        responseMessage?.let {
+    private fun addProductToFavorite(product: FavoriteProduct?, productPosition: Int) {
+        lifecycleScope.launch {
+            val responseMessage = placeActivityViewModel.addProductToFavorites(
+                VisitedProduct(pid = product?.id),
+                accessToken
+            )
+            responseMessage?.let {
+                favoriteProductsAdapter.notifyItemChanged(productPosition, product)
+            }
+            if (responseMessage == null) {
 
-            favoriteProductsAdapter.notifyItemChanged(productPosition, product)
+            }
+        }
+    }
+
+    private fun removeProductFromFavorite(favoriteProduct: FavoriteProduct){
+        lifecycleScope.launch {
+            val responseMessage = placeActivityViewModel.deleteProductFromFavorites(
+                favoriteProduct.id.toString(),
+                accessToken
+            )
+            responseMessage?.let {
+                //Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
+            }
+            if (responseMessage == null) {
+
+            }
         }
     }
 
     private fun dismissProgressAfterTimeOut() {
-        Handler().postDelayed({
-            fragmentFavoritesBinding.progressBar.visibility = View.GONE
-        }, TIME_OUT_SECONDS)
+        lifecycleScope.launchWhenStarted {
+            Handler().postDelayed({
+                fragmentFavoritesBinding.progressBar.visibility = View.GONE
+            }, TIME_OUT_MILLISECONDS)
+
+        }
+    }
+
+    override fun onFavoriteIconClicked(favoriteProduct: FavoriteProduct?, productPosition: Int) {
+        handleFavoriteState(productPosition, favoriteProduct)
     }
 
 }

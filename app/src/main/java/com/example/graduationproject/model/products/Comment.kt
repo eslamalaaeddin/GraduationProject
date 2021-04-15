@@ -2,6 +2,9 @@ package com.example.graduationproject.model.products
 
 import androidx.recyclerview.widget.DiffUtil
 import com.google.gson.annotations.SerializedName
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.*
 
 /*
      "comment_id": 1,
@@ -24,9 +27,16 @@ data class Comment(
     @SerializedName("user_image")
     var userImage: String? = null,
     @SerializedName("username")
-    var userName: String? = null
+    var userName: String? = null,
+    val timeStamp : Long = System.currentTimeMillis()
 ){
 
+    fun convertServerTimeToTimestamp(serverTime: String): Long{
+        val dateOnly = serverTime.substring(5, 25)
+        val formatter: DateFormat = SimpleDateFormat("dd MMM yyyy HH:mm:ss")
+        val date: Date = formatter.parse(dateOnly) as Date
+        return date.time / 1000
+    }
 
 
 }

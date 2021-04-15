@@ -18,9 +18,12 @@ import com.example.graduationproject.helper.Constants.ACCESS_TOKEN_EX_TIME
 import com.example.graduationproject.helper.Constants.LOGGED_OUT
 import com.example.graduationproject.helper.Constants.REFRESH_TOKEN
 import com.example.graduationproject.helper.Constants.REFRESH_TOKEN_EX_TIME
+import com.example.graduationproject.helper.Constants.SEARCH_METHOD
 import com.example.graduationproject.helper.Constants.SIGNED_UP_VERIFIED_SIGNED_IN
 import com.example.graduationproject.helper.Constants.USER_EMAIL
 import com.example.graduationproject.helper.Constants.USER_ID
+import com.example.graduationproject.helper.Constants.USER_IMAGE_URL
+import com.example.graduationproject.helper.Constants.USER_NAME
 import com.example.graduationproject.helper.Constants.WELCOMED
 import com.example.graduationproject.model.authentication.RefreshToken
 import com.example.graduationproject.viewmodel.SplashActivityViewModel
@@ -41,8 +44,6 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         makeFullScreen()
         setContentView(R.layout.activity_splash)
-
-
 
         val signedInORSignedUpVerified = getSignedIn(this)
         val welcomed = getWelcomed(this)
@@ -147,9 +148,45 @@ class SplashActivity : AppCompatActivity() {
                 .apply()
         }
 
+        fun setUserName(context: Context?, userName: String) {
+            PreferenceManager.getDefaultSharedPreferences(context)
+                .edit()
+                .putString(USER_NAME, userName)
+                .apply()
+        }
+
+        fun setUserImageUrl(context: Context?, userImageUrl: String) {
+            PreferenceManager.getDefaultSharedPreferences(context)
+                .edit()
+                .putString(USER_IMAGE_URL, userImageUrl)
+                .apply()
+        }
+
         fun getUserId(context: Context?): Long {
             val prefs = PreferenceManager.getDefaultSharedPreferences(context)
             return prefs.getLong(USER_ID, 0)
+        }
+
+        fun setSearchMethod(context: Context?, searchMethod: String) {
+            PreferenceManager.getDefaultSharedPreferences(context)
+                .edit()
+                .putString(SEARCH_METHOD, searchMethod)
+                .apply()
+        }
+
+        fun getSearchMethod(context: Context?): String? {
+            val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+            return prefs.getString(SEARCH_METHOD,"name" )
+        }
+
+        fun getUserName(context: Context?): String? {
+            val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+            return prefs.getString(USER_NAME,"" )
+        }
+
+        fun getUserImageUrl(context: Context?): String? {
+            val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+            return prefs.getString(USER_IMAGE_URL,"user.png" )
         }
 
         fun saveEmailInPrefs(context: Context?, userEmail: String) {

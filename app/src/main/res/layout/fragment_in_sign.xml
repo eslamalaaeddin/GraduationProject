@@ -90,10 +90,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:indeterminate="false"
-            android:layout_gravity="center"
+            android:layout_gravity="center|top"
             android:visibility="gone"
             android:indeterminateTint="@color/colorPrimary"
-            android:layout_marginBottom="16dp"
+            android:layout_marginTop="32dp"
             android:max="100" />
 
     </FrameLayout>

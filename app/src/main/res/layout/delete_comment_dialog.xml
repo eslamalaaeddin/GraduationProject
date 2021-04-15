@@ -8,6 +8,16 @@
     android:gravity="center"
     android:orientation="vertical">
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        android:indeterminate="false"
+        android:indeterminateTint="@color/colorPrimary"
+        android:max="100" />
+
 
     <TextView
         android:id="@+id/deleteCommentTextView"

@@ -75,6 +75,8 @@ class VerificationFragment : Fragment(R.layout.fragment_verification) {
                                 accessTokenExTime,
                                 refreshTokenExTime,
                                 userId,
+                                "${user.firstName} ${user.lastName}",
+                                user.image.orEmpty(),
                                 email.orEmpty()
                             )
                             navigateToMainActivity()
@@ -93,6 +95,8 @@ class VerificationFragment : Fragment(R.layout.fragment_verification) {
         accessTokenExTime: String,
         refreshTokenExTime: String,
         userId: Long,
+        userName: String,
+        userImageUrl : String,
         email: String
     ){
         SplashActivity.setAccessToken(requireContext(), accessToken)
@@ -100,6 +104,8 @@ class VerificationFragment : Fragment(R.layout.fragment_verification) {
         SplashActivity.setAccessTokenExpirationTime(requireContext(), accessTokenExTime)
         SplashActivity.setRefreshTokenExpirationTime(requireContext(), refreshTokenExTime)
         SplashActivity.setUserId(requireContext(), userId)
+        SplashActivity.setUserName(requireContext(), userName)
+        SplashActivity.setUserImageUrl(requireContext(), userImageUrl)
         SplashActivity.setSignedIn(requireContext(), true)
         SplashActivity.setLoggedOut(requireContext(), false)
         SplashActivity.saveEmailInPrefs(requireContext(), email)

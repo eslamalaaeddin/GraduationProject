@@ -1,11 +1,18 @@
 package com.example.graduationproject
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.SystemClock
 import android.util.Log
 import android.widget.Button
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.observe
+import com.example.graduationproject.helper.Constants
 import com.example.graduationproject.ui.activities.SplashActivity
 import com.example.graduationproject.viewmodel.NavigationDrawerViewModel
 import com.example.graduationproject.viewmodel.SplashActivityViewModel
@@ -14,10 +21,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 private const val TAG = "TokenActivity"
 class TokenActivity : AppCompatActivity() {
-    //to get access to refresh token method
-    private val splashViewModel : SplashActivityViewModel by viewModel()
-    //to make the dummy request that check if the token is expired
-    private val userViewModel : NavigationDrawerViewModel by viewModel()
 
     private lateinit var accessToken: String
     private lateinit var requestButton: Button
@@ -29,25 +32,53 @@ class TokenActivity : AppCompatActivity() {
         accessToken = SplashActivity.getAccessToken(this).orEmpty()
 
         requestButton.setOnClickListener {
-            tryToGetUser(accessToken)
-            lifecycleScope.launch{
-                val user = userViewModel.getUser(accessToken)
-                if (user == null){
-                    Log.i(TAG, "ISLAM tryToGetUser: REFRESH THE TOKEN")
-                }
-                Log.i(TAG, "ISLAM tryToGetUser: $user")
-            }
+            showImageUploadingProgress()
         }
-
 
     }
 
-    private fun tryToGetUser(accessToken: String) {
-        userViewModel.getUserWithViewModelScope(accessToken).observe(this){user ->
-            if (user == null){
-                Log.i(TAG, "ISLAM tryToGetUser: REFRESH THE TOKEN")
-            }
-            Log.i(TAG, "ISLAM tryToGetUser: $user")
+    private fun showImageUploadingProgress() {
+        val progressMax = 100
+        val notificationManager =
+            NotificationManagerCompat.from(applicationContext)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                Constants.CHANNEL_ID, Constants.CHANNEL_NAME,
+                NotificationManager.IMPORTANCE_LOW
+            )
+            channel.setSound(null, null)
+            channel.setShowBadge(false)
+            channel.importance = NotificationManager.IMPORTANCE_LOW
+            channel.description = getString(R.string.channel_description)
+            notificationManager.createNotificationChannel(channel)
         }
+
+
+        val notification = NotificationCompat.Builder(this, Constants.CHANNEL_NAME)
+            .setSmallIcon(R.drawable.ic_splash_logo)
+            .setChannelId(Constants.CHANNEL_ID)
+            .setContentTitle("Image uploading")
+            .setContentText("Uploading in progress")
+            .setOngoing(true)
+            .setOnlyAlertOnce(true)
+            .setProgress(progressMax, 0, true)
+        notificationManager.notify(2, notification.build())
+
+        Thread {
+            //SystemClock.sleep(2000);
+            var progress = 0
+            while (progress <= progressMax) {
+                notification.setProgress(progressMax, progress, false)
+                notificationManager.notify(2, notification.build())
+                SystemClock.sleep(500)
+                progress += 10
+            }
+            notification.setContentText("Done!")
+                .setProgress(0, 0, false)
+                .setOngoing(false)
+            notificationManager.notify(2, notification.build())
+        }.start()
     }
+
 }

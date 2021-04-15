@@ -32,11 +32,9 @@ class HomeFragment : Fragment(), RecommendedProductClickListener {
     private val homeFragmentViewModel by viewModel<HomeFragmentViewModel>()
     private val placeActivityViewModel by viewModel<ProductActivityViewModel>()
     private lateinit var fragmentBinding: FragmentHomeBinding
-    var recommendedPlaces = mutableListOf<Product>()
     private lateinit var gridLayoutManager : GridLayoutManager
     private var recProductsAdapter: RecommendedPlacesAdapter? = null
     private var accessToken = ""
-    var tempClicked = false
 
 
     override fun onCreateView(
@@ -55,13 +53,21 @@ class HomeFragment : Fragment(), RecommendedProductClickListener {
         accessToken = SplashActivity.getAccessToken(requireContext()).orEmpty()
         gridLayoutManager = GridLayoutManager(context, 2)
         fragmentBinding.progressBar.visibility = View.VISIBLE
+
         getRecommendedPlaces()
-        Log.i(TAG, "onViewCreated: LLLLLL")
+
+        initArrowImageButton()
+        initScrollListener()
+    }
+
+    private fun initArrowImageButton(){
         fragmentBinding.arrowUpImageButton.setOnClickListener {
             fragmentBinding.homePlacesRecyclerView.smoothScrollToPosition(0)
             fragmentBinding.arrowUpImageButton.visibility = View.GONE
         }
+    }
 
+    private fun initScrollListener(){
         fragmentBinding.homePlacesRecyclerView.addOnScrollListener(object :
             RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
@@ -124,7 +130,7 @@ class HomeFragment : Fragment(), RecommendedProductClickListener {
     private fun getRecommendedPlaces() {
         try {
             lifecycleScope.launch {
-                fragmentBinding.progressBar.visibility = View.VISIBLE
+                dismissProgressAfterTimeOut()
                 homeFragmentViewModel.getRecommendedProductsPagedList(accessToken)
                     ?.observe(viewLifecycleOwner)
                     { recProducts ->
@@ -133,12 +139,17 @@ class HomeFragment : Fragment(), RecommendedProductClickListener {
                             layoutManager = gridLayoutManager
                             recProductsAdapter = RecommendedPlacesAdapter(this@HomeFragment)
                             recProductsAdapter?.let {
+                                fragmentBinding.progressBar.visibility = View.VISIBLE
                                 it.submitList(recProducts)
                                 adapter = it
+                                lifecycleScope.launchWhenStarted {
+                                    Handler().postDelayed({
+                                        fragmentBinding.progressBar.visibility = View.GONE
+                                    },750)
+                                }
                             }
                         }
                     }
-                fragmentBinding.progressBar.visibility = View.GONE
             }
         } catch (ex: Throwable) {
             Log.i(TAG, "getRecommendedPlaces: ${ex.localizedMessage}")
@@ -149,9 +160,12 @@ class HomeFragment : Fragment(), RecommendedProductClickListener {
     }
 
     private fun dismissProgressAfterTimeOut() {
-        Handler().postDelayed({
-            fragmentBinding.progressBar.visibility = View.GONE
-        }, Constants.TIME_OUT_SECONDS)
+        lifecycleScope.launchWhenStarted {
+            fragmentBinding.progressBar.visibility = View.VISIBLE
+            Handler().postDelayed({
+                fragmentBinding.progressBar.visibility = View.GONE
+            }, Constants.TIME_OUT_MILLISECONDS)
+        }
     }
 
 

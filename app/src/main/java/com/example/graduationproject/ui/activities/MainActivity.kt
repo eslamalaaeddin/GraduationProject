@@ -5,13 +5,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Window
 import android.widget.Button
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.graduationproject.R
-import com.example.graduationproject.ui.bottomsheets.NavigationDrawerBottomSheet
-import com.example.graduationproject.ui.bottomsheets.SearchBottomSheet
+import com.example.graduationproject.ui.fragments.UserInfoFragment
 import com.example.graduationproject.ui.fragments.FavoritesFragment
 import com.example.graduationproject.ui.fragments.HomeFragment
 import com.example.graduationproject.ui.fragments.SearchFragment
@@ -44,17 +42,17 @@ class MainActivity : AppCompatActivity() {
                 R.id.favoritesFragment -> {
                     navigateToFavoritesFragment()
                 }
-//                R.id.addPlaces -> {
-//                    navigateToAddPlacesActivity()
-//                }
-                R.id.logOutIcon -> {
-//                    navigateToSearchFragment()
-//                    navigateToSearchBottomSheet()
-//                    updateStateAndLogOut()
-                    showLogoutDialog()
+                R.id.searchFragment -> {
+                    navigateToSearchFragment()
                 }
+//                R.id.logOutIcon -> {
+////                    navigateToSearchFragment()
+////                    navigateToSearchBottomSheet()
+////                    updateStateAndLogOut()
+//                    showLogoutDialog()
+//                }
                 R.id.moreNavigationDrawer -> {
-                    openNavigationDrawerBottomSheet()
+                    navigateToUserInfoFragment()
                 }
             }
             true
@@ -120,15 +118,16 @@ class MainActivity : AppCompatActivity() {
             .commit()
     }
 
-    private fun navigateToSearchBottomSheet(){
-        val searchBottomSheet = SearchBottomSheet()
-        searchBottomSheet.show(supportFragmentManager, searchBottomSheet.tag)
-    }
 
 
-    private fun openNavigationDrawerBottomSheet(){
-        val navigationDrawerBottomSheet = NavigationDrawerBottomSheet()
-        navigationDrawerBottomSheet.show(supportFragmentManager, navigationDrawerBottomSheet.tag)
+
+    private fun navigateToUserInfoFragment(){
+        val userInfoFragment = UserInfoFragment()
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.my_nav_host_fragment, userInfoFragment)
+//            .addToBackStack(null)
+            .commit()
     }
 
     override fun onBackPressed() {

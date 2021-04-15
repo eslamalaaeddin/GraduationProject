@@ -5,19 +5,15 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.paging.PagedListAdapter
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.graduationproject.R
 import com.example.graduationproject.helper.listeners.FavoriteProductClickListener
 import com.example.graduationproject.model.products.FavoriteProduct
-import com.example.graduationproject.ui.activities.PlaceActivity
-import com.squareup.picasso.Picasso
+import com.example.graduationproject.ui.activities.ProductActivity
 import kotlinx.android.synthetic.main.favorite_product_item.view.*
 import kotlinx.android.synthetic.main.home_product_item.view.add_to_favorite_image_view
 import kotlinx.android.synthetic.main.home_product_item.view.home_place_name_text_view
 import kotlinx.android.synthetic.main.home_product_item.view.home_rating_bar
-import kotlinx.android.synthetic.main.home_product_item.view.place_image_view
 
 //private const val BASE_PRODUCT_IMAGE_URL = "http://10.0.3.2:3000/images/products/"
 private const val TAG = "FavoritePlacesAdapte"
@@ -47,13 +43,13 @@ class FavoriteProductsAdapter(
             }
             itemView.home_rating_bar.rating = product.rating ?: 0F
             itemView.home_place_name_text_view.text = product.name
-           // Picasso.get().load(product.image).into(itemView.place_image_view)
+//            Picasso.get().load(product.image).into(itemView.place_image_view)
         }
 
         override fun onClick(v: View?) {
             //Temp
             val place = favoriteProducts?.get(adapterPosition)
-            val intent = Intent(itemView.context, PlaceActivity::class.java)
+            val intent = Intent(itemView.context, ProductActivity::class.java)
             intent.putExtra("placeId", place?.id)
             itemView.context.startActivity(intent)
         }

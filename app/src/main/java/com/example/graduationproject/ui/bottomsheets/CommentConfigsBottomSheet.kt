@@ -2,6 +2,7 @@ package com.example.graduationproject.ui.bottomsheets
 
 import android.app.Dialog
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import com.example.graduationproject.R
 import com.example.graduationproject.databinding.CommentConfigurationsBottomSheetBinding
+import com.example.graduationproject.helper.Constants
 import com.example.graduationproject.helper.listeners.CommentListener
 import com.example.graduationproject.model.comments.ProductComment
 import com.example.graduationproject.model.products.Comment
@@ -43,8 +45,6 @@ class CommentConfigsBottomSheet(
             container,
             false
         )
-
-
         return bindingInstance.root
     }
 
@@ -55,7 +55,10 @@ class CommentConfigsBottomSheet(
         bindingInstance.updateCommentLayout.setOnClickListener {
             //get current comment
             //show it in a dialog box
-            showCommentUpdateDialog(comment)
+            //showCommentUpdateDialog(comment)
+            val updateCommentBottomSheet = UpdateCommentBottomSheet(commentListener, comment, placeId, position)
+            updateCommentBottomSheet.show(requireActivity().supportFragmentManager, updateCommentBottomSheet.tag)
+            dismiss()
         }
 
         bindingInstance.deleteCommentLayout.setOnClickListener {
@@ -119,17 +122,31 @@ class CommentConfigsBottomSheet(
 
         val deleteButton = dialog.findViewById(R.id.deleteCommentButton) as Button
         val cancelButton = dialog.findViewById(R.id.cancelDeleteCommentButton) as Button
+        val progressBar = dialog.findViewById(R.id.progressBar) as ProgressBar
 
 
         deleteButton.setOnClickListener {
+            lifecycleScope.launchWhenStarted {
+                progressBar.visibility = View.VISIBLE
+                Handler().postDelayed({
+                    progressBar.visibility = View.GONE
+                }, Constants.TIME_OUT_MILLISECONDS)
+            }
+
             lifecycleScope.launch {
                 val responseMessage = placeActivityViewModel.deleteCommentFromProduct(
                     comment.commentId.toString(),
                     accessToken
                 )
                 responseMessage?.let {
+                    progressBar.visibility = View.GONE
                     Toast.makeText(requireContext(), "Comment deleted", Toast.LENGTH_SHORT).show()
                     commentListener.onCommentModified(position = position)
+                    dialog.dismiss()
+                    dismiss()
+                }
+                if (responseMessage == null){
+                    progressBar.visibility = View.GONE
                     dialog.dismiss()
                     dismiss()
                 }
@@ -143,53 +160,7 @@ class CommentConfigsBottomSheet(
 
     }
 
-//    private fun showRateProductDialog(comment: Comment) {
-//        val dialog = Dialog(requireContext())
-//        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-//        dialog.setCancelable(true)
-//        dialog.setContentView(R.layout.rate_place_dialog)
-//
-//        val submitButton = dialog.findViewById(R.id.submitRateButton) as Button
-//        val cancelButton = dialog.findViewById(R.id.cancelRateButton) as Button
-//        val ratingBar = dialog.findViewById(R.id.addRatingView) as RatingBar
-//
-//        comment.rate?.let { ratingBar.rating = it }
-//        Toast.makeText(requireContext(), "${ratingBar.rating}", Toast.LENGTH_SHORT).show()
-//
-//        submitButton.setOnClickListener {
-//            val rate = Rate(ratingBar.rating.toInt())
-//            //Post or Put
-//            if (comment.rate == null) {
-//                lifecycleScope.launch {
-//                    val responseMessage =
-//                        placeActivityViewModel.addRatingToProduct(rate, placeId.toString(), accessToken)
-//                    responseMessage?.let {
-//                        Toast.makeText(requireContext(), "Rate added", Toast.LENGTH_SHORT).show()
-//                        commentListener.onProductRated()
-//                        dialog.dismiss()
-//                        dismiss()
-//                    }
-//                }
-//            }
-//            else{
-//                lifecycleScope.launch {
-//                    val responseMessage =
-//                        placeActivityViewModel.updateRatingToProduct(rate, placeId.toString(), accessToken)
-//                    responseMessage?.let {
-//                        Toast.makeText(requireContext(), "Rate updated", Toast.LENGTH_SHORT).show()
-//                        commentListener.onProductRated()
-//                        dialog.dismiss()
-//                        dismiss()
-//                    }
-//                }
-//            }
-//
-//        }
-//        cancelButton.setOnClickListener {
-//            dialog.dismiss()
-//        }
-//        dialog.show()
-//
-//    }
+
+
 
 }

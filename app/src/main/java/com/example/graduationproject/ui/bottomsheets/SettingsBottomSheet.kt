@@ -56,7 +56,7 @@ class SettingsBottomSheet(private val user: User): BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         accessToken = SplashActivity.getAccessToken(requireContext()).toString()
-        updateUserUi()
+       // updateUserUi()
 
         bindingInstance.upButtonView.setOnClickListener {dismiss()}
         bindingInstance.changePasswordImageButton.setOnClickListener {
@@ -156,6 +156,7 @@ class SettingsBottomSheet(private val user: User): BottomSheetDialogFragment() {
     }
 
     private fun updateUserUi(){
+
         val userImageUrl = "$BASE_USER_IMAGE_URL${user.image}"
         if (userImageUrl.isNotEmpty()){
             Glide.with(requireContext())
@@ -170,6 +171,8 @@ class SettingsBottomSheet(private val user: User): BottomSheetDialogFragment() {
         bindingInstance.lastNameEditText.setText(user.lastName)
         bindingInstance.lastNameEditText.setSelection(bindingInstance.lastNameEditText.text.length)
 
-
     }
+
+
+
 }

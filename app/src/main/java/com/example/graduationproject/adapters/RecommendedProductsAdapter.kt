@@ -12,8 +12,7 @@ import com.example.graduationproject.R
 import com.example.graduationproject.helper.Constants.BASE_PRODUCT_IMAGE_URL
 import com.example.graduationproject.helper.listeners.RecommendedProductClickListener
 import com.example.graduationproject.model.products.Product
-import com.example.graduationproject.ui.activities.PlaceActivity
-import com.squareup.picasso.Picasso
+import com.example.graduationproject.ui.activities.ProductActivity
 import kotlinx.android.synthetic.main.home_product_item.view.*
 
 private const val TAG = "RecommendedPlacesAdapte"
@@ -42,7 +41,7 @@ class RecommendedPlacesAdapter(
 //                val placeImageUrl = "$BASE_IMAGE_URL${product.id}/${product.image}"
                 val placeImageUrl = "$BASE_PRODUCT_IMAGE_URL/${product.image}"
                 Log.i(TAG, "bind: $placeImageUrl")
-               // Picasso.get().load(product.image).into(itemView.place_image_view)
+//                Picasso.get().load(product.image).into(itemView.place_image_view)
                 if (product.isFavorite == 1){
                     itemView.add_to_favorite_image_view.setImageResource(R.drawable.ic_heart_filled)
                 }
@@ -54,7 +53,7 @@ class RecommendedPlacesAdapter(
             override fun onClick(v: View?) {
                 //Temp
                 val place = getItem(adapterPosition)
-                val intent = Intent(itemView.context, PlaceActivity::class.java)
+                val intent = Intent(itemView.context, ProductActivity::class.java)
                 place?.let {
                     intent.putExtra("placeId", place.id)
                     itemView.context.startActivity(intent)
@@ -62,6 +61,8 @@ class RecommendedPlacesAdapter(
 
             }
         }
+
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecommendedPlacesViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -75,6 +76,8 @@ class RecommendedPlacesAdapter(
             holder.bind(place)
         }
     }
+
+
 
     companion object {
         val CALLBACK: DiffUtil.ItemCallback<Product?> = object : DiffUtil.ItemCallback<Product?>() {

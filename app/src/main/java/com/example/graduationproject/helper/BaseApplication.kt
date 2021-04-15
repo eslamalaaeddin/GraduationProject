@@ -33,7 +33,9 @@ class BaseApplication : Application() {
                     addPlaceViewModelModule,
                     userRepositoryModule,
                     userProfileActivityViewModelModule,
-                    navigationDrawerViewModelModule
+                    navigationDrawerViewModelModule,
+                    searchRepositoryModule,
+                    searchViewModelModule
 //                    tokenAuthenticatorModule
                 )
             )

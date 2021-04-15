@@ -36,29 +36,28 @@ interface Api {
     @POST("auth/refresh_token")
     fun refreshTheToken(@Body refreshToken: RefreshToken): Call<Token>
 
-    /////////////////////////////////////////////////////////////////////////
-    // TODO: 3/26/2021 Delete it
-//    @POST("places")
-//    suspend fun addNewPlace(
-//        @Body product: Product,
-//        @Header("Authorization") accessToken: String
-//    ): Response<ResponseMessage>
-
     @GET("products/rec")
     suspend fun getRecommendedPlaces(
         @Query("page") page: Int,
         @Header("Authorization") accessToken: String
     ): Response<List<Product>>
 
-//    // TODO: 3/26/2021 Delete it
-//    @GET("places/search")
-//    suspend fun searchForPlaceInCountry(
-//        @Query("key") placeName: String,
-//        @Query("country") countryName: String,
-//        @Header("Authorization") accessToken: String
-//    ): Response<List<Product>>
+ //   http://localhost:3000/api/products?s=story&page=1
+//http://localhost:3000/api/products?t=drama&page=1
+    @GET("products")
+    suspend fun searchByProductName(
+        @Query("s") productName: String,
+        @Query("page") page: Int,
+        @Header("Authorization") accessToken: String
+    ): Response<List<Product>>
 
 
+    @GET("products")
+    suspend fun searchByProductTag(
+        @Query("t") productTag: String,
+        @Query("page") page: Int,
+        @Header("Authorization") accessToken: String
+    ): Response<List<Product>>
 
 
     @GET("products/{id}")
@@ -82,10 +81,6 @@ interface Api {
         @Header("Authorization") accessToken: String
     ): Response<List<Comment>>
 
-    /*
-       TO BE CHANGED AS IT IS HHH
-    */
-
 
     @GET("products/fav")
     suspend fun getFavoriteProducts(
@@ -106,22 +101,20 @@ interface Api {
         @Header("Authorization") accessToken: String
     ): Response<ResponseMessage>
 
-    /////////////////////////////////////////////////////////////////////////////
 
-//    @FormUrlEncoded
+
+
 //    @POST("comments")
-//    suspend fun addCommentOnPlace(
-//        @Field("pid") pid: Int,
-//        @Field("comment") comment: String,
-//        @Field("time") time: String = "2020-09-25 20:13:00",
+//    suspend fun addCommentOnProduct(
+//        @Body productComment: ProductComment,
 //        @Header("Authorization") accessToken: String
-//    ): ResponseMessage
+//    ): Response<ResponseMessage>
 
     @POST("comments")
     suspend fun addCommentOnProduct(
         @Body productComment: ProductComment,
         @Header("Authorization") accessToken: String
-    ): Response<ResponseMessage>
+    ): Response<ReturnedComment>
 
     @PUT("comments/{id}")
     suspend fun updateCommentOnProduct(

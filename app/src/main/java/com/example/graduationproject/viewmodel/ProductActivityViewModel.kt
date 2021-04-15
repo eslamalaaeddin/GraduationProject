@@ -25,65 +25,30 @@ class ProductActivityViewModel(
     private val ratingRepository: RatingRepository
 ) : ViewModel() {
     var commentsLiveData : LiveData<List<Comment>?>? = null
-    var productImagesLiveData: LiveData<List<ProductImage>?>? = null
     var productLiveData : LiveData<Product?>? = null
     var favoritePlacesLiveData: LiveData<MutableList<FavoriteProduct>?>? = null
     var userSpecificPlaceRate: Rate? = null
-
-    var commentsSourceLiveData : LiveData<CommentsSource>? = null
-    var commentsPagedList :  LiveData<PagedList<Comment>>? = null
-
-    var favoritesSourceLiveData : LiveData<FavoritesSource>? = null
-    var favoriteProductsPagedList :  LiveData<PagedList<FavoriteProduct>>? = null
 
     var favoritePages = 1
     var commentPages = 1
 
     suspend fun getProductComments(placeId: String, accessToken: String): LiveData<List<Comment>?>?{
-        // i hide it as i want comment to be real time
-//        if (commentsLiveData != null) {
-//            return commentsLiveData
-//        }
 
-        commentsLiveData = liveData {
-            Log.i(TAG, "ccc BEFORE PAGE: $commentPages")
-            val data = productsRepository.getProductComments(placeId, commentPages++, accessToken)
-            Log.i(TAG, "ccc AFTER PAGE: $commentPages")
-            emit(data)
+        if (commentPages!=-1){
+            commentsLiveData = liveData {
+                Log.i(TAG, "ccc BEFORE PAGE: $commentPages")
+                val data = productsRepository.getProductComments(placeId, commentPages++, accessToken)
+                Log.i(TAG, "ccc AFTER PAGE: $commentPages")
+                emit(data)
+            }
+            return commentsLiveData
         }
-        return commentsLiveData
-
+        return null
 
     }
 
-    suspend fun getCommentsPagedList(productId: String, accessToken: String) : LiveData<PagedList<Comment>>?{
-        val commentsSourceFactory = CommentsSourceFactory(productsRepository, productId, accessToken)
-        commentsSourceLiveData = commentsSourceFactory.commentsSourceLiveData
-        //Making configs
-
-        //Making configs
-        val config: PagedList.Config = PagedList.Config.Builder()
-            .setEnablePlaceholders(true) //no items
-            .setInitialLoadSizeHint(3)
-            .setPageSize(2)
-            .setPrefetchDistance(1)
-            .build()
-
-//        val executor: Executor = Executors.newFixedThreadPool(5)
-        //building the paged list
-        //building the paged list
-        commentsPagedList = LivePagedListBuilder<Int, Comment>(commentsSourceFactory, config)
-//            .setFetchExecutor(executor)
-            .build()
-
-        return commentsPagedList
-    }
 
     suspend fun getProductDetails(placeId: String, accessToken: String): LiveData<Product?>?{
-//        if (productLiveData != null) {
-//            return productLiveData
-//        }
-        //Commented to add the swipe functionality
         productLiveData = liveData {
             val data = productsRepository.getProductDetails(placeId, accessToken)
             emit(data)
@@ -92,45 +57,21 @@ class ProductActivityViewModel(
     }
 
     suspend fun getFavoriteProducts( accessToken: String): LiveData<MutableList<FavoriteProduct>?>?{
-//        if (favoritePlacesLiveData != null) {
-//            return favoritePlacesLiveData
-//        }
-        favoritePlacesLiveData = liveData {
-            Log.i(TAG, "FFF BeforePage: $favoritePages")
-            val data = productsRepository.getFavoriteProducts(favoritePages++ , accessToken)
-            Log.i(TAG, "FFF AfterPage: $favoritePages")
-            emit(data)
+
+        if (favoritePages != -1){
+            favoritePlacesLiveData = liveData {
+                Log.i(TAG, "FFF BeforePage: $favoritePages")
+                val data = productsRepository.getFavoriteProducts(favoritePages++ , accessToken)
+                Log.i(TAG, "FFF AfterPage: $favoritePages")
+                emit(data)
+            }
+            return favoritePlacesLiveData
         }
-        return favoritePlacesLiveData
+        return null
+
     }
-
-    suspend fun getFavoriteProductsPagedList(accessToken: String) : LiveData<PagedList<FavoriteProduct>>?{
-        val favoriteProductsSourceFactory = FavoritesSourceFactory(productsRepository, accessToken)
-        favoritesSourceLiveData = favoriteProductsSourceFactory.favoritesSourceLiveData
-        //Making configs
-
-        //Making configs
-        val config: PagedList.Config = PagedList.Config.Builder()
-            .setEnablePlaceholders(true) //no items
-            .setInitialLoadSizeHint(3)
-            .setPageSize(2)
-            .setPrefetchDistance(1)
-            .build()
-
-//        val executor: Executor = Executors.newFixedThreadPool(5)
-        //building the paged list
-        //building the paged list
-        favoriteProductsPagedList = LivePagedListBuilder<Int, FavoriteProduct>(favoriteProductsSourceFactory, config)
-//            .setFetchExecutor(executor)
-            .build()
-
-        return favoriteProductsPagedList
-    }
-
-
 
     suspend fun getUserSpecificRate(placeId: String, accessToken: String): Rate? {
-
         return if (userSpecificPlaceRate != null){ userSpecificPlaceRate }
         else{
             userSpecificPlaceRate = ratingRepository.getUserSpecificRate(placeId, accessToken)
@@ -141,7 +82,7 @@ class ProductActivityViewModel(
     suspend fun addCommentOnProduct(
         productComment: ProductComment,
         accessToken: String
-    ): ResponseMessage? {
+    ): ReturnedComment? {
         return commentsRepository.addCommentOnProduct(productComment, accessToken)
     }
 

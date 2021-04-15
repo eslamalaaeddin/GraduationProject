@@ -4,13 +4,18 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.graduationproject.R
+import com.example.graduationproject.databinding.FragmentFavoritesBinding
+import com.example.graduationproject.databinding.FragmentInSignBinding
 import com.example.graduationproject.helper.Constants
 import com.example.graduationproject.model.authentication.Login
 import com.example.graduationproject.model.authentication.RefreshToken
@@ -31,14 +36,28 @@ import retrofit2.Response
 
 private const val TAG = "SignInFragment"
 
-class SignInFragment : Fragment(R.layout.fragment_in_sign) {
+class SignInFragment : Fragment() {
     private val loginViewModel by viewModel<LoginViewModel>()
     private val navigationDrawerViewModel by viewModel<NavigationDrawerViewModel>()
+    private lateinit var bindingInstance: FragmentInSignBinding
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        bindingInstance = DataBindingUtil.inflate(
+            inflater,
+            R.layout.fragment_in_sign,
+            container,
+            false
+        )
+        return bindingInstance.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        mail_edit_text.setText(SplashActivity.getEmailFromPrefs(requireContext()))
+        bindingInstance.mailEditText.setText(SplashActivity.getEmailFromPrefs(requireContext()))
 
         doNotHaveAccountTextView.setOnClickListener {
             val action = SignInFragmentDirections.actionSignInFragmentToSignUpFragment()
@@ -51,8 +70,8 @@ class SignInFragment : Fragment(R.layout.fragment_in_sign) {
         }
 
         signInButton.setOnClickListener {
-            val email = mail_edit_text.text.toString()
-            val password = password_edit_text.text.toString()
+            val email = bindingInstance.mailEditText.text.toString()
+            val password = bindingInstance.passwordEditText.text.toString()
             validateUserAndNavigateToMainActivity(email, password)
         }
 
@@ -62,11 +81,13 @@ class SignInFragment : Fragment(R.layout.fragment_in_sign) {
         if (mail.trim().isEmpty() || password.trim().isEmpty()) {
             Toast.makeText(requireContext(), "Enter all information first", Toast.LENGTH_SHORT)
                 .show()
-        } else {
+        }
+        else {
 
             val login = Login(mail, password)
             lifecycleScope.launch {
-                progressBar.visibility = View.VISIBLE
+                bindingInstance.progressBar.visibility = View.VISIBLE
+                bindingInstance.signInButton.isEnabled = false
                 val token = loginViewModel.login(login)
                 token?.let { t ->
                     val accessToken = t.access_token
@@ -83,18 +104,22 @@ class SignInFragment : Fragment(R.layout.fragment_in_sign) {
                             accessTokenExTime,
                             refreshTokenExTime,
                             userId,
+                            "${user.firstName} ${user.lastName}",
+                            user.image.orEmpty(),
                             mail
                         )
 
                         navigateToMainActivity()
                     }
                     if (user == null){
-                        progressBar.visibility = View.GONE
+                        bindingInstance.progressBar.visibility = View.GONE
+                        bindingInstance.signInButton.isEnabled = true
                     }
 
                 }
                 if (token == null){
-                    progressBar.visibility = View.GONE
+                    bindingInstance.progressBar.visibility = View.GONE
+                    bindingInstance.signInButton.isEnabled = true
                 }
             }
             dismissProgressAfterTimeOut()
@@ -102,15 +127,20 @@ class SignInFragment : Fragment(R.layout.fragment_in_sign) {
     }
 
     private fun dismissProgressAfterTimeOut() {
-        Handler().postDelayed({
-            progressBar.visibility = View.GONE
-        }, Constants.TIME_OUT_SECONDS)
+        lifecycleScope.launchWhenStarted {
+            Handler().postDelayed({
+                bindingInstance.progressBar.visibility = View.GONE
+                bindingInstance.signInButton.isEnabled = true
+            }, Constants.TIME_OUT_MILLISECONDS)
+        }
+
 
     }
 
     override fun onStop() {
         super.onStop()
-        progressBar.visibility = View.GONE
+        bindingInstance.progressBar.visibility = View.GONE
+        bindingInstance.signInButton.isEnabled = true
     }
 
     private fun saveUserAsLoggedInAndSaveTokens(
@@ -119,6 +149,8 @@ class SignInFragment : Fragment(R.layout.fragment_in_sign) {
         accessTokenExTime: String,
         refreshTokenExTime: String,
         userId: Long,
+        userName: String,
+        userImageUrl : String,
         mail: String
     ) {
         SplashActivity.setAccessToken(requireContext(), accessToken)
@@ -126,13 +158,15 @@ class SignInFragment : Fragment(R.layout.fragment_in_sign) {
         SplashActivity.setAccessTokenExpirationTime(requireContext(), accessTokenExTime)
         SplashActivity.setRefreshTokenExpirationTime(requireContext(), refreshTokenExTime)
         SplashActivity.setUserId(requireContext(), userId)
+        SplashActivity.setUserName(requireContext(), userName)
+        SplashActivity.setUserImageUrl(requireContext(), userImageUrl)
         SplashActivity.saveEmailInPrefs(requireContext(), mail)
         SplashActivity.setSignedIn(requireContext(), true)
         SplashActivity.setLoggedOut(requireContext(), false)
     }
 
     private fun navigateToMainActivity() {
-        progressBar.visibility = View.GONE
+        bindingInstance.progressBar.visibility = View.GONE
         val action = SignInFragmentDirections.actionSignInFragmentToMainActivity()
         findNavController().navigate(action)
         activity?.finish()

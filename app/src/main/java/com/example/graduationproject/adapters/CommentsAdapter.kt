@@ -12,12 +12,14 @@ import com.example.graduationproject.R
 import com.example.graduationproject.helper.Constants.BASE_USER_IMAGE_URL
 import com.example.graduationproject.helper.listeners.CommentListener
 import com.example.graduationproject.model.products.Comment
+import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
+import java.util.*
 
 private const val TAG = "CommentsAdapter"
 //private const val BASE_USER_IMAGE_URL = "http://10.0.3.2:3000/images/users/"
 class CommentsAdapter(
-    private val comments: MutableList<Comment?>,
+    private var comments: MutableList<Comment?>,
     private val userId: Long,
     private val commentListener: CommentListener
     ) : RecyclerView.Adapter< CommentsAdapter.CommentsHolder>() {
@@ -45,25 +47,25 @@ class CommentsAdapter(
             personNameTextView.text = comment.userName
                 val userImageUrl = "$BASE_USER_IMAGE_URL${comment.userImage}"
                 if (userImageUrl.isNotEmpty()){
-                    Glide.with(itemView.context)
-                        .load(userImageUrl)
-                        .skipMemoryCache(true)
-                        .diskCacheStrategy(DiskCacheStrategy.NONE)
-                        .into(personImage)
+//                    Glide.with(itemView.context)
+//                        .load(userImageUrl)
+//                        .skipMemoryCache(true)
+//                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+//                        .into(personImage)
 
-//                    Picasso.get().load(userImageUrl).into(personImage)
+                    Picasso.get().load(userImageUrl).into(personImage)
                 }
                 else{
                     personImage.setImageResource(R.drawable.avatar)
                 }
-            Log.i(TAG, "ddd bind: $comment")
+            Log.i(TAG, "DDDD bind: $comment")
             //Rate
-            if (comment.rate == null){
-                placeRatingBar.visibility = View.GONE
-            }
-            else{
+//            if (comment.rate == null){
+//                placeRatingBar.visibility = View.GONE
+//            }
+//            else{
                 placeRatingBar.rating = comment.rate ?: 0F
-            }
+//            }
             //CommentContent
             commentTextView.text = comment.commentContent
 
@@ -119,7 +121,17 @@ class CommentsAdapter(
     }
 
     fun addComment(comment: Comment) {
-        comments[0] = comment
-        notifyItemChanged(0, comment)
+        val tempList = mutableListOf<Comment?>()
+        tempList.add(comment)
+        tempList.addAll(comments)
+        comments = tempList
+        notifyDataSetChanged()
+    }
+
+    fun addCommentsPage(orEmpty: List<Comment>) {
+        val temp = comments
+        comments.addAll(orEmpty)
+        notifyItemRangeInserted(temp.size, orEmpty.size)
+        notifyDataSetChanged()
     }
 }

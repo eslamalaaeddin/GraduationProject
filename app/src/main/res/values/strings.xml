@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">GraduationProject</string>
     <string name="dummy_description">oiafuysdafgiudfgaydsufgadsuyfguydaiugasfygdsafisdufiygdsuafgs</string>
-    <string name="dummy_comment">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s</string>
+<!--    <string name="dummy_comment">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s</string>-->
+    <string name="dummy_comment">عاااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااش</string>
     <string name="nav_open_drawer">Open navigation drawer</string>
     <string name="nav_close_drawer">Close navigation drawer</string>
 
@@ -11,6 +12,7 @@
     <string name="choose_file">Select a file</string>
     <string name="error_selecting_file">Error selecting File</string>
     <string name="internal_storage">Internal storage</string>
+    <string name="channel_description">This channel is for user image uploading</string>
 
 
 </resources>

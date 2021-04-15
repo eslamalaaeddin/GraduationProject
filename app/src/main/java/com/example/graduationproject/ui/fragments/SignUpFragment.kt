@@ -2,12 +2,17 @@ package com.example.graduationproject.ui.fragments
 
 import android.os.Bundle
 import android.os.Handler
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.graduationproject.R
+import com.example.graduationproject.databinding.FragmentInSignBinding
+import com.example.graduationproject.databinding.FragmentUpSignBinding
 import com.example.graduationproject.helper.Constants
 import com.example.graduationproject.model.authentication.SignUp
 import com.example.graduationproject.ui.activities.SplashActivity
@@ -20,8 +25,25 @@ import java.util.regex.Pattern
 
 private const val TAG = "SignUpFragment"
 
-class SignUpFragment : Fragment(R.layout.fragment_up_sign) {
+class SignUpFragment : Fragment() {
     private val signUpViewModel by viewModel<SignUpViewModel>()
+    private lateinit var bindingInstance: FragmentUpSignBinding
+
+
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        bindingInstance = DataBindingUtil.inflate(
+            inflater,
+            R.layout.fragment_up_sign,
+            container,
+            false
+        )
+        return bindingInstance.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -31,11 +53,11 @@ class SignUpFragment : Fragment(R.layout.fragment_up_sign) {
         }
 
         signUpButton.setOnClickListener {
-            val firstName = first_name_edit_text.text.toString()
-            val lastName = last_name_edit_text.text.toString()
-            val email = mail_edit_text.text.toString()
-            val password = password_edit_text.text.toString()
-            val confirmPassword = confirm_password_edit_text.text.toString()
+            val firstName = bindingInstance.firstNameEditText.text.toString()
+            val lastName = bindingInstance.lastNameEditText.text.toString()
+            val email = bindingInstance.mailEditText.text.toString()
+            val password = bindingInstance.passwordEditText.text.toString()
+            val confirmPassword = bindingInstance.confirmPasswordEditText.text.toString()
 
             validateUserAndNavigateToVerificationFragment(
                 firstName,
@@ -63,13 +85,20 @@ class SignUpFragment : Fragment(R.layout.fragment_up_sign) {
             Toast.makeText(requireContext(), "Enter valid email", Toast.LENGTH_SHORT)
                 .show()
         }
+
         else if (password != confirmPassword){
             Toast.makeText(requireContext(), "Passwords don't match", Toast.LENGTH_SHORT).show()
         }
+
+        else if (password.trim().count() < 6 || confirmPassword.trim().count() < 6){
+            Toast.makeText(requireContext(), "Passwords must be at least 6 characters", Toast.LENGTH_SHORT).show()
+        }
+
         else {
             val signUp = SignUp(firstName, lastName, email, password)
             lifecycleScope.launch {
-                progressBar.visibility = View.VISIBLE
+                bindingInstance.progressBar.visibility = View.VISIBLE
+                bindingInstance.signUpButton.isEnabled = false
                 SplashActivity.saveEmailInPrefs(requireContext(), email)
                val responseMessage = signUpViewModel.signUp(signUp)
                if(responseMessage != null){
@@ -82,7 +111,8 @@ class SignUpFragment : Fragment(R.layout.fragment_up_sign) {
 
                }
                 else{
-                   progressBar.visibility = View.GONE
+                   bindingInstance.progressBar.visibility = View.GONE
+                   bindingInstance.signUpButton.isEnabled = true
                 }
             }
             dismissProgressAfterTimeOut()
@@ -96,7 +126,8 @@ class SignUpFragment : Fragment(R.layout.fragment_up_sign) {
 
     override fun onStop() {
         super.onStop()
-        progressBar.visibility = View.GONE
+        bindingInstance.progressBar.visibility = View.GONE
+        bindingInstance.signUpButton.isEnabled = true
     }
 
     private fun isEmailValid(email: String?): Boolean {
@@ -107,9 +138,12 @@ class SignUpFragment : Fragment(R.layout.fragment_up_sign) {
     }
 
     private fun dismissProgressAfterTimeOut() {
-        Handler().postDelayed({
-            progressBar.visibility = View.GONE
-        }, Constants.TIME_OUT_SECONDS)
+        lifecycleScope.launchWhenStarted {
+            Handler().postDelayed({
+                bindingInstance.progressBar.visibility = View.GONE
+                bindingInstance.signUpButton.isEnabled = true
+            }, Constants.TIME_OUT_MILLISECONDS)
+        }
 
     }
 
