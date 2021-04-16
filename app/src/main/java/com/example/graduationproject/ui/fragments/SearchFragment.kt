@@ -69,6 +69,7 @@ class SearchFragment : Fragment() , TagClickListener{
     }
 
     private fun initEditTextListener() {
+        bindingInstance.searchProductsEditText.requestFocus()
         bindingInstance.searchProductsEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
@@ -80,6 +81,7 @@ class SearchFragment : Fragment() , TagClickListener{
             override fun afterTextChanged(q: Editable?) {
                 val query = q?.trim().toString()
                 if (query.isEmpty()){
+                    bindingInstance.searchProductsEditText.hint = "Search by name..."
                     bindingInstance.emptyQueryLayout.visibility = View.VISIBLE
                     searchedProductsAdapter?.let {
                         it.submitList(null)
@@ -106,24 +108,24 @@ class SearchFragment : Fragment() , TagClickListener{
         builder.setTitle("Choose a tag")
 
         val tags = arrayOf(
-            "music",
-            "crime",
-            "mystery",
-            "western",
-            "fantasy",
-            "thriller",
-            "animation",
-            "reality-tv",
-            "adventure",
-            "action",
-            "sport",
-            "drama",
-            "adult",
-            "sci-fi",
-            "family",
-            "documentary",
-            "history",
-            "musical", "romance", "biography", "film-noir", "news", "comedy", "horror", "war"
+            "Music",
+            "Crime",
+            "Mystery",
+            "Western",
+            "Fantasy",
+            "Thriller",
+            "Animation",
+            "Reality-Tv",
+            "Adventure",
+            "Action",
+            "Sport",
+            "Drama",
+            "Adult",
+            "Sci-Fi",
+            "Family",
+            "Documentary",
+            "History",
+            "Musical", "Romance", "Biography", "Film-Noir", "News", "Comedy", "Horror", "War"
         ).sortedArray()
         builder.setItems(tags) { dialog, which ->
            tagClickListener.onTagClicked(tags[which])
@@ -166,6 +168,7 @@ class SearchFragment : Fragment() , TagClickListener{
 
 
     override fun onTagClicked(tag: String) {
+        bindingInstance.searchProductsEditText.hint = "#$tag"
         searchProductsByTag(tag)
     }
 

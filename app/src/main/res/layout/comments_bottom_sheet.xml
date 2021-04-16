@@ -38,6 +38,16 @@
                 android:drawableStart="@drawable/ic_semi_up_button"
                 android:gravity="start" />
 
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:indeterminate="false"
+                android:indeterminateTint="@color/colorPrimary"
+                android:max="100"
+                android:visibility="gone" />
+
 
         </FrameLayout>
 
@@ -69,16 +79,6 @@
                 android:layout_height="match_parent"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
-            <ProgressBar
-                android:id="@+id/progressBar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center|top"
-                android:layout_marginTop="16dp"
-                android:indeterminate="false"
-                android:indeterminateTint="@color/colorPrimary"
-                android:max="100"
-                android:visibility="gone" />
 
             <ImageButton
                 android:id="@+id/arrowUpImageButton"

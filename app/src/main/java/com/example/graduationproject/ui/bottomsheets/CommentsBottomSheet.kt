@@ -104,25 +104,6 @@ class CommentsBottomSheet(
         initFab()
     }
 
-    private fun initEditTextListener() {
-        bindingInstance.commentEditText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            @SuppressLint("RestrictedApi")
-            override fun afterTextChanged(text: Editable?) {
-                if (text.toString().isEmpty()) {
-                    bindingInstance.addCommentFab.visibility = View.GONE
-                } else {
-                    bindingInstance.addCommentFab.visibility = View.VISIBLE
-                }
-            }
-        })
-    }
-
     private fun initScrollListener() {
         bindingInstance.commentsRecyclerView.addOnScrollListener(
             object : RecyclerView.OnScrollListener() {
@@ -220,7 +201,7 @@ class CommentsBottomSheet(
 
     private fun addCommentAndUpdateComments() {
 //        dismissProgressAfterTimeOut()
-        val commentString = bindingInstance.commentEditText.text.toString()
+        val commentString = bindingInstance.commentEditText.text.trim().toString()
         if (commentString.isEmpty()){
             Toast.makeText(requireContext(), "Enter a comment first.", Toast.LENGTH_SHORT).show()
         }

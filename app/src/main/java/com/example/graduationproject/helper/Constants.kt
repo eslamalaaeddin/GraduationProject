@@ -34,7 +34,8 @@ object Constants {
     const val CHANNEL_NAME = "Image uploading channel"
     const val CHANNEL_DESCRIPTION = "This channel is for user image uploading"
     const val NOTIFICATION_ID = 101
-    const val ACTION_IMAGE_UPLOADED = "com.example.graduationproject.imageUploaded"
+    const val ACTION_IMAGE_UPLOADED_SUCCESS = "com.example.graduationproject.imageUploadedSuccess"
+    const val ACTION_IMAGE_UPLOADED_FAIL = "com.example.graduationproject.imageUploadedFail"
 
 
 }

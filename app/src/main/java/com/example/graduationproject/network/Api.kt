@@ -102,14 +102,6 @@ interface Api {
     ): Response<ResponseMessage>
 
 
-
-
-//    @POST("comments")
-//    suspend fun addCommentOnProduct(
-//        @Body productComment: ProductComment,
-//        @Header("Authorization") accessToken: String
-//    ): Response<ResponseMessage>
-
     @POST("comments")
     suspend fun addCommentOnProduct(
         @Body productComment: ProductComment,
@@ -176,21 +168,15 @@ interface Api {
         @Header("Authorization") accessToken: String
     ): Response<ResponseMessage>
 
-    /////////////////////////////////////////////////////////////////////////////////////
 
-//    @Multipart
-//    @POST("places/{id}/images")
-//    fun uploadImage(
-//        @Part part: MultipartBody.Part?,
-//        @Path("id") placeId: String?,
-//        @Header("Authorization") accessToken: String
-//    ): Call<RequestBody?>?
+    //ImageUploading
 
     @Multipart
     @PUT("user/change_image")
     fun uploadImage(
         @Part image: MultipartBody.Part?,
         @Header("Authorization") accessToken: String,
-        @Part("description") description: RequestBody
+        @Part("description") description: RequestBody,
+        @Query("old-image") oldImageName : String
     ): Call<ResponseBody?>?
 }

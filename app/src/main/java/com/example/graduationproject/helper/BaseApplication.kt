@@ -1,6 +1,7 @@
 package com.example.graduationproject.helper
 
 import android.app.Application
+import android.content.Context
 import android.content.IntentFilter
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.example.graduationproject.di.*
@@ -36,7 +37,6 @@ class BaseApplication : Application() {
                     navigationDrawerViewModelModule,
                     searchRepositoryModule,
                     searchViewModelModule
-//                    tokenAuthenticatorModule
                 )
             )
         }
@@ -44,6 +44,5 @@ class BaseApplication : Application() {
 //        val networkStateReceiver = NetworkStateReceiver()
 //        registerReceiver(networkStateReceiver, intentFilter)
     }
-
 
 }

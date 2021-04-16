@@ -1,6 +1,5 @@
 package com.example.graduationproject.ui.activities
 
-import android.R.attr
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -109,7 +108,8 @@ class TestingActivity : AppCompatActivity() {
         val call = retrofit.uploadImage(
             image = file,
             accessToken = accessToken,
-            description = descriptionPart
+            description = descriptionPart,
+            oldImageName = ""
         )
 
         call?.enqueue(object : Callback<ResponseBody?> {

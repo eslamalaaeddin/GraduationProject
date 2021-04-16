@@ -28,6 +28,8 @@ class SearchedProductsAdapter :
         fun bind(product: Product){
             itemView.productNameTextView.text = product.name
             itemView.homeRatingBar.rating = product.rating ?: 0F
+            val tags = product.tags.orEmpty().replace(",", ", ")
+            itemView.productTagsTextView.text = tags
 //            Picasso.get().load(product.image).into(itemView.place_image_view)
         }
 
@@ -43,7 +45,6 @@ class SearchedProductsAdapter :
         }
     }
 
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchedProductsViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val view = layoutInflater.inflate(R.layout.searched_product_item, parent, false)
@@ -56,8 +57,6 @@ class SearchedProductsAdapter :
             holder.bind(place)
         }
     }
-
-
 
     companion object {
         val CALLBACK: DiffUtil.ItemCallback<Product?> = object : DiffUtil.ItemCallback<Product?>() {

@@ -35,6 +35,8 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.example.graduationproject.R
 import com.example.graduationproject.databinding.UserInfoFragmentBinding
+import com.example.graduationproject.dummy.AddToPostBottomSheet
+import com.example.graduationproject.dummy.PostAttachmentListener
 import com.example.graduationproject.helper.Constants
 import com.example.graduationproject.helper.Constants.BASE_USER_IMAGE_URL
 import com.example.graduationproject.helper.Constants.CHANNEL_ID
@@ -46,6 +48,7 @@ import com.example.graduationproject.ui.activities.RegisterActivity
 import com.example.graduationproject.ui.activities.SettingsActivity
 import com.example.graduationproject.ui.activities.SplashActivity
 import com.example.graduationproject.viewmodel.NavigationDrawerViewModel
+import com.squareup.picasso.Picasso
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -59,7 +62,7 @@ import java.io.File
 private const val TAG = "NavigationDrawerBottomS"
 
 
-class UserInfoFragment : Fragment(){
+class UserInfoFragment : Fragment(), PostAttachmentListener{
     private lateinit var bindingInstance: UserInfoFragmentBinding
     private val navDrawerViewModel by viewModel<NavigationDrawerViewModel>()
     private lateinit var accessToken: String
@@ -87,6 +90,10 @@ class UserInfoFragment : Fragment(){
             showLogoutDialog()
         }
 
+//        bindingInstance.userImageView.setOnClickListener{
+//            val addToPostBottomSheet = AddToPostBottomSheet(this)
+//            activity?.supportFragmentManager?.let { it1 -> addToPostBottomSheet.show(it1, addToPostBottomSheet.tag) }
+//        }
     }
 
     override fun onStart() {
@@ -124,6 +131,7 @@ class UserInfoFragment : Fragment(){
     private fun navigateToSettingsActivity() {
         user?.let {
             val settingsIntent = Intent(requireContext(), SettingsActivity::class.java)
+            //get user data from prefernces
             settingsIntent.putExtra("userFirstName", it.firstName)
             settingsIntent.putExtra("userLastName", it.lastName)
             settingsIntent.putExtra("userImageUrl", it.image)
@@ -131,7 +139,7 @@ class UserInfoFragment : Fragment(){
             startActivity(settingsIntent)
         }
         if (user == null){
-            Toast.makeText(requireContext(), "Please check your connectivity", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Please check your connectivity or try reloading the page", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -160,12 +168,9 @@ class UserInfoFragment : Fragment(){
                             }
                             override fun onLoadCleared(placeholder: Drawable?) {
                                 bindingInstance.progressBar.visibility = View.GONE
-                                // this is called when imageView is cleared on lifecycle call or for
-                                // some other reason.
-                                // if you are referencing the bitmap somewhere else too other than this imageView
-                                // clear it here as you can no longer have the bitmap
                             }
                         })
+//                    Picasso.get().load(userImageUrl).into(bindingInstance.userImageView)
 
                 } else {
                     bindingInstance.userImageView.setImageResource(R.drawable.avatar)
@@ -186,6 +191,13 @@ class UserInfoFragment : Fragment(){
                 bindingInstance.progressBar.visibility = View.GONE
             }, Constants.TIME_OUT_MILLISECONDS)
         }
+    }
+
+    override fun onAttachmentAdded(data: Intent?, dataType: String, fromCamera: Boolean) {
+        Log.i(TAG, "555555  $data")
+        Log.i(TAG, "555555  ${data?.data}")
+        Log.i(TAG, "555555  ${data?.data?.encodedPath}")
+        Log.i(TAG, "555555  ${data?.toUri(0)}")
     }
 
 

@@ -87,7 +87,7 @@ class ProductActivity : AppCompatActivity(){
            //Open comments bottom sheet
         }
 
-        placeDetailsBinding.upButtonImageButton.setOnClickListener { finish() }
+        placeDetailsBinding.upButton.setOnClickListener { finish() }
 
         lifecycleScope.launch {
             getProductDetails()

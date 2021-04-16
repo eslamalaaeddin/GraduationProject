@@ -39,15 +39,12 @@ class AuthenticationRepository(
             )
         } catch (ex: Throwable) {
             if (ex is HttpException) {
-//                when (ex.code()) {
-////                    302 -> exceptionHandler.handleException(ex, "${ex.code()}\n${ex.localizedMessage}")
-////
-////                    500 -> exceptionHandler.handleException(ex, "${ex.code()}\n${ex.localizedMessage}")
-////
-////                    405 -> exceptionHandler.handleException(ex, "${ex.code()}\n${ex.localizedMessage}")
-//
-//                }
-                exceptionHandler.handleException(ex, "${ex.code()}\n${ex.localizedMessage}")
+                when (ex.code()) {
+                    302 -> exceptionHandler.handleException(ex, "Account already exists")
+                    500 -> exceptionHandler.handleException(ex, "${ex.code()}\n${ex.localizedMessage}")
+                    405 -> exceptionHandler.handleException(ex, "${ex.code()}\n${ex.localizedMessage}")
+
+                }
             } else {
                 exceptionHandler.handleException(ex)
             }
@@ -71,12 +68,21 @@ class AuthenticationRepository(
         } catch (ex: Throwable) {
             if (ex is HttpException) {
                 when (ex.code()) {
-                    500 -> exceptionHandler.handleException(ex, "${ex.code()} Internal server error")
-                    404 -> exceptionHandler.handleException(ex, "${ex.code()} No account matches this email")
-                    403 -> { exceptionHandler.handleException(ex, "${ex.code()} Unverified account")
+                    500 -> exceptionHandler.handleException(
+                        ex,
+                        "Internal server error"
+                    )
+                    404 -> exceptionHandler.handleException(
+                        ex,
+                        "No account matches this email"
+                    )
+                    403 -> {
+                        exceptionHandler.handleException(ex, "Unverified account")
                         navigateToVerificationFragment()
                     }
-                    405 -> {exceptionHandler.handleException(ex, "${ex.code()} ${ex.localizedMessage}")}
+                    405 -> {
+                        exceptionHandler.handleException(ex, "${ex.code()} ${ex.localizedMessage}")
+                    }
                     406 -> exceptionHandler.handleException(ex, "Incorrect password")
                 }
             } else {

@@ -52,7 +52,7 @@ class UpdateCommentBottomSheet(
         bindingInstance.commentEditText.setSelection(bindingInstance.commentEditText.text.length)
 
         bindingInstance.addCommentFab.setOnClickListener {
-            val commentContent = bindingInstance.commentEditText.text.toString().trim()
+            val commentContent = bindingInstance.commentEditText.text.trim().toString()
             if (commentContent.isNotEmpty()) {
                 dismissProgressAfterTimeOut()
                 val placeComment = ProductComment(placeId, commentContent)

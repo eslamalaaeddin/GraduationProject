@@ -1,5 +1,6 @@
 package com.example.graduationproject.ui.activities
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -26,18 +27,24 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.request.transition.Transition
 import com.example.graduationproject.R
 import com.example.graduationproject.databinding.ActivitySettingsBinding
 import com.example.graduationproject.helper.Constants
-import com.example.graduationproject.helper.Constants.ACTION_IMAGE_UPLOADED
+import com.example.graduationproject.helper.Constants.ACTION_IMAGE_UPLOADED_FAIL
+import com.example.graduationproject.helper.Constants.ACTION_IMAGE_UPLOADED_SUCCESS
 import com.example.graduationproject.helper.FileUtils
 import com.example.graduationproject.model.user.UserName
 import com.example.graduationproject.model.user.UserPassword
 import com.example.graduationproject.services.ImageUploaderService
 import com.example.graduationproject.viewmodel.NavigationDrawerViewModel
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_settings.*
 import kotlinx.android.synthetic.main.fragment_up_sign.*
 import kotlinx.coroutines.*
@@ -67,7 +74,7 @@ class SettingsActivity : AppCompatActivity() {
 
         initUserInfo()
 
-        updateUserUi()
+
 
         bindingInstance.upButtonView.setOnClickListener { finish() }
 
@@ -166,9 +173,14 @@ class SettingsActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
+
+        updateUserUi()
+
         notificationBroadcastReceiver = NotificationBroadcastReceiver()
-        val intentFilter = IntentFilter(ACTION_IMAGE_UPLOADED)
-        registerReceiver(notificationBroadcastReceiver, intentFilter)
+        val intentFilterSuccess = IntentFilter(ACTION_IMAGE_UPLOADED_SUCCESS)
+        val intentFilterFail = IntentFilter(ACTION_IMAGE_UPLOADED_FAIL)
+        registerReceiver(notificationBroadcastReceiver, intentFilterSuccess)
+        registerReceiver(notificationBroadcastReceiver, intentFilterFail)
     }
 
     override fun onStop() {
@@ -195,6 +207,7 @@ class SettingsActivity : AppCompatActivity() {
                 )
                 toast.setGravity(Gravity.TOP, 0, 96)
                 toast.show()
+                SplashActivity.setUserName(this@SettingsActivity, "$firstName $lastName")
 
             }
             if (responseMessage == null) {
@@ -205,6 +218,7 @@ class SettingsActivity : AppCompatActivity() {
 //        }
     }
 
+    @SuppressLint("CheckResult")
     private fun updateUserUi() {
         dismissProgressAfterTimeOut()
         val userImageUrl = "${Constants.BASE_USER_IMAGE_URL}${imageUrl}"
@@ -225,14 +239,8 @@ class SettingsActivity : AppCompatActivity() {
 
                     override fun onLoadCleared(placeholder: Drawable?) {
                         bindingInstance.progressBar.visibility = View.GONE
-                        // this is called when imageView is cleared on lifecycle call or for
-                        // some other reason.
-                        // if you are referencing the bitmap somewhere else too other than this imageView
-                        // clear it here as you can no longer have the bitmap
                     }
                 })
-//                .into(bindingInstance.userImageView)
-
         }
         bindingInstance.firstNameEditText.setText(firstName)
         bindingInstance.firstNameEditText.setSelection(bindingInstance.firstNameEditText.text.length)
@@ -320,7 +328,7 @@ class SettingsActivity : AppCompatActivity() {
                 try {
                     val theRequiredFile = FileUtils.getFile(this, selectedImageURI)
                     if (theRequiredFile.length() <= 1000000) {
-//                        dismissProgressAfterTimeOut()
+                        dismissProgressAfterTimeOut()
                         var path = ""
                         val bitmap = MediaStore.Images.Media.getBitmap(
                             contentResolver,
@@ -347,6 +355,8 @@ class SettingsActivity : AppCompatActivity() {
                                 //1// Start the service
                                 intent.data = Uri.parse(path)
                                 intent.putExtra("accessToken", accessToken)
+                                intent.putExtra("oldImageName", imageUrl)
+
                                 startService(intent)
 //                                ContextCompat.startForegroundService(this@SettingsActivity, intent)
                             }
@@ -365,6 +375,7 @@ class SettingsActivity : AppCompatActivity() {
 
                 }
                 catch (ex: Throwable) {
+                    Toast.makeText(this, ex.localizedMessage, Toast.LENGTH_SHORT).show()
                   //  bindingInstance.progressBar.visibility = View.GONE
                 } finally {
                     //bindingInstance.progressBar.visibility = View.GONE
@@ -376,9 +387,17 @@ class SettingsActivity : AppCompatActivity() {
 
     inner class NotificationBroadcastReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            if (intent!!.action == ACTION_IMAGE_UPLOADED) {
-                bindingInstance.progressBar.visibility = View.GONE
-                bindingInstance.userImageView.setImageBitmap(userBitmap)
+            if (intent!!.action == ACTION_IMAGE_UPLOADED_SUCCESS) {
+                lifecycleScope.launchWhenStarted {
+                    bindingInstance.progressBar.visibility = View.GONE
+                    bindingInstance.userImageView.setImageBitmap(userBitmap)
+                }
+            }
+
+            if (intent!!.action == ACTION_IMAGE_UPLOADED_FAIL) {
+                lifecycleScope.launchWhenStarted {
+                    bindingInstance.progressBar.visibility = View.GONE
+                }
             }
         }
     }

@@ -40,20 +40,18 @@
                     android:layout_height="?android:attr/actionBarSize"
                     app:layout_collapseMode="pin">
 
-                    <ImageButton
-                        android:id="@+id/upButtonImageButton"
-                        android:layout_width="36dp"
-                        android:layout_height="36dp"
-                        style="@style/Widget.AppCompat.Button.Borderless"
+                    <Button
+                        android:id="@+id/upButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                        android:drawableStart="@drawable/ic_semi_up_button_white"
                         android:layout_gravity="center|start"
-                        android:scaleType="centerCrop"
-                        app:tint="@color/white"
-                        android:src="@drawable/ic_left_arrow"
                         />
 
                     <FrameLayout
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
                         android:layout_gravity="end"
                         android:layout_margin="8dp"
                         android:id="@+id/addRemoveFavoriteFrameLayout"
@@ -62,8 +60,9 @@
 
                         <ImageView
                             android:id="@+id/add_to_favorite_image_view"
-                            android:layout_width="16dp"
-                            android:layout_height="16dp"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:scaleType="centerCrop"
                             android:layout_gravity="center"
                             app:tint="@color/red" />
 
