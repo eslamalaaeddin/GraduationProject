@@ -6,8 +6,8 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.graduationproject.R
-import com.example.graduationproject.model.ResponseMessage
-import com.example.graduationproject.model.authentication.ResetCode
+import com.example.graduationproject.models.ResponseMessage
+import com.example.graduationproject.models.authentication.ResetCode
 import com.example.graduationproject.network.RetrofitInstance
 import kotlinx.android.synthetic.main.fragment_password_forget.*
 import retrofit2.Call

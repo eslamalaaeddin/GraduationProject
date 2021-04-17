@@ -2,7 +2,7 @@ package com.example.graduationproject.paging.searchedproducts.bytag
 
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.DataSource
-import com.example.graduationproject.model.products.Product
+import com.example.graduationproject.models.products.Product
 import com.example.graduationproject.repository.SearchRepository
 
 class SearchedProductsByTagSourceFactory(

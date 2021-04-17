@@ -4,7 +4,7 @@ import android.content.Context
 import com.example.graduationproject.network.Api
 import com.example.graduationproject.network.RetrofitInstance
 import com.example.graduationproject.repository.*
-import com.example.graduationproject.viewmodel.*
+import com.example.graduationproject.viewmodels.*
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module

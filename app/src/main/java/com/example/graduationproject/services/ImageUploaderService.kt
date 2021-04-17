@@ -12,18 +12,20 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.example.graduationproject.R
-import com.example.graduationproject.helper.Constants.ACTION_IMAGE_UPLOADED_FAIL
-import com.example.graduationproject.helper.Constants.ACTION_IMAGE_UPLOADED_SUCCESS
-import com.example.graduationproject.helper.Constants.CHANNEL_ID
-import com.example.graduationproject.helper.Constants.CHANNEL_NAME
-import com.example.graduationproject.helper.Constants.NOTIFICATION_ID
-import com.example.graduationproject.helper.Constants.TIME_OUT_MILLISECONDS
-import com.example.graduationproject.helper.FileUtils
+import com.example.graduationproject.helpers.Constants.ACTION_IMAGE_UPLOADED_FAIL
+import com.example.graduationproject.helpers.Constants.ACTION_IMAGE_UPLOADED_SUCCESS
+import com.example.graduationproject.helpers.Constants.ACTION_IMAGE_UPLOADED_SUCCESS_NO_UI
+import com.example.graduationproject.helpers.Constants.CHANNEL_ID
+import com.example.graduationproject.helpers.Constants.CHANNEL_NAME
+import com.example.graduationproject.helpers.Constants.NOTIFICATION_ID
+import com.example.graduationproject.helpers.Constants.TIME_OUT_MILLISECONDS
+import com.example.graduationproject.helpers.fileutils.FileUtils
+import com.example.graduationproject.models.ImageResponse
 import com.example.graduationproject.network.RetrofitInstance
+import com.example.graduationproject.ui.activities.SplashActivity
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -80,9 +82,9 @@ class ImageUploaderService : Service() {
             description = descriptionPart,
             oldImageName = oldImageName
         )
-        call?.enqueue(object : Callback<ResponseBody?> {
+        call?.enqueue(object : Callback<ImageResponse?> {
 
-            override fun onResponse(call: Call<ResponseBody?>, response: Response<ResponseBody?>) {
+            override fun onResponse(call: Call<ImageResponse?>, response: Response<ImageResponse?>) {
                 if (response.isSuccessful) {
                     stopForeground(true)
                     notification.setContentText("Done :)")
@@ -92,11 +94,17 @@ class ImageUploaderService : Service() {
                     handler.removeCallbacksAndMessages(null)
                     //send a broad cast to update the ui
                     val intent = Intent(ACTION_IMAGE_UPLOADED_SUCCESS)
+                    val noUiIntent = Intent(ACTION_IMAGE_UPLOADED_SUCCESS_NO_UI)
                     sendBroadcast(intent)
+                    sendBroadcast(noUiIntent)
+                    response.body()?.let {
+                        SplashActivity.setUserImageUrl(this@ImageUploaderService, it.image.orEmpty())
+                    }
                 }
             }
+            //1618500110-56681229741093.jpg
 
-            override fun onFailure(call: Call<ResponseBody?>, t: Throwable) {
+            override fun onFailure(call: Call<ImageResponse?>, t: Throwable) {
                 stopForeground(true)
                 notification.setContentText("Failed :(")
                     .setProgress(0, 0, false)
@@ -150,10 +158,6 @@ class ImageUploaderService : Service() {
             notificationManager.notify(NOTIFICATION_ID, notification.build())
 
         }, TIME_OUT_MILLISECONDS)
-    }
-
-    private fun dismissNotificationAfterTimeOut() {
-
     }
 
 }

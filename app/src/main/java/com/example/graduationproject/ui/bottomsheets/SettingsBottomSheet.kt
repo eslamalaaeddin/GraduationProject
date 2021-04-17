@@ -1,6 +1,5 @@
 package com.example.graduationproject.ui.bottomsheets
 
-import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -17,16 +16,15 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.graduationproject.R
 import com.example.graduationproject.databinding.SettingBottomSheetBinding
-import com.example.graduationproject.helper.Constants.BASE_USER_IMAGE_URL
-import com.example.graduationproject.model.user.User
-import com.example.graduationproject.model.user.UserName
-import com.example.graduationproject.model.user.UserPassword
+import com.example.graduationproject.helpers.Constants.BASE_USER_IMAGE_URL
+import com.example.graduationproject.models.user.User
+import com.example.graduationproject.models.user.UserName
+import com.example.graduationproject.models.user.UserPassword
 import com.example.graduationproject.ui.activities.SplashActivity
-import com.example.graduationproject.viewmodel.NavigationDrawerViewModel
+import com.example.graduationproject.viewmodels.NavigationDrawerViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.squareup.picasso.Picasso
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 

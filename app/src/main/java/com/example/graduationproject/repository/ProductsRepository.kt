@@ -1,8 +1,8 @@
 package com.example.graduationproject.repository
 
 import android.content.Context
-import com.example.graduationproject.model.ResponseMessage
-import com.example.graduationproject.model.products.*
+import com.example.graduationproject.models.ResponseMessage
+import com.example.graduationproject.models.products.*
 import com.example.graduationproject.network.Api
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers

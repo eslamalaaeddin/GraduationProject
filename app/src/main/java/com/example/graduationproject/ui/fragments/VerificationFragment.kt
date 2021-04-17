@@ -8,13 +8,12 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat.finishAffinity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import com.example.graduationproject.R
-import com.example.graduationproject.model.authentication.Verify
+import com.example.graduationproject.models.authentication.Verify
 import com.example.graduationproject.ui.activities.MainActivity
 import com.example.graduationproject.ui.activities.SplashActivity
-import com.example.graduationproject.viewmodel.NavigationDrawerViewModel
-import com.example.graduationproject.viewmodel.VerificationFragmentViewModel
+import com.example.graduationproject.viewmodels.NavigationDrawerViewModel
+import com.example.graduationproject.viewmodels.VerificationFragmentViewModel
 import kotlinx.android.synthetic.main.fragment_verification.*
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel

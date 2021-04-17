@@ -1,7 +1,6 @@
 package com.example.graduationproject.adapters
 
 import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,10 +8,8 @@ import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.graduationproject.R
-import com.example.graduationproject.helper.Constants
-import com.example.graduationproject.model.products.Product
+import com.example.graduationproject.models.products.Product
 import com.example.graduationproject.ui.activities.ProductActivity
-import kotlinx.android.synthetic.main.home_product_item.view.*
 import kotlinx.android.synthetic.main.searched_product_item.view.*
 
 private const val TAG = "SearchedProductsAdapter"

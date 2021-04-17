@@ -1,17 +1,12 @@
 package com.example.graduationproject.paging.products
 
-import android.content.Context
 import android.util.Log
 import androidx.paging.PageKeyedDataSource
-import com.example.graduationproject.helper.ExceptionHandler
-import com.example.graduationproject.model.products.Product
-import com.example.graduationproject.network.Api
-import com.example.graduationproject.network.RetrofitInstance
+import com.example.graduationproject.models.products.Product
 import com.example.graduationproject.repository.ProductsRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import retrofit2.Retrofit
 
 private const val TAG = "RecommendedProductsSour"
 

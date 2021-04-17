@@ -1,26 +1,15 @@
 package com.example.graduationproject.repository
 
-import android.app.Dialog
 import android.content.Context
 import android.content.Intent
-import android.util.Log
-import android.view.Window
-import android.widget.Toast
-import androidx.navigation.fragment.NavHostFragment.findNavController
-import androidx.navigation.fragment.findNavController
-import com.example.graduationproject.R
-import com.example.graduationproject.model.ResponseMessage
-import com.example.graduationproject.model.authentication.*
+import com.example.graduationproject.models.ResponseMessage
+import com.example.graduationproject.models.authentication.*
 import com.example.graduationproject.network.Api
 import com.example.graduationproject.ui.activities.RegisterActivity
-import com.example.graduationproject.ui.fragments.SignUpFragmentDirections
-import kotlinx.android.synthetic.main.unverified_account_dialog_layout.*
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
-import java.io.IOException
-import java.lang.Exception
 
 private const val TAG = "AuthRepository"
 

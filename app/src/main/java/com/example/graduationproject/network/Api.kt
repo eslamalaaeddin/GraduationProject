@@ -1,13 +1,14 @@
 package com.example.graduationproject.network
 
-import com.example.graduationproject.model.ResponseMessage
-import com.example.graduationproject.model.authentication.*
-import com.example.graduationproject.model.comments.ProductComment
-import com.example.graduationproject.model.products.*
-import com.example.graduationproject.model.rating.Rate
-import com.example.graduationproject.model.user.User
-import com.example.graduationproject.model.user.UserName
-import com.example.graduationproject.model.user.UserPassword
+import com.example.graduationproject.models.ImageResponse
+import com.example.graduationproject.models.ResponseMessage
+import com.example.graduationproject.models.authentication.*
+import com.example.graduationproject.models.comments.ProductComment
+import com.example.graduationproject.models.products.*
+import com.example.graduationproject.models.rating.Rate
+import com.example.graduationproject.models.user.User
+import com.example.graduationproject.models.user.UserName
+import com.example.graduationproject.models.user.UserPassword
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
@@ -178,5 +179,5 @@ interface Api {
         @Header("Authorization") accessToken: String,
         @Part("description") description: RequestBody,
         @Query("old-image") oldImageName : String
-    ): Call<ResponseBody?>?
+    ): Call<ImageResponse?>?
 }

@@ -6,14 +6,9 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.graduationproject.R
-import com.example.graduationproject.helper.Constants.BASE_PRODUCT_IMAGE_URL
-import com.example.graduationproject.model.products.Product
-import com.example.graduationproject.model.products.ProductImage
-import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.product_details_item_layout.view.*
+import com.example.graduationproject.models.products.ProductImage
 
 
 //http://127.0.0.1:3000/images/products/product.png

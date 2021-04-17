@@ -2,9 +2,7 @@ package com.example.graduationproject.paging.favorites
 
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.DataSource
-import com.example.graduationproject.model.products.Comment
-import com.example.graduationproject.model.products.FavoriteProduct
-import com.example.graduationproject.paging.comments.CommentsSource
+import com.example.graduationproject.models.products.FavoriteProduct
 import com.example.graduationproject.repository.ProductsRepository
 
 class FavoritesSourceFactory(

@@ -2,8 +2,8 @@ package com.example.graduationproject.network
 
 import android.content.Context
 import android.util.Log
-import com.example.graduationproject.model.authentication.RefreshToken
-import com.example.graduationproject.model.authentication.Token
+import com.example.graduationproject.models.authentication.RefreshToken
+import com.example.graduationproject.models.authentication.Token
 import com.example.graduationproject.ui.activities.SplashActivity
 import okhttp3.Authenticator
 import okhttp3.Request

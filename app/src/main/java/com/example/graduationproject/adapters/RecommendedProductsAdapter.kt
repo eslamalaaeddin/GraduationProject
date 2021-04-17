@@ -9,9 +9,9 @@ import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.graduationproject.R
-import com.example.graduationproject.helper.Constants.BASE_PRODUCT_IMAGE_URL
-import com.example.graduationproject.helper.listeners.RecommendedProductClickListener
-import com.example.graduationproject.model.products.Product
+import com.example.graduationproject.helpers.Constants.BASE_PRODUCT_IMAGE_URL
+import com.example.graduationproject.helpers.listeners.RecommendedProductClickListener
+import com.example.graduationproject.models.products.Product
 import com.example.graduationproject.ui.activities.ProductActivity
 import kotlinx.android.synthetic.main.home_product_item.view.*
 

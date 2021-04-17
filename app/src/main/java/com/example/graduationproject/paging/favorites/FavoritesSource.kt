@@ -2,7 +2,7 @@ package com.example.graduationproject.paging.favorites
 
 import android.util.Log
 import androidx.paging.PageKeyedDataSource
-import com.example.graduationproject.model.products.FavoriteProduct
+import com.example.graduationproject.models.products.FavoriteProduct
 import com.example.graduationproject.repository.ProductsRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

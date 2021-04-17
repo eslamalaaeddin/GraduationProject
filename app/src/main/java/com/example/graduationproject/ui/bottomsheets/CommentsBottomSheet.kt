@@ -1,11 +1,8 @@
 package com.example.graduationproject.ui.bottomsheets
 
-import android.annotation.SuppressLint
 import android.app.Dialog
 import android.os.Bundle
 import android.os.Handler
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -22,11 +19,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.graduationproject.R
 import com.example.graduationproject.adapters.CommentsAdapter
 import com.example.graduationproject.databinding.CommentsBottomSheetBinding
-import com.example.graduationproject.helper.Constants
-import com.example.graduationproject.helper.listeners.CommentListener
-import com.example.graduationproject.model.comments.ProductComment
-import com.example.graduationproject.model.products.Comment
-import com.example.graduationproject.viewmodel.ProductActivityViewModel
+import com.example.graduationproject.helpers.Constants
+import com.example.graduationproject.helpers.listeners.CommentListener
+import com.example.graduationproject.models.comments.ProductComment
+import com.example.graduationproject.models.products.Comment
+import com.example.graduationproject.viewmodels.ProductActivityViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment

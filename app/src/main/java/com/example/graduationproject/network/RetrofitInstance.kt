@@ -1,7 +1,7 @@
 package com.example.graduationproject.network
 
-import com.example.graduationproject.helper.Constants.BASE_URL
-import com.example.graduationproject.helper.Constants.TIME_OUT_SECONDS
+import com.example.graduationproject.helpers.Constants.BASE_URL
+import com.example.graduationproject.helpers.Constants.TIME_OUT_SECONDS
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

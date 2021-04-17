@@ -1,63 +1,38 @@
 package com.example.graduationproject.ui.fragments
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.Dialog
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
-import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
-import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.Button
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.observe
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.example.graduationproject.R
 import com.example.graduationproject.databinding.UserInfoFragmentBinding
-import com.example.graduationproject.dummy.AddToPostBottomSheet
 import com.example.graduationproject.dummy.PostAttachmentListener
-import com.example.graduationproject.helper.Constants
-import com.example.graduationproject.helper.Constants.BASE_USER_IMAGE_URL
-import com.example.graduationproject.helper.Constants.CHANNEL_ID
-import com.example.graduationproject.helper.Constants.CHANNEL_NAME
-import com.example.graduationproject.helper.FileUtils
-import com.example.graduationproject.model.user.User
-import com.example.graduationproject.network.RetrofitInstance
+import com.example.graduationproject.helpers.Constants
+import com.example.graduationproject.helpers.Constants.BASE_USER_IMAGE_URL
+import com.example.graduationproject.helpers.Constants.SETTINGS_ACTIVITY_CODE
+import com.example.graduationproject.models.user.User
 import com.example.graduationproject.ui.activities.RegisterActivity
 import com.example.graduationproject.ui.activities.SettingsActivity
 import com.example.graduationproject.ui.activities.SplashActivity
-import com.example.graduationproject.viewmodel.NavigationDrawerViewModel
-import com.squareup.picasso.Picasso
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
-import okhttp3.ResponseBody
+import com.example.graduationproject.viewmodels.NavigationDrawerViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import java.io.File
 
 private const val TAG = "NavigationDrawerBottomS"
 
@@ -67,7 +42,8 @@ class UserInfoFragment : Fragment(), PostAttachmentListener{
     private val navDrawerViewModel by viewModel<NavigationDrawerViewModel>()
     private lateinit var accessToken: String
     private var user: User? = null
-
+    private var userName: String = ""
+    private var userImageUrl: String = ""
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -85,10 +61,15 @@ class UserInfoFragment : Fragment(), PostAttachmentListener{
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         accessToken = SplashActivity.getAccessToken(requireContext()).toString()
+
+
         bindingInstance.settingsLayout.setOnClickListener { navigateToSettingsActivity() }
         bindingInstance.logOutLayout.setOnClickListener {
             showLogoutDialog()
         }
+
+        dismissProgressAfterTimeOut()
+        getUserAndUpdateUi()
 
 //        bindingInstance.userImageView.setOnClickListener{
 //            val addToPostBottomSheet = AddToPostBottomSheet(this)
@@ -96,11 +77,6 @@ class UserInfoFragment : Fragment(), PostAttachmentListener{
 //        }
     }
 
-    override fun onStart() {
-        super.onStart()
-        dismissProgressAfterTimeOut()
-        getUserAndUpdateUi()
-    }
 
     private fun showLogoutDialog() {
         val dialog = Dialog(requireContext())
@@ -129,17 +105,47 @@ class UserInfoFragment : Fragment(), PostAttachmentListener{
     }
 
     private fun navigateToSettingsActivity() {
-        user?.let {
-            val settingsIntent = Intent(requireContext(), SettingsActivity::class.java)
-            //get user data from prefernces
-            settingsIntent.putExtra("userFirstName", it.firstName)
-            settingsIntent.putExtra("userLastName", it.lastName)
-            settingsIntent.putExtra("userImageUrl", it.image)
+        userName =  SplashActivity.getUserName(requireContext()).toString()
+        userImageUrl =  SplashActivity.getUserImageUrl(requireContext()).toString()
 
-            startActivity(settingsIntent)
-        }
-        if (user == null){
-            Toast.makeText(requireContext(), "Please check your connectivity or try reloading the page", Toast.LENGTH_SHORT).show()
+        val settingsIntent = Intent(requireContext(), SettingsActivity::class.java)
+        settingsIntent.putExtra("userFirstName", userName.substringBefore(" "))
+        settingsIntent.putExtra("userLastName",  userName.substringAfter(" "))
+        settingsIntent.putExtra("userImageUrl", userImageUrl)
+        startActivityForResult(settingsIntent, SETTINGS_ACTIVITY_CODE)
+
+//        user?.let {
+//            val settingsIntent = Intent(requireContext(), SettingsActivity::class.java)
+//
+//
+//            //get user data from prefernces
+//            settingsIntent.putExtra("userFirstName", it.firstName)
+//            settingsIntent.putExtra("userLastName", it.lastName)
+//            settingsIntent.putExtra("userImageUrl", it.image)
+////            startActivity(settingsIntent)
+//            startActivityForResult(settingsIntent, SETTINGS_ACTIVITY_CODE)
+//        }
+//        if (user == null){
+//            Toast.makeText(requireContext(), "Please check your connectivity or try reloading the page", Toast.LENGTH_SHORT).show()
+//        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == SETTINGS_ACTIVITY_CODE){
+            if (resultCode == Activity.RESULT_OK){
+                data?.let {
+                    val isUserNameUpdated = it.getBooleanExtra("userNameUpdated", false)
+                    val isUserImageUpdated = it.getBooleanExtra("userImageUpdated", false)
+
+                    if (isUserNameUpdated || isUserImageUpdated){
+                        dismissProgressAfterTimeOut()
+                        //not the optimal, i should divide updateUserUi into two function, one for the name, and the
+                        //other for the image.
+                        getUserAndUpdateUi()
+                    }
+                }
+            }
         }
     }
 
@@ -159,8 +165,8 @@ class UserInfoFragment : Fragment(), PostAttachmentListener{
                     Glide.with(requireContext())
                         .asBitmap()
                         .load(userImageUrl)
-                        .skipMemoryCache(true)
-                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+//                        .skipMemoryCache(true)
+//                        .diskCacheStrategy(DiskCacheStrategy.NONE)
                         .into(object : CustomTarget<Bitmap>(){
                             override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
                                 bindingInstance.userImageView.setImageBitmap(resource)

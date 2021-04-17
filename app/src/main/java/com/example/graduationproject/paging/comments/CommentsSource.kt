@@ -1,18 +1,12 @@
 package com.example.graduationproject.paging.comments
 
-import android.content.Context
 import android.util.Log
 import androidx.paging.PageKeyedDataSource
-import com.example.graduationproject.helper.ExceptionHandler
-import com.example.graduationproject.model.products.Comment
-import com.example.graduationproject.network.Api
-import com.example.graduationproject.network.RetrofitInstance
+import com.example.graduationproject.models.products.Comment
 import com.example.graduationproject.repository.ProductsRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import retrofit2.Retrofit
-import java.lang.Exception
 
 private const val TAG = "CommentsSource"
 //I should have provide a repo as a parameter

@@ -1,10 +1,10 @@
 package com.example.graduationproject.repository
 
 import android.content.Context
-import com.example.graduationproject.model.ResponseMessage
-import com.example.graduationproject.model.user.User
-import com.example.graduationproject.model.user.UserName
-import com.example.graduationproject.model.user.UserPassword
+import com.example.graduationproject.models.ResponseMessage
+import com.example.graduationproject.models.user.User
+import com.example.graduationproject.models.user.UserName
+import com.example.graduationproject.models.user.UserPassword
 import com.example.graduationproject.network.Api
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers

@@ -1,5 +1,6 @@
 package com.example.graduationproject.ui.activities
 
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Bundle
@@ -12,18 +13,15 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.LinearSnapHelper
 import com.example.graduationproject.R
-import com.example.graduationproject.adapters.CommentsAdapter
 import com.example.graduationproject.adapters.PlaceImagesAdapter
 import com.example.graduationproject.databinding.ActivityProductBinding
-import com.example.graduationproject.helper.Constants
-import com.example.graduationproject.model.products.Comment
-import com.example.graduationproject.model.products.ProductImage
-import com.example.graduationproject.model.products.VisitedProduct
-import com.example.graduationproject.model.rating.Rate
+import com.example.graduationproject.helpers.Constants
+import com.example.graduationproject.models.products.ProductImage
+import com.example.graduationproject.models.products.VisitedProduct
+import com.example.graduationproject.models.rating.Rate
 import com.example.graduationproject.ui.bottomsheets.CommentsBottomSheet
-import com.example.graduationproject.viewmodel.ProductActivityViewModel
+import com.example.graduationproject.viewmodels.ProductActivityViewModel
 import kotlinx.android.synthetic.main.activity_product.*
 import kotlinx.android.synthetic.main.fragment_up_sign.*
 import kotlinx.coroutines.launch
@@ -43,7 +41,8 @@ class ProductActivity : AppCompatActivity(){
     var isPlaceFavorite = false
     private var overallProductRate: Float = 0.0F
     private var userRate: Float = 0.0F
-
+    private var REMOVED = false
+    private var ADDED = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         accessToken = SplashActivity.getAccessToken(this).orEmpty()
@@ -82,18 +81,37 @@ class ProductActivity : AppCompatActivity(){
         }
 
         placeDetailsBinding.addCommentFab.setOnClickListener {
-            val commentsBottomSheet = CommentsBottomSheet(accessToken, placeId, userId,userName, userImageUrl)
+            val commentsBottomSheet = CommentsBottomSheet(
+                accessToken,
+                placeId,
+                userId,
+                userName,
+                userImageUrl
+            )
             commentsBottomSheet.show(supportFragmentManager, commentsBottomSheet.tag)
            //Open comments bottom sheet
         }
 
-        placeDetailsBinding.upButton.setOnClickListener { finish() }
+        placeDetailsBinding.upButton.setOnClickListener {
+            val resultIntent = Intent()
+            resultIntent.putExtra("removedProduct", REMOVED)
+            resultIntent.putExtra("addedProduct", ADDED)
+            setResult(RESULT_OK, resultIntent)
+            finish()
+        }
 
         lifecycleScope.launch {
             getProductDetails()
         }
     }
 
+    override fun onBackPressed() {
+        val resultIntent = Intent()
+        resultIntent.putExtra("removedProduct", REMOVED)
+        resultIntent.putExtra("addedProduct", ADDED)
+        setResult(RESULT_OK, resultIntent)
+        finish()
+    }
 
     private fun setUpToolbar() {
         setSupportActionBar(placeDetailsBinding.mainToolbar)
@@ -170,6 +188,8 @@ class ProductActivity : AppCompatActivity(){
             //commented to work offline and faster
             // add_to_favorite_image_view.setImageResource(R.drawable.ic_heart_filled)
             isPlaceFavorite = true
+            ADDED = true
+            REMOVED = false
 //            Toast.makeText(this, it.message, Toast.LENGTH_SHORT).show()
             placeDetailsBinding.progressBar.visibility = View.GONE
             placeDetailsBinding.addRemoveFavoriteFrameLayout.isEnabled = true
@@ -190,6 +210,8 @@ class ProductActivity : AppCompatActivity(){
             accessToken
         )
         responseMessage?.let {
+            REMOVED = true
+            ADDED = false
             //commented to work offline and faster
             //add_to_favorite_image_view.setImageResource(R.drawable.ic_heart)
             isPlaceFavorite = false
@@ -236,7 +258,7 @@ class ProductActivity : AppCompatActivity(){
                 }
             }
         }
-        catch (ex : Throwable){
+        catch (ex: Throwable){
             placeDetailsBinding.addRatingToPlaceBar.isEnabled = true
         }
         finally {
@@ -250,7 +272,11 @@ class ProductActivity : AppCompatActivity(){
             lifecycleScope.launch {
                 placeDetailsBinding.addRatingToPlaceBar.isEnabled = false
                 val responseMessage =
-                    placeActivityViewModel.updateRatingToProduct(rate, placeId.toString(), accessToken)
+                    placeActivityViewModel.updateRatingToProduct(
+                        rate,
+                        placeId.toString(),
+                        accessToken
+                    )
                 responseMessage?.let {
                     placeDetailsBinding.addRatingToPlaceBar.isEnabled = true
                 Toast.makeText(this@ProductActivity, "Rate updated", Toast.LENGTH_SHORT).show()
@@ -261,7 +287,7 @@ class ProductActivity : AppCompatActivity(){
                 }
             }
         }
-        catch (ex : Throwable){
+        catch (ex: Throwable){
             placeDetailsBinding.addRatingToPlaceBar.isEnabled = true
         }
 //        finally {

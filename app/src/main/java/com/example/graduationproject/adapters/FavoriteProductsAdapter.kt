@@ -7,8 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.graduationproject.R
-import com.example.graduationproject.helper.listeners.FavoriteProductClickListener
-import com.example.graduationproject.model.products.FavoriteProduct
+import com.example.graduationproject.helpers.listeners.FavoriteProductClickListener
+import com.example.graduationproject.models.products.FavoriteProduct
 import com.example.graduationproject.ui.activities.ProductActivity
 import kotlinx.android.synthetic.main.favorite_product_item.view.*
 import kotlinx.android.synthetic.main.home_product_item.view.add_to_favorite_image_view
@@ -51,7 +51,9 @@ class FavoriteProductsAdapter(
             val place = favoriteProducts?.get(adapterPosition)
             val intent = Intent(itemView.context, ProductActivity::class.java)
             intent.putExtra("placeId", place?.id)
-            itemView.context.startActivity(intent)
+//            itemView.context.startActivity(intent)
+            favoriteProductClickListener.onFavoriteProductClicked(place, adapterPosition)
+//            itemView.context.startActivity(intent)
         }
     }
 

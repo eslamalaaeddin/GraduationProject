@@ -7,15 +7,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
 import com.example.graduationproject.R
 import com.example.graduationproject.databinding.UpdateCommentBottomSheetBinding
-import com.example.graduationproject.helper.Constants
-import com.example.graduationproject.helper.listeners.CommentListener
-import com.example.graduationproject.model.comments.ProductComment
-import com.example.graduationproject.model.products.Comment
+import com.example.graduationproject.helpers.Constants
+import com.example.graduationproject.helpers.listeners.CommentListener
+import com.example.graduationproject.models.comments.ProductComment
+import com.example.graduationproject.models.products.Comment
 import com.example.graduationproject.ui.activities.SplashActivity
-import com.example.graduationproject.viewmodel.ProductActivityViewModel
+import com.example.graduationproject.viewmodels.ProductActivityViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -29,6 +30,11 @@ class UpdateCommentBottomSheet(
     private lateinit var bindingInstance: UpdateCommentBottomSheetBinding
     private val placeActivityViewModel by viewModel<ProductActivityViewModel>()
     private lateinit var accessToken: String
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setStyle(DialogFragment.STYLE_NORMAL, R.style.DialogStyle)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

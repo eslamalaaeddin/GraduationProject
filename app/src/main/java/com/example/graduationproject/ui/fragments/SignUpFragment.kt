@@ -11,12 +11,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.graduationproject.R
-import com.example.graduationproject.databinding.FragmentInSignBinding
 import com.example.graduationproject.databinding.FragmentUpSignBinding
-import com.example.graduationproject.helper.Constants
-import com.example.graduationproject.model.authentication.SignUp
+import com.example.graduationproject.helpers.Constants
+import com.example.graduationproject.models.authentication.SignUp
 import com.example.graduationproject.ui.activities.SplashActivity
-import com.example.graduationproject.viewmodel.SignUpViewModel
+import com.example.graduationproject.viewmodels.SignUpViewModel
 import kotlinx.android.synthetic.main.fragment_up_sign.*
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel

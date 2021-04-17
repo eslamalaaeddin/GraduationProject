@@ -1,38 +1,25 @@
 package com.example.graduationproject.ui.fragments
 
-import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.graduationproject.R
-import com.example.graduationproject.databinding.FragmentFavoritesBinding
 import com.example.graduationproject.databinding.FragmentInSignBinding
-import com.example.graduationproject.helper.Constants
-import com.example.graduationproject.model.authentication.Login
-import com.example.graduationproject.model.authentication.RefreshToken
-import com.example.graduationproject.model.authentication.Token
-import com.example.graduationproject.model.authentication.Verify
-import com.example.graduationproject.network.RetrofitInstance
-import com.example.graduationproject.ui.activities.MainActivity
+import com.example.graduationproject.helpers.Constants
+import com.example.graduationproject.models.authentication.Login
 import com.example.graduationproject.ui.activities.SplashActivity
-import com.example.graduationproject.viewmodel.LoginViewModel
-import com.example.graduationproject.viewmodel.NavigationDrawerViewModel
+import com.example.graduationproject.viewmodels.LoginViewModel
+import com.example.graduationproject.viewmodels.NavigationDrawerViewModel
 import kotlinx.android.synthetic.main.fragment_in_sign.*
-import kotlinx.android.synthetic.main.fragment_password_forget.*
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 private const val TAG = "SignInFragment"
 

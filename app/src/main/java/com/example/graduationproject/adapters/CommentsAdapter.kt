@@ -7,14 +7,11 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.graduationproject.R
-import com.example.graduationproject.helper.Constants.BASE_USER_IMAGE_URL
-import com.example.graduationproject.helper.listeners.CommentListener
-import com.example.graduationproject.model.products.Comment
-import com.squareup.picasso.Picasso
+import com.example.graduationproject.helpers.Constants.BASE_USER_IMAGE_URL
+import com.example.graduationproject.helpers.listeners.CommentListener
+import com.example.graduationproject.models.products.Comment
 import de.hdodenhof.circleimageview.CircleImageView
-import java.util.*
 
 private const val TAG = "CommentsAdapter"
 //private const val BASE_USER_IMAGE_URL = "http://10.0.3.2:3000/images/users/"
@@ -47,13 +44,13 @@ class CommentsAdapter(
             personNameTextView.text = comment.userName
                 val userImageUrl = "$BASE_USER_IMAGE_URL${comment.userImage}"
                 if (userImageUrl.isNotEmpty()){
-//                    Glide.with(itemView.context)
-//                        .load(userImageUrl)
+                    Glide.with(itemView.context)
+                        .load(userImageUrl)
 //                        .skipMemoryCache(true)
 //                        .diskCacheStrategy(DiskCacheStrategy.NONE)
-//                        .into(personImage)
+                        .into(personImage)
 
-                    Picasso.get().load(userImageUrl).into(personImage)
+//                    Picasso.get().load(userImageUrl).into(personImage)
                 }
                 else{
                     personImage.setImageResource(R.drawable.avatar)
@@ -68,7 +65,7 @@ class CommentsAdapter(
 //            }
             //CommentContent
             commentTextView.text = comment.commentContent
-
+            //1618612359-56681229741093.jpg
             moreOnCommentButton.visibility = if (userId == comment.userId) View.VISIBLE else View.GONE
 
         }

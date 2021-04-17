@@ -1,16 +1,14 @@
 package com.example.graduationproject.repository
 
 import android.content.Context
-import com.example.graduationproject.model.ResponseMessage
-import com.example.graduationproject.model.comments.ProductComment
-import com.example.graduationproject.model.products.Comment
-import com.example.graduationproject.model.products.ReturnedComment
+import com.example.graduationproject.models.ResponseMessage
+import com.example.graduationproject.models.comments.ProductComment
+import com.example.graduationproject.models.products.ReturnedComment
 import com.example.graduationproject.network.Api
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
-import retrofit2.Response
 
 private const val TAG = "CommentsRepository"
 class CommentsRepository(private val api: Api, private val context: Context,   private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO) : BaseRepository(context) {

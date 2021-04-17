@@ -1,5 +1,9 @@
 package com.example.graduationproject.ui.fragments
 
+import android.app.Activity
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
@@ -17,14 +21,18 @@ import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import com.example.graduationproject.R
 import com.example.graduationproject.adapters.FavoriteProductsAdapter
 import com.example.graduationproject.databinding.FragmentFavoritesBinding
-import com.example.graduationproject.helper.Constants.TIME_OUT_MILLISECONDS
-import com.example.graduationproject.helper.listeners.FavoriteProductClickListener
-import com.example.graduationproject.model.products.FavoriteProduct
-import com.example.graduationproject.model.products.VisitedProduct
+import com.example.graduationproject.helpers.Constants.FAVORITE_PRODUCT_REQUEST_CODE
+import com.example.graduationproject.helpers.Constants.TIME_OUT_MILLISECONDS
+import com.example.graduationproject.helpers.Utils
+import com.example.graduationproject.helpers.listeners.FavoriteProductClickListener
+import com.example.graduationproject.models.products.FavoriteProduct
+import com.example.graduationproject.models.products.VisitedProduct
+import com.example.graduationproject.ui.activities.ProductActivity
 import com.example.graduationproject.ui.activities.SplashActivity
-import com.example.graduationproject.viewmodel.ProductActivityViewModel
+import com.example.graduationproject.viewmodels.ProductActivityViewModel
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
+
 
 private const val TAG = "FavoritesFragment"
 
@@ -34,8 +42,11 @@ class FavoritesFragment : Fragment(), FavoriteProductClickListener {
     private lateinit var accessToken: String
     private var favoriteProducts: MutableList<FavoriteProduct> = mutableListOf()
     private lateinit var favoriteProductsAdapter: FavoriteProductsAdapter
+    private var currentFavoriteProduct : FavoriteProduct? = null
+    private var currentFavoriteProductPosition = 0
     private var currentRecProducts: PagedList<FavoriteProduct>? = null
     private lateinit var gridLayoutManager: GridLayoutManager
+    private lateinit var networkStateReceiver: NetworkStateReceiver
     var userScrolled = true
     var pastVisibleItems = 0
     var visibleItemCount: Int = 0
@@ -58,7 +69,7 @@ class FavoritesFragment : Fragment(), FavoriteProductClickListener {
         super.onViewCreated(view, savedInstanceState)
         accessToken = SplashActivity.getAccessToken(requireContext()).orEmpty()
 
-        //getFavoriteProducts()
+        getFavoriteProducts()
 
         fragmentFavoritesBinding.arrowUpImageButton.setOnClickListener {
             fragmentFavoritesBinding.favoriteProductsRecyclerView.smoothScrollToPosition(0)
@@ -116,12 +127,17 @@ class FavoritesFragment : Fragment(), FavoriteProductClickListener {
 
     override fun onStart() {
         super.onStart()
-        getFavoriteProducts()
+       // networkStateReceiver = NetworkStateReceiver()
+        //val intentFilter = IntentFilter(CONNECTION_CHANGE)
+        //requireActivity().registerReceiver(networkStateReceiver, intentFilter)
+
+//        getFavoriteProducts()
+
     }
 
     override fun onStop() {
         super.onStop()
-        placeActivityViewModel.favoritePages = 1
+        //requireActivity().unregisterReceiver(networkStateReceiver)
     }
 
     private fun updateRecyclerView() {
@@ -208,7 +224,6 @@ class FavoritesFragment : Fragment(), FavoriteProductClickListener {
             addProductToFavorite(favoriteProduct, productPosition)
             favoriteProduct?.isFavorite = true
             favoriteProductsAdapter.notifyItemChanged(productPosition, favoriteProduct)
-
         }
     }
 
@@ -226,8 +241,7 @@ class FavoritesFragment : Fragment(), FavoriteProductClickListener {
             }
         }
     }
-
-    private fun removeProductFromFavorite(favoriteProduct: FavoriteProduct){
+    private fun removeProductFromFavorite(favoriteProduct: FavoriteProduct) {
         lifecycleScope.launch {
             val responseMessage = placeActivityViewModel.deleteProductFromFavorites(
                 favoriteProduct.id.toString(),
@@ -241,7 +255,6 @@ class FavoritesFragment : Fragment(), FavoriteProductClickListener {
             }
         }
     }
-
     private fun dismissProgressAfterTimeOut() {
         lifecycleScope.launchWhenStarted {
             Handler().postDelayed({
@@ -253,6 +266,61 @@ class FavoritesFragment : Fragment(), FavoriteProductClickListener {
 
     override fun onFavoriteIconClicked(favoriteProduct: FavoriteProduct?, productPosition: Int) {
         handleFavoriteState(productPosition, favoriteProduct)
+    }
+    override fun onFavoriteProductClicked(favoriteProduct: FavoriteProduct?, position: Int) {
+        currentFavoriteProduct = favoriteProduct
+        currentFavoriteProductPosition = position
+        val intent = Intent(requireContext(), ProductActivity::class.java)
+        intent.putExtra("placeId", favoriteProduct?.id)
+        startActivityForResult(intent, FAVORITE_PRODUCT_REQUEST_CODE)
+
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == FAVORITE_PRODUCT_REQUEST_CODE){
+            if (resultCode == Activity.RESULT_OK) {
+               data?.let {
+                   val isRemoved: Boolean = data.getBooleanExtra("removedProduct", false)
+                   val isAdded: Boolean = data.getBooleanExtra("addedProduct", false)
+
+                   currentFavoriteProduct?.let {
+                       val isFavorite = currentFavoriteProduct?.isFavorite
+                       //Is favorite
+                       if (isRemoved) {
+                           it.isFavorite = false
+                           favoriteProductsAdapter.notifyItemChanged(currentFavoriteProductPosition, it)
+                           favoriteProductsAdapter.notifyDataSetChanged()
+                          // Toast.makeText(requireContext(), "Removed", Toast.LENGTH_SHORT).show()
+                       }
+                       //Not favorite
+                       // I think below code is useless as you returned to the favorite state that you where in -- no change
+//                       if (isAdded) {
+//                           it.isFavorite = true
+//                           favoriteProductsAdapter.notifyItemChanged(currentFavoriteProductPosition, it)
+//                           favoriteProductsAdapter.notifyDataSetChanged()
+//                         //  Toast.makeText(requireContext(), "Added", Toast.LENGTH_SHORT).show()
+//                       }
+                   }
+               }
+            }
+        }
+    }
+
+
+}
+
+class NetworkStateReceiver : BroadcastReceiver() {
+    override fun onReceive(context: Context?, intent: Intent?) {
+        context?.let {
+            if (Utils.getConnectionType(it) == 0) {
+                Toast.makeText(it, "NO", Toast.LENGTH_SHORT).show()
+            }
+            else {
+                Toast.makeText(it, "YES", Toast.LENGTH_SHORT).show()
+            }
+        }
+
     }
 
 }

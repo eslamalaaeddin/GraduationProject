@@ -8,7 +8,6 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.*
 import android.widget.AbsListView
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -19,10 +18,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.graduationproject.R
 import com.example.graduationproject.adapters.SearchedProductsAdapter
 import com.example.graduationproject.databinding.SearchFragmentBinding
-import com.example.graduationproject.helper.Constants
-import com.example.graduationproject.helper.listeners.TagClickListener
+import com.example.graduationproject.helpers.Constants
+import com.example.graduationproject.helpers.listeners.TagClickListener
 import com.example.graduationproject.ui.activities.SplashActivity
-import com.example.graduationproject.viewmodel.SearchFragmentViewModel
+import com.example.graduationproject.viewmodels.SearchFragmentViewModel
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -168,6 +167,7 @@ class SearchFragment : Fragment() , TagClickListener{
 
 
     override fun onTagClicked(tag: String) {
+        bindingInstance.searchProductsEditText.text.clear()
         bindingInstance.searchProductsEditText.hint = "#$tag"
         searchProductsByTag(tag)
     }

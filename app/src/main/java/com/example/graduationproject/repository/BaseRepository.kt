@@ -2,14 +2,10 @@ package com.example.graduationproject.repository
 
 import android.content.Context
 import android.util.Log
-import android.widget.Toast
-import com.example.graduationproject.helper.ExceptionHandler
-import com.example.graduationproject.helper.Result
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
+import com.example.graduationproject.helpers.ExceptionHandler
+import com.example.graduationproject.helpers.Result
 import retrofit2.HttpException
 import retrofit2.Response
-import java.io.IOException
 
 private const val TAG = "BaseRepository"
 open class BaseRepository (context: Context){

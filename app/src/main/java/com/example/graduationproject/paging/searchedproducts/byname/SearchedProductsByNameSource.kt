@@ -2,7 +2,7 @@ package com.example.graduationproject.paging.searchedproducts.byname
 
 import android.util.Log
 import androidx.paging.PageKeyedDataSource
-import com.example.graduationproject.model.products.Product
+import com.example.graduationproject.models.products.Product
 import com.example.graduationproject.repository.SearchRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

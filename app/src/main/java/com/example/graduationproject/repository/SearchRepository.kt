@@ -1,7 +1,7 @@
 package com.example.graduationproject.repository
 
 import android.content.Context
-import com.example.graduationproject.model.products.Product
+import com.example.graduationproject.models.products.Product
 import com.example.graduationproject.network.Api
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

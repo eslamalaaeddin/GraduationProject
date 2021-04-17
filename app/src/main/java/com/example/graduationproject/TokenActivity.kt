@@ -6,18 +6,11 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.SystemClock
-import android.util.Log
 import android.widget.Button
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.observe
-import com.example.graduationproject.helper.Constants
+import com.example.graduationproject.helpers.Constants
 import com.example.graduationproject.ui.activities.SplashActivity
-import com.example.graduationproject.viewmodel.NavigationDrawerViewModel
-import com.example.graduationproject.viewmodel.SplashActivityViewModel
-import kotlinx.coroutines.launch
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
 private const val TAG = "TokenActivity"
 class TokenActivity : AppCompatActivity() {
