@@ -9,8 +9,6 @@
         <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
         <item name="android:textColorHint">@color/edit_text_hint</item>
 
-
-
 <!--       <item name="android:textViewStyle">@style/RobotoTextViewStyle</item>-->
 <!--       <item name="android:buttonStyle">@style/RobotoButtonStyle</item>-->
 

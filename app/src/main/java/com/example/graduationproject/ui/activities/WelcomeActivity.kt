@@ -44,7 +44,7 @@ class WelcomeActivity : AppCompatActivity() {
               //  background = resources.getDrawable(R.drawable.shape_deselected_dot)
                 text = (Html.fromHtml("&#8226;"))
                 textSize = 36F
-                setTextColor(resources.getColor(R.color.white))
+                setTextColor(resources.getColor(R.color.white_font_text))
             }
             activityWelcomeBinding.dotsLayout.addView(dots[i])
 

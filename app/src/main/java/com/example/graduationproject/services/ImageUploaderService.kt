@@ -93,16 +93,20 @@ class ImageUploaderService : Service() {
                     notificationManager.notify(NOTIFICATION_ID, notification.build())
                     handler.removeCallbacksAndMessages(null)
                     //send a broad cast to update the ui
-                    val intent = Intent(ACTION_IMAGE_UPLOADED_SUCCESS)
-                    val noUiIntent = Intent(ACTION_IMAGE_UPLOADED_SUCCESS_NO_UI)
-                    sendBroadcast(intent)
-                    sendBroadcast(noUiIntent)
+//                    val intent = Intent(ACTION_IMAGE_UPLOADED_SUCCESS)
+//                    val noUiIntent = Intent(ACTION_IMAGE_UPLOADED_SUCCESS_NO_UI)
+//                    sendBroadcast(intent)
+//                    sendBroadcast(noUiIntent)
                     response.body()?.let {
+                        val intent = Intent(ACTION_IMAGE_UPLOADED_SUCCESS)
+                        val noUiIntent = Intent(ACTION_IMAGE_UPLOADED_SUCCESS_NO_UI)
+                        intent.putExtra("newImageUrl", it.image.orEmpty())
+                        sendBroadcast(intent)
+                        sendBroadcast(noUiIntent)
                         SplashActivity.setUserImageUrl(this@ImageUploaderService, it.image.orEmpty())
                     }
                 }
             }
-            //1618500110-56681229741093.jpg
 
             override fun onFailure(call: Call<ImageResponse?>, t: Throwable) {
                 stopForeground(true)

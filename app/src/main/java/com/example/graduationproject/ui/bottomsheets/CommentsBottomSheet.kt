@@ -110,10 +110,10 @@ class CommentsBottomSheet(
                     if (comments.isNotEmpty()){
                         if (newState == AbsListView.OnScrollListener.SCROLL_STATE_FLING
                             && layoutManager.findFirstCompletelyVisibleItemPosition() != 0) {
-                            bindingInstance.arrowUpImageButton.visibility = View.VISIBLE
+//                            bindingInstance.arrowUpImageButton.visibility = View.VISIBLE
                         } else if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL
                             && layoutManager.findFirstCompletelyVisibleItemPosition() != 0) {
-                            bindingInstance.arrowUpImageButton.visibility = View.VISIBLE
+//                            bindingInstance.arrowUpImageButton.visibility = View.VISIBLE
                         }
                     }
 
@@ -133,15 +133,12 @@ class CommentsBottomSheet(
                     pastVisibleItems = layoutManager.findFirstVisibleItemPosition()
 
                     if (layoutManager.findFirstCompletelyVisibleItemPosition() < 2) {
-                        bindingInstance.arrowUpImageButton.visibility = View.GONE
+//                        bindingInstance.arrowUpImageButton.visibility = View.GONE
                     }
 
                     if (dy < 0) {
-                        bindingInstance.arrowUpImageButton.visibility = View.GONE
+//                        bindingInstance.arrowUpImageButton.visibility = View.GONE
                     }
-                    // Now check if userScrolled is true and also check if
-                    // the item is end then update recycler view and set
-                    // userScrolled to false
                     if (userScrolled && visibleItemCount + pastVisibleItems == totalItemCount) {
                         userScrolled = false
                         if (productActivityViewModel.commentPages != -1){
@@ -149,9 +146,9 @@ class CommentsBottomSheet(
                         }
                     }
 
-//                    if (layoutManager.findFirstCompletelyVisibleItemPosition() < 0) {
-//                        placeDetailsBinding.arrowUpImageButton.visibility = View.GONE
-//                    }
+                    if (layoutManager.findFirstCompletelyVisibleItemPosition() < 0) {
+//                        bindingInstance.arrowUpImageButton.visibility = View.GONE
+                    }
                 }
             }
         )

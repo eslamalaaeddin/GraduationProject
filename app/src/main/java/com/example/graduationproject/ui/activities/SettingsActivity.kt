@@ -1,12 +1,11 @@
 package com.example.graduationproject.ui.activities
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.Dialog
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
+import android.content.*
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.drawable.Drawable
@@ -17,11 +16,14 @@ import android.provider.MediaStore
 import android.util.Log
 import android.view.Gravity
 import android.view.View
+import android.view.ViewAnimationUtils
 import android.view.Window
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.animation.doOnEnd
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -46,6 +48,7 @@ import kotlinx.coroutines.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
+import kotlin.math.hypot
 
 
 private const val IMAGE_REQUEST_CODE = 123
@@ -57,26 +60,68 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var accessToken: String
     private lateinit var notificationBroadcastReceiver: NotificationBroadcastReceiver
     private val navDrawerViewModel by viewModel<NavigationDrawerViewModel>()
-    private var firstName = ""
-    private var lastName = ""
-    private var imageUrl = ""
+//    private var firstName = ""
+//    private var lastName = ""
+//    private var imageUrl = ""
     private var userBitmap: Bitmap? = null
     private var userNameUpdated = false
     private var userImageUpdated = false
+
+    private lateinit var appSettingPrefs: SharedPreferences
+
+    private lateinit var sharedPrefsEdit: SharedPreferences.Editor
+    private var isNightModeOn: Boolean = false
+
+    @SuppressLint("CommitPrefEdits")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         bindingInstance = DataBindingUtil.setContentView(this, R.layout.activity_settings)
 
         accessToken = SplashActivity.getAccessToken(this).toString()
 
-        initUserInfo()
+        if (savedInstanceState == null){
+            initUserInfo()
+        }
+
+        Log.i(TAG, "MMMM onCreate: ONLY FIRST TIME")
+        appSettingPrefs = getSharedPreferences("AppSettingPrefs", 0)
+        sharedPrefsEdit = appSettingPrefs.edit()
+        isNightModeOn = appSettingPrefs.getBoolean("NightMode", false)
+
 
         bindingInstance.upButtonView.setOnClickListener {
             val resultIntent = Intent()
             resultIntent.putExtra("userNameUpdated", userNameUpdated)
             resultIntent.putExtra("userImageUpdated", userImageUpdated)
+            resultIntent.putExtra("isModeUpdated", navDrawerViewModel.isModeUpdated)
             setResult(RESULT_OK, resultIntent)
             finish()
+        }
+
+        if (isNightModeOn) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            bindingInstance.changeModeImageButton.setImageResource(R.drawable.ic_sun)
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            bindingInstance.changeModeImageButton.setImageResource(R.drawable.ic_moon)
+        }
+
+        bindingInstance.changeModeImageButton.setOnClickListener {
+            Log.i(TAG, "MMMM onCreate: CLICKED")
+            navDrawerViewModel.isModeUpdated = true
+//            animate()
+            if (isNightModeOn) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                sharedPrefsEdit.putBoolean("NightMode", false)
+                sharedPrefsEdit.apply()
+                recreate()
+
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                sharedPrefsEdit.putBoolean("NightMode", true)
+                sharedPrefsEdit.apply()
+                recreate()
+            }
         }
 
         bindingInstance.userImageView.setOnClickListener { onClickImage() }
@@ -96,7 +141,7 @@ class SettingsActivity : AppCompatActivity() {
                 toast.setGravity(Gravity.TOP, 0, 96)
                 toast.show()
 
-            } else if (this.firstName == firstName && this.lastName == lastName) {
+            } else if (navDrawerViewModel.firstName == firstName && navDrawerViewModel.lastName == lastName) {
                 val toast = Toast.makeText(
                     applicationContext,
                     "First and last name didn't change.", Toast.LENGTH_SHORT
@@ -110,19 +155,52 @@ class SettingsActivity : AppCompatActivity() {
 
     }
 
+
+    private fun animate() {
+        val w = bindingInstance.container.measuredWidth
+        val h = bindingInstance.container.measuredHeight
+        val finalRadius = hypot(w.toFloat(), h.toFloat())
+        val anim = ViewAnimationUtils.createCircularReveal(
+            bindingInstance.container,
+            w / 2,
+            h / 2,
+            0f,
+            finalRadius
+        )
+        anim.duration = 1000L
+        anim.start()
+        anim.doOnEnd {
+            if (isNightModeOn) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                sharedPrefsEdit.putBoolean("NightMode", false)
+                sharedPrefsEdit.apply()
+                recreate()
+
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                sharedPrefsEdit.putBoolean("NightMode", true)
+                sharedPrefsEdit.apply()
+                recreate()
+
+            }
+        }
+    }
+
     override fun onBackPressed() {
         val resultIntent = Intent()
         resultIntent.putExtra("userNameUpdated", userNameUpdated)
         resultIntent.putExtra("userImageUpdated", userImageUpdated)
+        resultIntent.putExtra("isModeUpdated", navDrawerViewModel.isModeUpdated)
         setResult(RESULT_OK, resultIntent)
         finish()
     }
 
     private fun initUserInfo() {
-        firstName = intent.getStringExtra("userFirstName").toString()
-        lastName = intent.getStringExtra("userLastName").toString()
-        imageUrl = intent.getStringExtra("userImageUrl").toString()
+        navDrawerViewModel.firstName = intent.getStringExtra("userFirstName").toString()
+        navDrawerViewModel.lastName = intent.getStringExtra("userLastName").toString()
+        navDrawerViewModel.imageUrl = intent.getStringExtra("userImageUrl").toString()
     }
+
 
     private fun showUpdateUserPasswordDialog() {
         val dialog = Dialog(this)
@@ -227,8 +305,8 @@ class SettingsActivity : AppCompatActivity() {
                 toast.setGravity(Gravity.TOP, 0, 96)
                 toast.show()
                 SplashActivity.setUserName(this@SettingsActivity, "$firstName $lastName")
-                this@SettingsActivity.firstName = firstName
-                this@SettingsActivity.lastName = lastName
+                navDrawerViewModel.firstName = firstName
+                navDrawerViewModel.lastName = lastName
                 userNameUpdated = true
             }
             if (responseMessage == null) {
@@ -243,7 +321,7 @@ class SettingsActivity : AppCompatActivity() {
     private fun updateUserUi() {
         bindingInstance.progressBar.visibility = View.VISIBLE
         dismissProgressAfterTimeOut()
-        val userImageUrl = "${Constants.BASE_USER_IMAGE_URL}${imageUrl}"
+        val userImageUrl = "${Constants.BASE_USER_IMAGE_URL}${navDrawerViewModel.imageUrl}"
         if (userImageUrl.isNotEmpty()) {
             Glide.with(this)
                 .asBitmap()
@@ -264,10 +342,10 @@ class SettingsActivity : AppCompatActivity() {
                     }
                 })
         }
-        bindingInstance.firstNameEditText.setText(firstName)
+        bindingInstance.firstNameEditText.setText(navDrawerViewModel.firstName)
         bindingInstance.firstNameEditText.setSelection(bindingInstance.firstNameEditText.text.length)
 
-        bindingInstance.lastNameEditText.setText(lastName)
+        bindingInstance.lastNameEditText.setText(navDrawerViewModel.lastName)
         bindingInstance.lastNameEditText.setSelection(bindingInstance.lastNameEditText.text.length)
 
     }
@@ -378,7 +456,7 @@ class SettingsActivity : AppCompatActivity() {
                                 //1// Start the service
                                 intent.data = Uri.parse(path)
                                 intent.putExtra("accessToken", accessToken)
-                                intent.putExtra("oldImageName", imageUrl)
+                                intent.putExtra("oldImageName", navDrawerViewModel.imageUrl)
 
                                 startService(intent)
 //                                ContextCompat.startForegroundService(this@SettingsActivity, intent)
@@ -418,6 +496,9 @@ class SettingsActivity : AppCompatActivity() {
                         bindingInstance.userImageView.setImageBitmap(userBitmap)
                         userImageUpdated = true
                     }
+                    val newImageUrl = intent.getStringExtra("newImageUrl").orEmpty()
+                    Log.i(TAG, "MMMM onReceive: $newImageUrl")
+                    navDrawerViewModel.imageUrl = if (newImageUrl.isEmpty()) navDrawerViewModel.imageUrl else newImageUrl
                     userImageUpdated = true
                 }
 

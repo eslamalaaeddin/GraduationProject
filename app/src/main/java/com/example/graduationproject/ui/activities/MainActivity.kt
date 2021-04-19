@@ -5,10 +5,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Window
 import android.widget.Button
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import androidx.navigation.NavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.graduationproject.R
+import com.example.graduationproject.databinding.ActivityMainBinding
 import com.example.graduationproject.ui.fragments.UserInfoFragment
 import com.example.graduationproject.ui.fragments.FavoritesFragment
 import com.example.graduationproject.ui.fragments.HomeFragment
@@ -17,11 +20,11 @@ import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
-
-    val stack = Stack<Int>()
+    private lateinit var bindingInstance: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        bindingInstance = DataBindingUtil.setContentView(this, R.layout.activity_main)
+//        setContentView(R.layout.activity_main)
 
 //        val host: NavHostFragment = supportFragmentManager
 //            .findFragmentById(R.id.my_nav_host_fragment) as NavHostFragment? ?: return
@@ -32,9 +35,12 @@ class MainActivity : AppCompatActivity() {
 
         //check if it is not there add it else do not do anything
 
-        navigateToHomeFragment()
+        if (savedInstanceState == null) {
+            navigateToHomeFragment()
+        }
 
-        bottomNavigationView.setOnNavigationItemSelectedListener { item ->
+
+        bindingInstance.bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.homeFragment -> {
                     navigateToHomeFragment()

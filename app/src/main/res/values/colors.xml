@@ -4,17 +4,38 @@
     <color name="colorPrimaryDark">#FF3D00</color>
     <color name="colorAccent">#FB6435</color>
 
-    <color name="white">#FFFFFF</color>
+    <color name="white_font_buttons">#FFFFFF</color>
+    <color name="white_font_text">#FFFFFF</color>
+    <color name="white_font_icons">#FFFFFF</color>
+    <color name="white_background">#FFFFFF</color>
+    <color name="white_product_background">#FFFFFF</color>
+    <color name="white_bottom_nav_icons">#FFFFFF</color>
+    <color name="white_bottom_nav_background">#FFFFFF</color>
+    <color name="off_white">#EAEAEA</color>
+    <color name="edit_text_hint">#9F9F9F</color>
+    <color name="edit_text_color">#000000</color>
+    <color name="edit_text_background">@color/off_white</color>
+    <color name="black_font">#000000</color>
+
+
     <color name="grey">#A3A3A3</color>
     <color name="dark_grey">#474646</color>
     <color name="black">#000000</color>
     <color name="yellow">#FDD629</color>
     <color name="orange">#FD6D40</color>
-    <color name="blue">#039BE5</color>
-    <color name="dark_blue">#00699C</color>
+    <color name="blue">#0B5EA6</color>
+    <color name="dark_blue">#01496C</color>
     <color name="red">#FA2E3F</color>
 
 
     <color name="view_page_color">#FF764B</color>
     <color name="secondary_text">#7C7C7C</color>
+    <color name="product_frame_grey">#B2F4F4F4</color>
+    <color name="white_fav_icon_color">#FFFFFF</color>
+    <color name="no_comment_blue">#0B5EA6</color>
+    <color name="edit_text_background_search">#FFFFFF</color>
+    <color name="default_nav_icon_un_checked_color">#B3B3B3</color>
+    <color name="default_nav_icon_checked_color">#FA460E</color>
+    <color name="orange_stroked">#FD6D40</color>
+
 </resources>

@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:padding="8dp"
     android:gravity="center"
+    android:background="@color/white_background"
     android:orientation="vertical">
 
 
@@ -15,6 +16,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:ems="10"
+        android:textColor="@color/black_font"
         android:inputType="textMultiLine"
         android:padding="4dp"
         android:scrollbars="vertical"/>
@@ -34,7 +36,7 @@
             android:text="Cancel"
             style="@style/Widget.AppCompat.Button.Borderless.Colored"
             android:textAllCaps="false"
-            android:textColor="@color/dark_grey" />
+            android:textColor="@color/black_font" />
 
         <Button
             android:id="@+id/updateCommentButton"

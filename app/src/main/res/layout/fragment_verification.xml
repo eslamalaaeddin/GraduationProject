@@ -10,6 +10,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:gravity="center"
+        android:background="@color/white_background"
         >
 <!--        <TextView-->
 <!--            android:layout_width="match_parent"-->
@@ -26,7 +27,9 @@
             android:layout_height="wrap_content"
             android:id="@+id/verification_code_edit_text"
             android:hint="Verification code"
-            android:backgroundTint="@color/grey"
+            android:backgroundTint="@color/edit_text_background"
+            android:textColor="@color/black_font"
+            android:textColorHint="@color/edit_text_hint"
             android:inputType="number"
             android:layout_margin="8dp"
             />
@@ -38,7 +41,7 @@
             android:id="@+id/verifyButton"
             android:text="Verify"
             android:background="@drawable/round_button"
-            android:textColor="@color/white"
+            android:textColor="@color/white_font_text"
             android:textAllCaps="false"
             android:textSize="18sp"
             android:layout_marginStart="32dp"

@@ -6,8 +6,10 @@ object Constants {
 //    private const val HOST = "http://10.0.2.2:" //Emulator
 //    private const val url = "http://rec-sys.ddns.net:5000/images/users/user.png"
     //$BASE_USER_IMAGE_URL${comment.userImage}
-    private const val HOST = "http://rec-sys.ddns.net:"
-    private const val PORT = 5000
+//    private const val HOST = "http://rec-sys.ddns.net:"//Mostafa
+//    private const val PORT = 5000//Mostafa
+    private const val HOST = "http://192.168.1.4:"//Mohammad
+    private const val PORT = 5000//Mohammad
     const val BASE_USER_IMAGE_URL = "$HOST$PORT/images/users/"
     const val BASE_PRODUCT_IMAGE_URL = "$HOST$PORT/images/products/"
     const val BASE_URL = "$HOST$PORT/api/" //GenyMotion
@@ -26,7 +28,7 @@ object Constants {
     const val REFRESH_TOKEN = "refresh token"
     const val REFRESH_TOKEN_EX_TIME = "refresh token expiration time"
     const val USER_EMAIL = "user email"
-
+    const val APP_PREFS = "AppPrefs"
 
     const val SEARCH_METHOD = "search method"
 

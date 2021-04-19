@@ -60,27 +60,33 @@ class UpdateCommentBottomSheet(
         bindingInstance.addCommentFab.setOnClickListener {
             val commentContent = bindingInstance.commentEditText.text.trim().toString()
             if (commentContent.isNotEmpty()) {
-                dismissProgressAfterTimeOut()
-                val placeComment = ProductComment(placeId, commentContent)
-                lifecycleScope.launch {
-                    val responseMessage = placeActivityViewModel.updateCommentOnProduct(
-                        comment.commentId.toString(),
-                        placeComment,
-                        accessToken
-                    )
-                    responseMessage?.let {
-                        bindingInstance.progressBar.visibility = View.GONE
-                        Toast.makeText(requireContext(), "Comment updated", Toast.LENGTH_SHORT)
-                            .show()
-                        //call an interface to get tell Product activity that comments has been updated
-                        comment.commentContent = commentContent
-                        commentListener.onCommentModified(comment, position)
-                        dismiss()
-                    }
-                    if (responseMessage == null){
-                        bindingInstance.progressBar.visibility = View.GONE
+                if (commentContent == comment.commentContent){
+                    Toast.makeText(requireContext(), "Comment didn't change", Toast.LENGTH_SHORT).show()
+                }
+                else{
+                    dismissProgressAfterTimeOut()
+                    val placeComment = ProductComment(placeId, commentContent)
+                    lifecycleScope.launch {
+                        val responseMessage = placeActivityViewModel.updateCommentOnProduct(
+                            comment.commentId.toString(),
+                            placeComment,
+                            accessToken
+                        )
+                        responseMessage?.let {
+                            bindingInstance.progressBar.visibility = View.GONE
+                            Toast.makeText(requireContext(), "Comment updated", Toast.LENGTH_SHORT)
+                                .show()
+                            //call an interface to get tell Product activity that comments has been updated
+                            comment.commentContent = commentContent
+                            commentListener.onCommentModified(comment, position)
+                            dismiss()
+                        }
+                        if (responseMessage == null){
+                            bindingInstance.progressBar.visibility = View.GONE
+                        }
                     }
                 }
+
             } else {
                 Toast.makeText(requireContext(), "Enter a comment first", Toast.LENGTH_SHORT).show()
             }

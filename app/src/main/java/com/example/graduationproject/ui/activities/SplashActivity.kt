@@ -15,6 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.graduationproject.R
 import com.example.graduationproject.helpers.Constants.ACCESS_TOKEN
 import com.example.graduationproject.helpers.Constants.ACCESS_TOKEN_EX_TIME
+import com.example.graduationproject.helpers.Constants.APP_PREFS
 import com.example.graduationproject.helpers.Constants.LOGGED_OUT
 import com.example.graduationproject.helpers.Constants.REFRESH_TOKEN
 import com.example.graduationproject.helpers.Constants.REFRESH_TOKEN_EX_TIME
@@ -34,8 +35,6 @@ import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
-
-
 private const val TAG = "SplashActivity"
 
 class SplashActivity : AppCompatActivity() {
@@ -49,8 +48,6 @@ class SplashActivity : AppCompatActivity() {
         val welcomed = getWelcomed(this)
         val loggedOut  = getLoggedOut(this)
 
-        val accessTokenExTime = getAccessTokenExpirationTime(this).orEmpty()
-        val refreshTokenExTime = getRefreshTokenExpirationTime(this).orEmpty()
 
         Handler().postDelayed({
             when {
@@ -83,7 +80,7 @@ class SplashActivity : AppCompatActivity() {
 //            startActivity(Intent(this, MainActivity::class.java))
 //            finish()
 
-        }, 3000)
+        }, 2000)
     }
 
     private fun makeFullScreen() {
@@ -98,233 +95,154 @@ class SplashActivity : AppCompatActivity() {
     }
 
     companion object {
-        fun getSignedIn(context: Context?): Boolean {
-            val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+        fun getSignedIn(context: Context): Boolean {
+            val prefs = context.getSharedPreferences(APP_PREFS, 0)
             return prefs.getBoolean(SIGNED_UP_VERIFIED_SIGNED_IN, false)
         }
 
-        fun getWelcomed(context: Context?): Boolean {
-            val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+        fun getWelcomed(context: Context): Boolean {
+            val prefs = context.getSharedPreferences(APP_PREFS, 0)
             return prefs.getBoolean(WELCOMED, false)
         }
 
-        fun setSignedIn(context: Context?, state: Boolean) {
-            PreferenceManager.getDefaultSharedPreferences(context)
+        fun setSignedIn(context: Context, state: Boolean) {
+            context.getSharedPreferences(APP_PREFS, 0)
                 .edit()
                 .putBoolean(SIGNED_UP_VERIFIED_SIGNED_IN, state)
                 .apply()
         }
 
-        fun setLoggedOut(context: Context?, state: Boolean) {
-            PreferenceManager.getDefaultSharedPreferences(context)
+        fun setLoggedOut(context: Context, state: Boolean) {
+            context.getSharedPreferences(APP_PREFS, 0)
                 .edit()
                 .putBoolean(LOGGED_OUT, state)
                 .apply()
         }
 
-        fun getLoggedOut(context: Context?): Boolean {
-            val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+        fun getLoggedOut(context: Context): Boolean {
+            val prefs = context.getSharedPreferences(APP_PREFS, 0)
             return prefs.getBoolean(LOGGED_OUT, false)
         }
 
-        fun setWelcomed(context: Context?, state: Boolean) {
-            PreferenceManager.getDefaultSharedPreferences(context)
+        fun setWelcomed(context: Context, state: Boolean) {
+            context.getSharedPreferences(APP_PREFS, 0)
                 .edit()
                 .putBoolean(WELCOMED, state)
                 .apply()
         }
 
-        fun setAccessToken(context: Context?, accessToken: String) {
-            PreferenceManager.getDefaultSharedPreferences(context)
+        fun setAccessToken(context: Context, accessToken: String) {
+            context.getSharedPreferences(APP_PREFS, 0)
                 .edit()
                 .putString(ACCESS_TOKEN, accessToken)
                 .apply()
         }
 
-        fun setUserId(context: Context?, userId: Long) {
-            PreferenceManager.getDefaultSharedPreferences(context)
+        fun setUserId(context: Context, userId: Long) {
+            context.getSharedPreferences(APP_PREFS, 0)
                 .edit()
                 .putLong(USER_ID, userId)
                 .apply()
         }
 
-        fun setUserName(context: Context?, userName: String) {
-            PreferenceManager.getDefaultSharedPreferences(context)
+        fun setUserName(context: Context, userName: String) {
+            context.getSharedPreferences(APP_PREFS, 0)
                 .edit()
                 .putString(USER_NAME, userName)
                 .apply()
         }
 
-        fun setUserImageUrl(context: Context?, userImageUrl: String) {
-            PreferenceManager.getDefaultSharedPreferences(context)
+        fun setUserImageUrl(context: Context, userImageUrl: String) {
+            context.getSharedPreferences(APP_PREFS, 0)
                 .edit()
                 .putString(USER_IMAGE_URL, userImageUrl)
                 .apply()
         }
 
-        fun getUserId(context: Context?): Long {
-            val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+        fun getUserId(context: Context): Long {
+            val prefs = context.getSharedPreferences(APP_PREFS, 0)
             return prefs.getLong(USER_ID, 0)
         }
 
-        fun setSearchMethod(context: Context?, searchMethod: String) {
-            PreferenceManager.getDefaultSharedPreferences(context)
+        fun setSearchMethod(context: Context, searchMethod: String) {
+            context.getSharedPreferences(APP_PREFS, 0)
                 .edit()
                 .putString(SEARCH_METHOD, searchMethod)
                 .apply()
         }
 
-        fun getSearchMethod(context: Context?): String? {
-            val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+        fun getSearchMethod(context: Context): String? {
+            val prefs = context.getSharedPreferences(APP_PREFS, 0)
             return prefs.getString(SEARCH_METHOD,"name" )
         }
 
-        fun getUserName(context: Context?): String? {
-            val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+        fun getUserName(context: Context): String? {
+            val prefs = context.getSharedPreferences(APP_PREFS, 0)
             return prefs.getString(USER_NAME,"" )
         }
 
-        fun getUserImageUrl(context: Context?): String? {
-            val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+        fun getUserImageUrl(context: Context): String? {
+            val prefs = context.getSharedPreferences(APP_PREFS, 0)
             return prefs.getString(USER_IMAGE_URL,"user.png" )
         }
 
-        fun saveEmailInPrefs(context: Context?, userEmail: String) {
-            PreferenceManager.getDefaultSharedPreferences(context)
+        fun saveEmailInPrefs(context: Context, userEmail: String) {
+            context.getSharedPreferences(APP_PREFS, 0)
                 .edit()
                 .putString(USER_EMAIL, userEmail)
                 .apply()
         }
 
-        fun getEmailFromPrefs(context: Context?): String? {
-            val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+        fun getEmailFromPrefs(context: Context): String? {
+            val prefs = context.getSharedPreferences(APP_PREFS, 0)
             return prefs.getString(USER_EMAIL, "")
         }
 
-        fun setAccessTokenExpirationTime(context: Context?, accessTokenExTime: String) {
-            PreferenceManager.getDefaultSharedPreferences(context)
+        fun setAccessTokenExpirationTime(context: Context, accessTokenExTime: String) {
+            context.getSharedPreferences(APP_PREFS, 0)
                 .edit()
                 .putString(ACCESS_TOKEN_EX_TIME, accessTokenExTime)
                 .apply()
         }
 
-        fun getAccessToken(context: Context?): String? {
-            val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+        fun getAccessToken(context: Context): String? {
+            val prefs = context.getSharedPreferences(APP_PREFS, 0)
             return prefs.getString(ACCESS_TOKEN, "")
         }
 
-        fun getAccessTokenExpirationTime(context: Context?): String? {
-            val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+        fun getAccessTokenExpirationTime(context: Context): String? {
+            val prefs = context.getSharedPreferences(APP_PREFS, 0)
             return prefs.getString(ACCESS_TOKEN_EX_TIME, "")
         }
 
-        fun setRefreshToken(context: Context?, refreshToken: String) {
-            PreferenceManager.getDefaultSharedPreferences(context)
+        fun setRefreshToken(context: Context, refreshToken: String) {
+            context.getSharedPreferences(APP_PREFS, 0)
                 .edit()
                 .putString(REFRESH_TOKEN, refreshToken)
                 .apply()
         }
 
-        fun setRefreshTokenExpirationTime(context: Context?, refreshTokenExTime: String) {
-            PreferenceManager.getDefaultSharedPreferences(context)
+        fun setRefreshTokenExpirationTime(context: Context, refreshTokenExTime: String) {
+            context.getSharedPreferences(APP_PREFS, 0)
                 .edit()
                 .putString(REFRESH_TOKEN_EX_TIME, refreshTokenExTime)
                 .apply()
         }
 
-        fun getRefreshToken(context: Context?): String? {
-            val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+        fun getRefreshToken(context: Context): String? {
+            val prefs = context.getSharedPreferences(APP_PREFS, 0)
             return prefs.getString(REFRESH_TOKEN, "")
         }
 
-        fun getRefreshTokenExpirationTime(context: Context?): String? {
-            val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+        fun getRefreshTokenExpirationTime(context: Context): String? {
+            val prefs = context.getSharedPreferences(APP_PREFS, 0)
             return prefs.getString(REFRESH_TOKEN_EX_TIME, "")
         }
 
 
     }
 
-    private fun tokenizeUser(accessTokenExTime: String?, refreshTokenExTime: String?) {
-        val accessTokenExTimestamp = convertServerTimeToTimestamp(accessTokenExTime.orEmpty())
-        val refreshTokenExTimestamp = convertServerTimeToTimestamp(refreshTokenExTime.orEmpty())
 
-//        Toast.makeText(this, "${isAccessTokenExpired(accessTokenExTimestamp)}", Toast.LENGTH_SHORT).show()
-        if (!getAccessToken(this).isNullOrEmpty()) {
-            if (isAccessTokenExpired(accessTokenExTimestamp)) {
-                if (isRefreshTokenExpired(refreshTokenExTimestamp)) {
-                    Toast.makeText(this, "Navigate to Login", Toast.LENGTH_SHORT).show()
-                    startActivity(Intent(this, RegisterActivity::class.java))
-                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
-                    finish()
-                } else {
-                    val oldAccessToken = getAccessToken(this).toString()
-                    val refreshToken = getRefreshToken(this).toString()
-                    Log.i(TAG, "TOKEN old access token: $oldAccessToken")
-                    Log.i(TAG, "TOKEN refresh token: $refreshToken")
-                    getNewAccessToken(oldAccessToken, refreshToken)
-                }
-            } else {
-                startActivity(Intent(this, MainActivity::class.java))
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
-                finish()
-            }
-        }
-    }
-
-    @SuppressLint("SimpleDateFormat")
-    private fun convertServerTimeToTimestamp(serverTime: String): Long {
-        if (serverTime.isEmpty()) {
-            return 0
-        }
-        val dateOnly = serverTime.substring(5, 25)
-        val formatter: DateFormat = SimpleDateFormat("dd MMM yyyy HH:mm:ss")
-        val date: Date = formatter.parse(dateOnly) as Date
-        return date.time / 1000
-    }
-
-    private fun isAccessTokenExpired(accessTokenTimestamp: Long): Boolean {
-        val currentTimeInSeconds = System.currentTimeMillis() / 1000
-        Log.i(TAG, "ISLAM isAccessTokenExpired: Current time $currentTimeInSeconds")
-        Log.i(TAG, "ISLAM isAccessTokenExpired: Expiration time  $accessTokenTimestamp")
-        Log.i(TAG, "ISLAM isAccessTokenExpired: Differenece time  ${accessTokenTimestamp - currentTimeInSeconds}")
-        return currentTimeInSeconds - accessTokenTimestamp >= 0
-//        return (currentTimeInSeconds - (accessTokenTimestamp + 7200)) >= 0
-    }
-
-    private fun isRefreshTokenExpired(refreshTokenTimestamp: Long): Boolean {
-        val currentTimeInSeconds = System.currentTimeMillis() / 1000
-        return (currentTimeInSeconds - (refreshTokenTimestamp + 7200)) >= 0
-    }
-
-    private fun getNewAccessToken(oldAccessToken: String, oldRefreshToken: String) {
-        // Toast.makeText(this, "I am getting new access token", Toast.LENGTH_SHORT).show()
-        val refreshTokenObj = RefreshToken(oldAccessToken, oldRefreshToken)
-        lifecycleScope.launch {
-            val token = splashActivityViewModel.refreshToken(refreshTokenObj)
-            if (token != null) {
-
-                val accessToken = token.access_token
-                val refreshToken = token.refresh_token
-                val accessTokenExTime = token.access_token_exp
-                val refreshTokenExTime = token.refresh_token_exp
-
-                setAccessToken(this@SplashActivity, accessToken)
-                setRefreshToken(this@SplashActivity, refreshToken)
-                setAccessTokenExpirationTime(this@SplashActivity, accessTokenExTime)
-                setRefreshTokenExpirationTime(this@SplashActivity, refreshTokenExTime)
-                Log.i(TAG, "ISLAM onCreate: ${getAccessToken(this@SplashActivity)}")
-                navigateToMainActivity()
-
-            }
-        }
-    }
-
-    private fun navigateToMainActivity() {
-        startActivity(Intent(this, MainActivity::class.java))
-        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
-        finish()
-    }
 
 
 }

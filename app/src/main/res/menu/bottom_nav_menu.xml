@@ -4,28 +4,23 @@
 
     <item
         android:id="@+id/homeFragment"
-        android:icon="@drawable/home_selector"
+        android:icon="@drawable/ic_home"
         android:title="Home" />
 
     <item
         android:id="@+id/favoritesFragment"
-        android:icon="@drawable/favorite_places_selector"
+        android:icon="@drawable/ic_heart"
         android:title="Favorites" />
-
-<!--    <item-->
-<!--        android:id="@+id/addPlaces"-->
-<!--        android:icon="@drawable/add_place_selector"-->
-<!--        android:title="Add place" />-->
 
 
     <item
         android:id="@+id/searchFragment"
-        android:icon="@drawable/search_places_selector"
+        android:icon="@drawable/ic_search"
         android:title="Search" />
 
     <item
         android:id="@+id/moreNavigationDrawer"
-        android:icon="@drawable/more_selector"
+        android:icon="@drawable/ic_more__comment"
         android:title="More" />
 
 <!--        <item-->
@@ -34,8 +29,31 @@
 <!--            android:title="Logout" />-->
 
 
-    <!--    <item android:title="NavDrawer" android:id="@+id/nav_drawer"-->
-    <!--        android:icon="@drawable/ic_menu" app:showAsAction="always"/>-->
+<!--    <item-->
+<!--        android:id="@+id/homeFragment"-->
+<!--        android:icon="@drawable/home_selector"-->
+<!--        android:title="Home" />-->
+
+<!--    <item-->
+<!--        android:id="@+id/favoritesFragment"-->
+<!--        android:icon="@drawable/favorite_places_selector"-->
+<!--        android:title="Favorites" />-->
+
+
+<!--    <item-->
+<!--        android:id="@+id/searchFragment"-->
+<!--        android:icon="@drawable/search_places_selector"-->
+<!--        android:title="Search" />-->
+
+<!--    <item-->
+<!--        android:id="@+id/moreNavigationDrawer"-->
+<!--        android:icon="@drawable/more_selector"-->
+<!--        android:title="More" />-->
+
+    <!--        <item-->
+    <!--            android:id="@+id/logOutIcon"-->
+    <!--            android:icon="@drawable/logout_selector"-->
+    <!--            android:title="Logout" />-->
 
 
 </menu>

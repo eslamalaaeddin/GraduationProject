@@ -26,7 +26,10 @@ class SearchedProductsAdapter :
             itemView.productNameTextView.text = product.name
             itemView.homeRatingBar.rating = product.rating ?: 0F
             val tags = product.tags.orEmpty().replace(",", ", ")
-            itemView.productTagsTextView.text = tags
+            //comedy,fantasy,drama ==> Comedy, Fantasy, Drama
+            val tags1 = product.tags.orEmpty().splitToSequence(",").toList().joinToString(", ") { item -> item.capitalize() }
+//            itemView.productTagsTextView.text = tags
+            itemView.productTagsTextView.text = tags1
 //            Picasso.get().load(product.image).into(itemView.place_image_view)
         }
 

@@ -10,6 +10,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/white_background"
         android:orientation="vertical">
 
         <androidx.cardview.widget.CardView
@@ -21,8 +22,8 @@
             android:layout_alignParentEnd="true"
             android:layout_marginStart="4dp"
             android:layout_marginEnd="4dp"
+            android:background="@color/white_background"
             android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp"
             app:cardCornerRadius="2dp"
             app:cardElevation="4dp">
 
@@ -33,6 +34,7 @@
                 android:layout_alignParentStart="true"
                 android:layout_alignParentEnd="true"
                 android:elevation="12dp"
+                android:background="@color/edit_text_background_search"
                 android:orientation="horizontal">
 
                 <EditText
@@ -42,11 +44,11 @@
                     android:layout_marginEnd="8dp"
                     android:layout_weight="12"
                     android:background="@android:color/transparent"
-                    android:backgroundTint="#E6E6E6"
+                    android:backgroundTint="@color/off_white"
                     android:hint="Search by name..."
+                    android:textColor="@color/black_font"
                     android:inputType="text"
                     android:maxLines="1"
-                    android:padding="1dp"
                     android:paddingStart="10dp" />
 
                 <ImageButton
@@ -73,12 +75,15 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/productCardView"
             android:layout_alignParentStart="true"
+            android:paddingTop="4dp"
+            android:background="@color/white_background"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/searchedProductsRecyclerView"
                 android:layout_width="match_parent"
+                tools:listitem="@layout/searched_product_item"
                 android:layout_height="match_parent" />
 
             <ProgressBar
@@ -121,7 +126,7 @@
                     android:layout_marginStart="16dp"
                     android:gravity="center"
                     android:text="Type something to search or use tags"
-                    android:textColor="@color/black"
+                    android:textColor="@color/black_font"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     android:visibility="visible"
@@ -161,7 +166,7 @@
                     android:layout_marginStart="16dp"
                     android:gravity="center"
                     android:text="Sorry, we could'nt find matching result"
-                    android:textColor="@color/black"
+                    android:textColor="@color/black_font"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     android:visibility="visible"

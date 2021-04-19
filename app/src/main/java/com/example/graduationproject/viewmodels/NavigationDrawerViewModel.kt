@@ -7,14 +7,18 @@ import com.example.graduationproject.models.user.UserName
 import com.example.graduationproject.models.user.UserPassword
 import com.example.graduationproject.repository.UserRepository
 
-class NavigationDrawerViewModel(private val usersRepository: UserRepository): ViewModel() {
+class NavigationDrawerViewModel(private val usersRepository: UserRepository) : ViewModel() {
+    var isModeUpdated = false
+    var firstName = ""
+    var lastName = ""
+    var imageUrl = ""
 
-    suspend fun getUser(accessToken: String): User?{
+    suspend fun getUser(accessToken: String): User? {
         return usersRepository.getUser(accessToken)
     }
 
     //another option
-    fun getUserWithViewModelScope(accessToken: String): LiveData<User?>{
+    fun getUserWithViewModelScope(accessToken: String): LiveData<User?> {
         return liveData {
             val data = usersRepository.getUser(accessToken)
             emit(data)
@@ -27,11 +31,14 @@ class NavigationDrawerViewModel(private val usersRepository: UserRepository): Vi
 
     //I think that second solution will be with deferred, without using live data
 
-    suspend fun updateUserName(userName: UserName, accessToken: String): ResponseMessage?{
+    suspend fun updateUserName(userName: UserName, accessToken: String): ResponseMessage? {
         return usersRepository.updateUserName(userName, accessToken)
     }
 
-    suspend fun changeUserPassword(userPassword: UserPassword, accessToken: String): ResponseMessage?{
+    suspend fun changeUserPassword(
+        userPassword: UserPassword,
+        accessToken: String
+    ): ResponseMessage? {
         return usersRepository.changeUserPassword(userPassword, accessToken)
     }
 }

@@ -54,6 +54,8 @@ class HomeFragment : Fragment(), RecommendedProductClickListener {
         gridLayoutManager = GridLayoutManager(context, 2)
         fragmentBinding.progressBar.visibility = View.VISIBLE
 
+        Log.i(TAG, "RRRRR onViewCreated: RECREATED")
+
         getRecommendedPlaces()
 
         initArrowImageButton()
@@ -78,6 +80,9 @@ class HomeFragment : Fragment(), RecommendedProductClickListener {
                 } else if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL && gridLayoutManager.findFirstCompletelyVisibleItemPosition() != 0) {
                     fragmentBinding.arrowUpImageButton.visibility = View.VISIBLE
                 }
+
+
+
             }
 
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {

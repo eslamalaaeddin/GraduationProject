@@ -8,6 +8,7 @@
     android:paddingEnd="8dp"
     android:paddingTop="4dp"
     android:paddingBottom="4dp"
+
     >
 
 <!--    <ImageView-->
@@ -54,7 +55,7 @@
                     android:paddingStart="4dp"
                     android:layout_gravity="start|center"
                     android:textStyle="bold"
-                    android:textColor="@color/black"
+                    android:textColor="@color/black_font"
                     android:textSize="16sp"/>
 
                 <ImageButton
@@ -75,6 +76,7 @@
                 android:id="@+id/comment_place_rating_bar"
                 android:numStars="5"
                 android:rating="3"
+
                 android:layout_marginStart="3dp"
                 style="?android:attr/ratingBarStyleSmall"
                 android:progressTint="@color/orange"
@@ -86,7 +88,7 @@
                 android:text="@string/dummy_comment"
                 android:textSize="14sp"
                 android:paddingStart="4dp"
-                android:textColor="@color/black"
+                android:textColor="@color/black_font"
                 android:id="@+id/comment_body_text_view"
                 />
 

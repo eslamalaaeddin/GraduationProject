@@ -10,10 +10,12 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/white_background"
         >
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            tools:listitem="@layout/home_product_item"
             android:id="@+id/home_places_recycler_view"/>
 
         <ProgressBar

@@ -155,13 +155,6 @@ interface Api {
         @Header("Authorization") accessToken: String
     ): Response<ResponseMessage>
 
-    @Multipart
-    @POST("user/change_image")
-    fun changeUserImage(
-        @Part image: MultipartBody.Part?,
-        @Header("Authorization") accessToken: String,
-        @Part("description") description: RequestBody
-    ): Call<ResponseBody?>?
 
     @PUT("user/change_password")
     suspend fun changeUserPassword(

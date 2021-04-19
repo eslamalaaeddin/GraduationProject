@@ -4,8 +4,8 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:layout_gravity="center"
-    android:background="@drawable/rounded_background_no_stroke"
     android:padding="8dp"
+    android:background="@color/white_background"
     android:gravity="center"
     >
 
@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:text="Are you sure you want to exit?"
         android:gravity="center|start"
-        android:textColor="@color/black"
+        android:textColor="@color/black_font"
         android:padding="8dp"
         android:textSize="21sp"/>
 
@@ -33,7 +33,7 @@
             style="@style/Widget.AppCompat.Button.Borderless.Colored"
             android:textAllCaps="false"
             android:layout_margin="8dp"
-            android:textColor="@color/black"
+            android:textColor="@color/black_font"
             android:textSize="16sp"/>
 
 

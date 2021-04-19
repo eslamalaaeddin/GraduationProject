@@ -103,7 +103,7 @@ class SearchFragment : Fragment() , TagClickListener{
 
     private fun showTagsListDialog(tagClickListener: TagClickListener) {
         // setup the alert builder
-        val builder = AlertDialog.Builder(requireContext())
+        val builder = AlertDialog.Builder(requireContext(), R.style.MyDialogTheme)
         builder.setTitle("Choose a tag")
 
         val tags = arrayOf(

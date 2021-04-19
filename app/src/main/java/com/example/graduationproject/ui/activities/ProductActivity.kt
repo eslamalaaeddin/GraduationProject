@@ -122,11 +122,11 @@ class ProductActivity : AppCompatActivity(){
         placeDetailsBinding.mainToolbar.setTitleTextColor(Color.WHITE)
         placeDetailsBinding.mainToolbar.setSubtitleTextColor(Color.WHITE)
         placeDetailsBinding.mainToolbar.overflowIcon?.setColorFilter(
-            resources.getColor(R.color.white),
+            resources.getColor(R.color.white_font_text),
             PorterDuff.Mode.SRC_IN
         )
         placeDetailsBinding.mainToolbar.navigationIcon?.setColorFilter(
-            resources.getColor(R.color.white),
+            resources.getColor(R.color.white_font_text),
             PorterDuff.Mode.SRC_IN
         )
     }
@@ -143,8 +143,8 @@ class ProductActivity : AppCompatActivity(){
 
                 placeDetailsBinding.detailsPlaceNameTextView.text = it.name
                 placeDetailsBinding.placeDescriptionTextView.text = it.description
-
-                placeDetailsBinding.productTagsTextView.text = it.tags.toString()
+                //comedy,fantasy,drama ==> Comedy, Fantasy, Drama
+                placeDetailsBinding.productTagsTextView.text = it.tags.orEmpty().splitToSequence(",").toList().joinToString(", ") { item -> item.capitalize() }
 
                 val rate = it.rating
                 Log.i(TAG, "PPPP getProductDetails: $rate")

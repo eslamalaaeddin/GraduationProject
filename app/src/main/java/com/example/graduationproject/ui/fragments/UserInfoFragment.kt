@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.os.Bundle
@@ -14,6 +15,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.Button
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -37,7 +40,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 private const val TAG = "NavigationDrawerBottomS"
 
 
-class UserInfoFragment : Fragment(), PostAttachmentListener{
+class UserInfoFragment : Fragment(), PostAttachmentListener {
     private lateinit var bindingInstance: UserInfoFragmentBinding
     private val navDrawerViewModel by viewModel<NavigationDrawerViewModel>()
     private lateinit var accessToken: String
@@ -68,6 +71,8 @@ class UserInfoFragment : Fragment(), PostAttachmentListener{
             showLogoutDialog()
         }
 
+
+
         dismissProgressAfterTimeOut()
         getUserAndUpdateUi()
 
@@ -90,6 +95,7 @@ class UserInfoFragment : Fragment(), PostAttachmentListener{
             dialog.dismiss()
         }
         logoutButton.setOnClickListener {
+            dialog.dismiss()
             updateStateAndLogOut()
         }
         dialog.show()
@@ -105,12 +111,12 @@ class UserInfoFragment : Fragment(), PostAttachmentListener{
     }
 
     private fun navigateToSettingsActivity() {
-        userName =  SplashActivity.getUserName(requireContext()).toString()
-        userImageUrl =  SplashActivity.getUserImageUrl(requireContext()).toString()
+        userName = SplashActivity.getUserName(requireContext()).toString()
+        userImageUrl = SplashActivity.getUserImageUrl(requireContext()).toString()
 
         val settingsIntent = Intent(requireContext(), SettingsActivity::class.java)
         settingsIntent.putExtra("userFirstName", userName.substringBefore(" "))
-        settingsIntent.putExtra("userLastName",  userName.substringAfter(" "))
+        settingsIntent.putExtra("userLastName", userName.substringAfter(" "))
         settingsIntent.putExtra("userImageUrl", userImageUrl)
         startActivityForResult(settingsIntent, SETTINGS_ACTIVITY_CODE)
 
@@ -132,13 +138,20 @@ class UserInfoFragment : Fragment(), PostAttachmentListener{
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == SETTINGS_ACTIVITY_CODE){
-            if (resultCode == Activity.RESULT_OK){
+        if (requestCode == SETTINGS_ACTIVITY_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
                 data?.let {
                     val isUserNameUpdated = it.getBooleanExtra("userNameUpdated", false)
                     val isUserImageUpdated = it.getBooleanExtra("userImageUpdated", false)
+                    val isModeUpdated = it.getBooleanExtra("isModeUpdated", false)
 
-                    if (isUserNameUpdated || isUserImageUpdated){
+                    if (isModeUpdated){
+                        Log.i(TAG, "MMMMM onActivity: UPDATED")
+                        updateMode()
+                        requireActivity().recreate()
+                    }
+
+                    if (isUserNameUpdated || isUserImageUpdated) {
                         dismissProgressAfterTimeOut()
                         //not the optimal, i should divide updateUserUi into two function, one for the name, and the
                         //other for the image.
@@ -149,15 +162,28 @@ class UserInfoFragment : Fragment(), PostAttachmentListener{
         }
     }
 
+    private fun updateMode(){
+        val appSettingPrefs: SharedPreferences =
+            requireActivity().getSharedPreferences("AppSettingPrefs", 0)
+        val isNightModeOn: Boolean = appSettingPrefs.getBoolean("NightMode", false)
+
+        if (isNightModeOn) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        }
+    }
+
     @SuppressLint("SetTextI18n")
-    private fun getUserAndUpdateUi(){
+    private fun getUserAndUpdateUi() {
         bindingInstance.progressBar.visibility = View.VISIBLE
         val userFromViewModelScopeLiveData =
             navDrawerViewModel.getUserWithViewModelScope(accessToken)
         userFromViewModelScopeLiveData.observe(viewLifecycleOwner) {
             it?.let { currentUser ->
                 user = currentUser
-                bindingInstance.userNameTextView.text = "${currentUser.firstName} ${currentUser.lastName}"
+                bindingInstance.userNameTextView.text =
+                    "${currentUser.firstName} ${currentUser.lastName}"
                 bindingInstance.userEmailTextView.text = currentUser.email
                 val userImageUrl = "${BASE_USER_IMAGE_URL}${currentUser.image}"
 
@@ -167,11 +193,15 @@ class UserInfoFragment : Fragment(), PostAttachmentListener{
                         .load(userImageUrl)
 //                        .skipMemoryCache(true)
 //                        .diskCacheStrategy(DiskCacheStrategy.NONE)
-                        .into(object : CustomTarget<Bitmap>(){
-                            override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                        .into(object : CustomTarget<Bitmap>() {
+                            override fun onResourceReady(
+                                resource: Bitmap,
+                                transition: Transition<in Bitmap>?
+                            ) {
                                 bindingInstance.userImageView.setImageBitmap(resource)
                                 bindingInstance.progressBar.visibility = View.GONE
                             }
+
                             override fun onLoadCleared(placeholder: Drawable?) {
                                 bindingInstance.progressBar.visibility = View.GONE
                             }
@@ -184,7 +214,7 @@ class UserInfoFragment : Fragment(), PostAttachmentListener{
                 //bindingInstance.progressBar.visibility = View.GONE
 
             }
-            if (it == null){
+            if (it == null) {
                 bindingInstance.progressBar.visibility = View.GONE
             }
         }
