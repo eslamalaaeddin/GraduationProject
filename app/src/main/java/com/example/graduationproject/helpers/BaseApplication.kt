@@ -35,7 +35,10 @@ class BaseApplication : Application() {
                     userProfileActivityViewModelModule,
                     navigationDrawerViewModelModule,
                     searchRepositoryModule,
-                    searchViewModelModule
+                    searchViewModelModule,
+                    databaseModule,
+                    cachingRepositoryModule,
+                    cachingViewModelModule
                 )
             )
         }

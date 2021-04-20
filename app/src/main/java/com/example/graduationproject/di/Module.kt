@@ -1,6 +1,10 @@
 package com.example.graduationproject.di
 
 import android.content.Context
+import androidx.room.Room
+import com.example.graduationproject.cache.CachingRepository
+import com.example.graduationproject.cache.CachingViewModel
+import com.example.graduationproject.cache.Database
 import com.example.graduationproject.network.Api
 import com.example.graduationproject.network.RetrofitInstance
 import com.example.graduationproject.repository.*
@@ -20,6 +24,13 @@ val apiModule = module {
     single { provideApi() }
 }
 
+val databaseModule = module {
+    fun provideDatabase(context: Context): Database {
+        return Room.databaseBuilder(context, Database::class.java, "recommendation_db").build()
+    }
+    single { provideDatabase(androidContext()) }
+}
+
 
 //val tokenAuthenticatorModule = module {
 //    fun provideTokenAuthenticatorModule(context: Context): TokenAuthenticator{
@@ -34,6 +45,13 @@ val authenticationRepositoryModule = module {
         return AuthenticationRepository(RetrofitInstance.api, context)
     }
     single { provideAuthenticationRepository(androidContext()) }
+}
+
+val cachingRepositoryModule = module {
+    fun provideCachingRepository(database: Database, context: Context): CachingRepository {
+        return CachingRepository(database, context)
+    }
+    single { provideCachingRepository(get(), androidContext()) }
 }
 
 val placesRepositoryModule = module {
@@ -83,4 +101,5 @@ val addPlaceViewModelModule = module { viewModel { AddPlaceViewModel(get()) } }
 val userProfileActivityViewModelModule = module { viewModel { UserProfileViewModel(get()) } }
 val navigationDrawerViewModelModule = module { viewModel { NavigationDrawerViewModel(get()) } }
 val searchViewModelModule = module { viewModel { SearchFragmentViewModel(get()) } }
+val cachingViewModelModule = module { viewModel { CachingViewModel(get()) } }
 

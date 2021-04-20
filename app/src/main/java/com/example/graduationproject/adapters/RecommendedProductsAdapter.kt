@@ -37,6 +37,7 @@ class RecommendedPlacesAdapter(
                 itemView.home_place_name_text_view.text = product.name
 //                overallProductRate = rate?.toFloat() ?: 0F
                 Log.i(TAG, "PPPP bind: $product")
+
                 itemView.home_rating_bar.rating = product.rating ?: 0F
 //                val placeImageUrl = "$BASE_IMAGE_URL${product.id}/${product.image}"
                 val placeImageUrl = "$BASE_PRODUCT_IMAGE_URL/${product.image}"

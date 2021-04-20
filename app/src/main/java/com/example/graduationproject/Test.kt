@@ -1,7 +1,18 @@
 package com.example.graduationproject
 
+import android.annotation.SuppressLint
+import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.os.Build
+import android.view.View
 import androidx.annotation.RequiresApi
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.observe
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
+import com.example.graduationproject.helpers.Constants
+import kotlinx.coroutines.launch
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -46,3 +57,43 @@ fun main() {
         val currentTimeInSeconds = System.currentTimeMillis()/1000
         return (currentTimeInSeconds - refreshTokenTimestamp) >= DAYS_14
     }
+
+//@SuppressLint("SetTextI18n")
+//private fun getUserAndUpdateUiOffLine() {
+//    bindingInstance.progressBar.visibility = View.VISIBLE
+//    lifecycleScope.launch {
+//        val userLiveData = cachingViewModel.getUser(userId)
+//        userLiveData.observe(viewLifecycleOwner) {
+//            it.let { currentUser ->
+//                user = currentUser
+//                bindingInstance.userNameTextView.text =
+//                    "${currentUser.firstName} ${currentUser.lastName}"
+//                bindingInstance.userEmailTextView.text = currentUser.email
+//                val userImageUrl = "${Constants.BASE_USER_IMAGE_URL}${currentUser.image}"
+//
+//                if (userImageUrl.isNotEmpty()) {
+//                    Glide.with(requireContext())
+//                        .asBitmap()
+//                        .load(userImageUrl)
+//                        .into(object : CustomTarget<Bitmap>() {
+//                            override fun onResourceReady(
+//                                resource: Bitmap,
+//                                transition: Transition<in Bitmap>?
+//                            ) {
+//                                bindingInstance.userImageView.setImageBitmap(resource)
+//                                bindingInstance.progressBar.visibility = View.GONE
+//                            }
+//
+//                            override fun onLoadCleared(placeholder: Drawable?) {
+//                                bindingInstance.progressBar.visibility = View.GONE
+//                            }
+//                        })
+//                } else {
+//                    bindingInstance.userImageView.setImageResource(R.drawable.avatar)
+//                }
+//            }
+//        }
+//    }
+//
+//
+//}

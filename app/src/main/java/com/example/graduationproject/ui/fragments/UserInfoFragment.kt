@@ -15,7 +15,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.Button
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -25,16 +24,19 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.example.graduationproject.R
+import com.example.graduationproject.cache.CachingViewModel
 import com.example.graduationproject.databinding.UserInfoFragmentBinding
 import com.example.graduationproject.dummy.PostAttachmentListener
 import com.example.graduationproject.helpers.Constants
 import com.example.graduationproject.helpers.Constants.BASE_USER_IMAGE_URL
 import com.example.graduationproject.helpers.Constants.SETTINGS_ACTIVITY_CODE
+import com.example.graduationproject.helpers.Utils
 import com.example.graduationproject.models.user.User
 import com.example.graduationproject.ui.activities.RegisterActivity
 import com.example.graduationproject.ui.activities.SettingsActivity
 import com.example.graduationproject.ui.activities.SplashActivity
 import com.example.graduationproject.viewmodels.NavigationDrawerViewModel
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 private const val TAG = "NavigationDrawerBottomS"
@@ -43,9 +45,11 @@ private const val TAG = "NavigationDrawerBottomS"
 class UserInfoFragment : Fragment(), PostAttachmentListener {
     private lateinit var bindingInstance: UserInfoFragmentBinding
     private val navDrawerViewModel by viewModel<NavigationDrawerViewModel>()
+    private val cachingViewModel by viewModel<CachingViewModel>()
     private lateinit var accessToken: String
-    private var user: User? = null
+    private var userId: Long = 0
     private var userName: String = ""
+    private var userEmail: String = ""
     private var userImageUrl: String = ""
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -64,17 +68,23 @@ class UserInfoFragment : Fragment(), PostAttachmentListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         accessToken = SplashActivity.getAccessToken(requireContext()).toString()
-
+        userId = SplashActivity.getUserId(requireContext())
 
         bindingInstance.settingsLayout.setOnClickListener { navigateToSettingsActivity() }
         bindingInstance.logOutLayout.setOnClickListener {
             showLogoutDialog()
         }
 
-
-
         dismissProgressAfterTimeOut()
-        getUserAndUpdateUi()
+
+        //OFFLINE
+        if (Utils.getConnectionType(requireContext()) == 0) {
+            getUserAndUpdateUiOffLine()
+        }
+        //ONLINE
+        else {
+            getUserAndUpdateUiOnLine()
+        }
 
 //        bindingInstance.userImageView.setOnClickListener{
 //            val addToPostBottomSheet = AddToPostBottomSheet(this)
@@ -120,20 +130,6 @@ class UserInfoFragment : Fragment(), PostAttachmentListener {
         settingsIntent.putExtra("userImageUrl", userImageUrl)
         startActivityForResult(settingsIntent, SETTINGS_ACTIVITY_CODE)
 
-//        user?.let {
-//            val settingsIntent = Intent(requireContext(), SettingsActivity::class.java)
-//
-//
-//            //get user data from prefernces
-//            settingsIntent.putExtra("userFirstName", it.firstName)
-//            settingsIntent.putExtra("userLastName", it.lastName)
-//            settingsIntent.putExtra("userImageUrl", it.image)
-////            startActivity(settingsIntent)
-//            startActivityForResult(settingsIntent, SETTINGS_ACTIVITY_CODE)
-//        }
-//        if (user == null){
-//            Toast.makeText(requireContext(), "Please check your connectivity or try reloading the page", Toast.LENGTH_SHORT).show()
-//        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -145,7 +141,7 @@ class UserInfoFragment : Fragment(), PostAttachmentListener {
                     val isUserImageUpdated = it.getBooleanExtra("userImageUpdated", false)
                     val isModeUpdated = it.getBooleanExtra("isModeUpdated", false)
 
-                    if (isModeUpdated){
+                    if (isModeUpdated) {
                         Log.i(TAG, "MMMMM onActivity: UPDATED")
                         updateMode()
                         requireActivity().recreate()
@@ -155,14 +151,14 @@ class UserInfoFragment : Fragment(), PostAttachmentListener {
                         dismissProgressAfterTimeOut()
                         //not the optimal, i should divide updateUserUi into two function, one for the name, and the
                         //other for the image.
-                        getUserAndUpdateUi()
+                        getUserAndUpdateUiOnLine()
                     }
                 }
             }
         }
     }
 
-    private fun updateMode(){
+    private fun updateMode() {
         val appSettingPrefs: SharedPreferences =
             requireActivity().getSharedPreferences("AppSettingPrefs", 0)
         val isNightModeOn: Boolean = appSettingPrefs.getBoolean("NightMode", false)
@@ -175,13 +171,12 @@ class UserInfoFragment : Fragment(), PostAttachmentListener {
     }
 
     @SuppressLint("SetTextI18n")
-    private fun getUserAndUpdateUi() {
+    private fun getUserAndUpdateUiOnLine() {
         bindingInstance.progressBar.visibility = View.VISIBLE
         val userFromViewModelScopeLiveData =
             navDrawerViewModel.getUserWithViewModelScope(accessToken)
         userFromViewModelScopeLiveData.observe(viewLifecycleOwner) {
             it?.let { currentUser ->
-                user = currentUser
                 bindingInstance.userNameTextView.text =
                     "${currentUser.firstName} ${currentUser.lastName}"
                 bindingInstance.userEmailTextView.text = currentUser.email
@@ -206,8 +201,6 @@ class UserInfoFragment : Fragment(), PostAttachmentListener {
                                 bindingInstance.progressBar.visibility = View.GONE
                             }
                         })
-//                    Picasso.get().load(userImageUrl).into(bindingInstance.userImageView)
-
                 } else {
                     bindingInstance.userImageView.setImageResource(R.drawable.avatar)
                 }
@@ -218,6 +211,42 @@ class UserInfoFragment : Fragment(), PostAttachmentListener {
                 bindingInstance.progressBar.visibility = View.GONE
             }
         }
+
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun getUserAndUpdateUiOffLine() {
+        bindingInstance.progressBar.visibility = View.VISIBLE
+
+        userName = SplashActivity.getUserName(requireContext()).toString()
+        userEmail = SplashActivity.getEmailFromPrefs(requireContext()).toString()
+        userImageUrl = SplashActivity.getUserImageUrl(requireContext()).toString()
+
+        bindingInstance.userNameTextView.text = userName
+        bindingInstance.userEmailTextView.text = userEmail
+        val userImageUrl = "${BASE_USER_IMAGE_URL}${userImageUrl}"
+
+        if (userImageUrl.isNotEmpty()) {
+            Glide.with(requireContext())
+                .asBitmap()
+                .load(userImageUrl)
+                .into(object : CustomTarget<Bitmap>() {
+                    override fun onResourceReady(
+                        resource: Bitmap,
+                        transition: Transition<in Bitmap>?
+                    ) {
+                        bindingInstance.userImageView.setImageBitmap(resource)
+                        bindingInstance.progressBar.visibility = View.GONE
+                    }
+
+                    override fun onLoadCleared(placeholder: Drawable?) {
+                        bindingInstance.progressBar.visibility = View.GONE
+                    }
+                })
+        } else {
+            bindingInstance.userImageView.setImageResource(R.drawable.avatar)
+        }
+
 
     }
 

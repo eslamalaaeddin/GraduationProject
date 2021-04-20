@@ -35,6 +35,10 @@ class MainActivity : AppCompatActivity() {
 
         //check if it is not there add it else do not do anything
 
+        bindingInstance.testingButton.setOnClickListener {
+            startActivity(Intent(this, TestingActivity::class.java))
+        }
+
         if (savedInstanceState == null) {
             navigateToHomeFragment()
         }

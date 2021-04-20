@@ -201,7 +201,7 @@
             android:foregroundGravity="center"
             app:borderWidth="0dp"
             app:fabCustomSize="40dp"
-            android:visibility="gone"
+            android:visibility="visible"
             app:srcCompat="@drawable/ic_add_comment_24"
             app:tint="@color/white_font_text"
             tools:ignore="VectorDrawableCompat" />

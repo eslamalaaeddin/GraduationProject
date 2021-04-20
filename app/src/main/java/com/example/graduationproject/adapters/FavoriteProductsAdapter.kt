@@ -48,11 +48,11 @@ class FavoriteProductsAdapter(
 
         override fun onClick(v: View?) {
             //Temp
-            val place = favoriteProducts?.get(adapterPosition)
+            val favoriteProduct = favoriteProducts?.get(adapterPosition)
             val intent = Intent(itemView.context, ProductActivity::class.java)
-            intent.putExtra("placeId", place?.id)
+            intent.putExtra("placeId", favoriteProduct?.id)
 //            itemView.context.startActivity(intent)
-            favoriteProductClickListener.onFavoriteProductClicked(place, adapterPosition)
+            favoriteProductClickListener.onFavoriteProductClicked(favoriteProduct, adapterPosition)
 //            itemView.context.startActivity(intent)
         }
     }

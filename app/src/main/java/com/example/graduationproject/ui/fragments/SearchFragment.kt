@@ -22,6 +22,7 @@ import com.example.graduationproject.helpers.Constants
 import com.example.graduationproject.helpers.listeners.TagClickListener
 import com.example.graduationproject.ui.activities.SplashActivity
 import com.example.graduationproject.viewmodels.SearchFragmentViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -80,12 +81,16 @@ class SearchFragment : Fragment() , TagClickListener{
             override fun afterTextChanged(q: Editable?) {
                 val query = q?.trim().toString()
                 if (query.isEmpty()){
-                    bindingInstance.searchProductsEditText.hint = "Search by name..."
-                    bindingInstance.emptyQueryLayout.visibility = View.VISIBLE
-                    searchedProductsAdapter?.let {
-                        it.submitList(null)
-                        bindingInstance.arrowUpImageButton.visibility = View.GONE
+                    //UI Razala
+                    lifecycleScope.launchWhenStarted {
+                        delay(750)
+                        bindingInstance.emptyQueryLayout.visibility = View.VISIBLE
+                        searchedProductsAdapter?.let {
+                            it.submitList(null)
+                            bindingInstance.arrowUpImageButton.visibility = View.GONE
+                        }
                     }
+                    bindingInstance.searchProductsEditText.hint = "Search by name..."
                 }
 
                 else if ( query.count() < 3) {
@@ -176,6 +181,7 @@ class SearchFragment : Fragment() , TagClickListener{
         bindingInstance.progressBar.visibility = View.VISIBLE
         try {
             lifecycleScope.launch {
+//                delay(1000)
                 dismissProgressAfterTimeOut()
                 searchFragmentViewModel.getProductsPagedListByName(productName, accessToken)
                     ?.observe(viewLifecycleOwner)

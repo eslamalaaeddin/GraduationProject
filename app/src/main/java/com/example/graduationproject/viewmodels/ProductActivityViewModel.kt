@@ -41,7 +41,6 @@ class ProductActivityViewModel(
 
     }
 
-
     suspend fun getProductDetails(placeId: String, accessToken: String): LiveData<Product?>?{
         productLiveData = liveData {
             val data = productsRepository.getProductDetails(placeId, accessToken)
@@ -51,7 +50,6 @@ class ProductActivityViewModel(
     }
 
     suspend fun getFavoriteProducts( accessToken: String): LiveData<MutableList<FavoriteProduct>?>?{
-
         if (favoritePages != -1){
             favoritePlacesLiveData = liveData {
                 Log.i(TAG, "FFF BeforePage: $favoritePages")

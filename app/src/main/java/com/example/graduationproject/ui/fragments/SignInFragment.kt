@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.graduationproject.R
+import com.example.graduationproject.cache.CachingViewModel
 import com.example.graduationproject.databinding.FragmentInSignBinding
 import com.example.graduationproject.helpers.Constants
 import com.example.graduationproject.models.authentication.Login
@@ -26,6 +27,7 @@ private const val TAG = "SignInFragment"
 class SignInFragment : Fragment() {
     private val loginViewModel by viewModel<LoginViewModel>()
     private val navigationDrawerViewModel by viewModel<NavigationDrawerViewModel>()
+    private val cachingViewModel by viewModel<CachingViewModel>()
     private lateinit var bindingInstance: FragmentInSignBinding
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -96,6 +98,9 @@ class SignInFragment : Fragment() {
                             mail
                         )
 
+//                        lifecycleScope.launch {
+//                            cachingViewModel.insertUser(it)
+//                        }
                         navigateToMainActivity()
                     }
                     if (user == null){
@@ -120,8 +125,6 @@ class SignInFragment : Fragment() {
                 bindingInstance.signInButton.isEnabled = true
             }, Constants.TIME_OUT_MILLISECONDS)
         }
-
-
     }
 
     override fun onStop() {
