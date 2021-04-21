@@ -15,6 +15,7 @@ import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.graduationproject.R
 import com.example.graduationproject.adapters.PlaceImagesAdapter
+import com.example.graduationproject.adapters.RecommendedPlacesAdapter
 import com.example.graduationproject.cache.CachingViewModel
 import com.example.graduationproject.databinding.ActivityProductBinding
 import com.example.graduationproject.helpers.Constants
@@ -53,6 +54,8 @@ class ProductActivity : AppCompatActivity() {
     private var userRate: Float = 0.0F
     private var REMOVED = false
     private var ADDED = false
+    private lateinit var linearLayoutManager: LinearLayoutManager
+    private var recProductsAdapter: RecommendedPlacesAdapter? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         accessToken = SplashActivity.getAccessToken(this).orEmpty()
@@ -67,9 +70,17 @@ class ProductActivity : AppCompatActivity() {
         connectionState = intent.getIntExtra("connectionState", -1)
         fromFavorite = intent.getBooleanExtra("fromFavorite", false)
 
+        linearLayoutManager = LinearLayoutManager(
+            this,
+            LinearLayoutManager.HORIZONTAL,
+            false
+        )
+
+
         //OFFLINE
         if (connectionState == 0) {
             Log.i(TAG, "UUUU onCreate: OFFLINE PRODUCT")
+            placeDetailsBinding.recommendedForYouTextView.visibility = View.INVISIBLE
             try {
                 lifecycleScope.launch {
                     cachingViewModel.getProductFromDb(productId)
@@ -130,10 +141,12 @@ class ProductActivity : AppCompatActivity() {
         }
         //ONLINE
         else {
+            placeDetailsBinding.recommendedForYouTextView.visibility = View.VISIBLE
             lifecycleScope.launch {
                 Log.i(TAG, "UUUU onCreate: ONLINE PRODUCT")
                 getUserSpecificRateOnline()
                 getProductDetailsOnline()
+                getRecommendedProductsByProduct()
                 syncRates()
             }
         }
@@ -184,6 +197,42 @@ class ProductActivity : AppCompatActivity() {
 
     }
 
+    private fun getRecommendedProductsByProduct() {
+        try {
+            lifecycleScope.launch {
+                //dismissProgressAfterTimeOut()
+                placeActivityViewModel.getRecommendedProductsByProductPagedList(
+                    productId.toString(),
+                    accessToken
+                )
+                    ?.observe(this@ProductActivity)
+                    { recProducts ->
+
+                        placeDetailsBinding.recommendedProductsByProductRecyclerView.apply {
+                            layoutManager = linearLayoutManager
+
+                            recProductsAdapter = RecommendedPlacesAdapter(itemLayout = R.layout.item_recommended_by_product)
+                            recProductsAdapter?.let {
+                                placeDetailsBinding.progressBar.visibility = View.VISIBLE
+                                it.submitList(recProducts)
+                                adapter = it
+                                lifecycleScope.launchWhenStarted {
+                                    Handler().postDelayed({
+                                        placeDetailsBinding.progressBar.visibility = View.GONE
+                                    },750)
+                                }
+                            }
+                        }
+                    }
+            }
+        } catch (ex: Throwable) {
+            Log.i(TAG, "getRecommendedPlaces: ${ex.localizedMessage}")
+        } finally {
+            dismissProgressAfterTimeOut()
+        }
+
+    }
+
     //will be called in case of ONLINE MODE ONLY
     private fun syncRates() {
         lifecycleScope.launch {
@@ -214,6 +263,7 @@ class ProductActivity : AppCompatActivity() {
     private fun shouldSync(dbProduct: Product, serverProduct: Product): Boolean {
         return dbProduct.userRate != userRate || dbProduct.rating != serverProduct.rating
     }
+
 
     override fun onBackPressed() {
         val resultIntent = Intent()

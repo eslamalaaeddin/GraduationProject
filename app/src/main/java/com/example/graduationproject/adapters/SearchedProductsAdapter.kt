@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.graduationproject.R
 import com.example.graduationproject.models.products.Product
 import com.example.graduationproject.ui.activities.ProductActivity
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.searched_product_item.view.*
 
 private const val TAG = "SearchedProductsAdapter"
@@ -30,7 +31,7 @@ class SearchedProductsAdapter :
             val tags1 = product.tags.orEmpty().splitToSequence(",").toList().joinToString(", ") { item -> item.capitalize() }
 //            itemView.productTagsTextView.text = tags
             itemView.productTagsTextView.text = tags1
-//            Picasso.get().load(product.image).into(itemView.place_image_view)
+            Picasso.get().load(product.image).into(itemView.movie_image_view)
         }
 
         override fun onClick(v: View?) {

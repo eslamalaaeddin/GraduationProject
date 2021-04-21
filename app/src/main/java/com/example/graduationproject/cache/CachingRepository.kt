@@ -26,8 +26,8 @@ class CachingRepository(
     suspend fun deleteFromProducts(product: Product) = database.getProductsDao().deleteFromProducts(product)
 
     //USERS DAO
-    suspend fun getUser(userId: Long) = database.getUsersDao().getUser(userId)
-    suspend fun insertUser(user: User) = database.getUsersDao().insertUser(user)
+//    suspend fun getUser(userId: Long) = database.getUsersDao().getUser(userId)
+//    suspend fun insertUser(user: User) = database.getUsersDao().insertUser(user)
 
 
 }

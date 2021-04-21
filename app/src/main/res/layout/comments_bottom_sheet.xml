@@ -106,6 +106,30 @@
                     android:text="No Comments Yet\n Be the first to comment"
                     android:textSize="21sp" />
 
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/noConnectionLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:layout_marginBottom="16dp"
+                    android:src="@drawable/ic_no_wifi"
+                    app:tint="@color/no_comment_blue" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/black_font"
+                    android:text="No internet connection"
+                    android:textSize="21sp" />
 
             </LinearLayout>
 

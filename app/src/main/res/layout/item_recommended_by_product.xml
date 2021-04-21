@@ -8,11 +8,10 @@
     </data>
 
     <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="196dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_width="156dp"
+        android:layout_height="172dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
         android:layout_marginBottom="8dp"
         app:cardCornerRadius="2dp"
         app:cardElevation="1dp"
@@ -30,7 +29,7 @@
                 android:layout_width="match_parent"
                 android:visibility="invisible"
                 android:layout_height="match_parent"
-                android:scaleType="fitXY" />
+                android:scaleType="centerCrop" />
 
             <FrameLayout
                 android:layout_width="match_parent"
@@ -61,7 +60,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:numStars="5"
-                        android:progressTint="@color/orange"
+                        android:visibility="gone"
+                        android:progressTint="@color/colorPrimary"
                         android:rating="0.0" />
 
                 </LinearLayout>
@@ -73,8 +73,8 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_gravity="end"
+                android:visibility="gone"
                 android:layout_margin="8dp"
-                android:id="@+id/addToFavoriteFrameLayout"
                 android:background="@drawable/rounded_background_no_stroke">
 
                 <ImageView

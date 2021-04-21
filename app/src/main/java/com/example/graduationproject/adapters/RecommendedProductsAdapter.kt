@@ -13,13 +13,17 @@ import com.example.graduationproject.helpers.Constants.BASE_PRODUCT_IMAGE_URL
 import com.example.graduationproject.helpers.listeners.RecommendedProductClickListener
 import com.example.graduationproject.models.products.Product
 import com.example.graduationproject.ui.activities.ProductActivity
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.home_product_item.view.*
 
 private const val TAG = "RecommendedPlacesAdapte"
 class RecommendedPlacesAdapter(
-    private val recommendedProductClickListener: RecommendedProductClickListener
+    private val itemLayout : Int,
+    private val recommendedProductClickListener: RecommendedProductClickListener? = null
     ) :
     PagedListAdapter<Product, RecommendedPlacesAdapter.RecommendedPlacesViewHolder>(CALLBACK) {
+
+    constructor(itemLayout: Int) : this(itemLayout, null)
 
         inner class RecommendedPlacesViewHolder(itemView: View): RecyclerView.ViewHolder(itemView), View.OnClickListener{
 
@@ -28,10 +32,11 @@ class RecommendedPlacesAdapter(
                 itemView.add_to_favorite_image_view.setOnClickListener {
                     val place = getItem(adapterPosition)
                     place?.let {
-                        recommendedProductClickListener.onFavoriteIconClicked(place, adapterPosition)
+                        recommendedProductClickListener?.onFavoriteIconClicked(place, adapterPosition)
                     }
                 }
             }
+
 
             fun bind(product: Product){
                 itemView.home_place_name_text_view.text = product.name
@@ -67,7 +72,7 @@ class RecommendedPlacesAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecommendedPlacesViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
-        val view = layoutInflater.inflate(R.layout.home_product_item, parent, false)
+        val view = layoutInflater.inflate(itemLayout, parent, false)
         return RecommendedPlacesViewHolder(view)
     }
 

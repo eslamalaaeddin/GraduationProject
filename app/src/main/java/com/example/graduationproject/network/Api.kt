@@ -43,8 +43,16 @@ interface Api {
         @Header("Authorization") accessToken: String
     ): Response<List<Product>>
 
- //   http://localhost:3000/api/products?s=story&page=1
-//http://localhost:3000/api/products?t=drama&page=1
+
+    @GET("products/rec-product")
+    suspend fun getRecommendationsByProduct(
+        @Query("pid") productId: String,
+        @Query("page") page: Int,
+        @Header("Authorization") accessToken: String
+    ): Response<List<Product>>
+
+
+
     @GET("products")
     suspend fun searchByProductName(
         @Query("s") productName: String,

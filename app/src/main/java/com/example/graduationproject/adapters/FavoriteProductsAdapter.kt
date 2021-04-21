@@ -10,6 +10,7 @@ import com.example.graduationproject.R
 import com.example.graduationproject.helpers.listeners.FavoriteProductClickListener
 import com.example.graduationproject.models.products.FavoriteProduct
 import com.example.graduationproject.ui.activities.ProductActivity
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.favorite_product_item.view.*
 import kotlinx.android.synthetic.main.home_product_item.view.add_to_favorite_image_view
 import kotlinx.android.synthetic.main.home_product_item.view.home_place_name_text_view
@@ -43,7 +44,7 @@ class FavoriteProductsAdapter(
             }
             itemView.home_rating_bar.rating = product.rating ?: 0F
             itemView.home_place_name_text_view.text = product.name
-//            Picasso.get().load(product.image).into(itemView.place_image_view)
+            Picasso.get().load(product.image).into(itemView.place_image_view)
         }
 
         override fun onClick(v: View?) {

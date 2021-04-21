@@ -20,6 +20,7 @@ import com.example.graduationproject.R
 import com.example.graduationproject.adapters.CommentsAdapter
 import com.example.graduationproject.databinding.CommentsBottomSheetBinding
 import com.example.graduationproject.helpers.Constants
+import com.example.graduationproject.helpers.Utils
 import com.example.graduationproject.helpers.listeners.CommentListener
 import com.example.graduationproject.models.comments.ProductComment
 import com.example.graduationproject.models.products.Comment
@@ -89,11 +90,19 @@ class CommentsBottomSheet(
         super.onViewCreated(view, savedInstanceState)
         layoutManager = LinearLayoutManager(requireContext())
 
-        lifecycleScope.launch {
-            getComments()
-            //to get always the updated rate
-            getUserSpecificRate()
+        if (Utils.getConnectionType(requireContext()) == 0){
+            bindingInstance.noConnectionLayout.visibility = View.VISIBLE
         }
+        else{
+            bindingInstance.noConnectionLayout.visibility = View.GONE
+            lifecycleScope.launch {
+                getComments()
+                //to get always the updated rate
+                getUserSpecificRate()
+            }
+        }
+
+
        // initEditTextListener()
         initUpButton()
         initUpArrowImageButton()

@@ -14,12 +14,13 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/white_background"
         >
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/detail_place_image_view"
-            android:background="@color/white_background"
+            android:visibility="invisible"
             android:scaleType="fitXY"/>
 
     </FrameLayout>

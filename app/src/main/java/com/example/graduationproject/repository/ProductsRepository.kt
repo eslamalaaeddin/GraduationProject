@@ -29,11 +29,27 @@ class ProductsRepository(private val api: Api, private val context: Context, pri
 //        return responseMessage
 //    }
 
-    suspend fun getRecommendedPlaces(page: Int, accessToken: String): List<Product>? {
+    suspend fun getRecommendedProducts(page: Int, accessToken: String): List<Product>? {
         var response : List<Product>? = null
         try {
              response = safeApiCall(
                 call = { withContext(ioDispatcher){api.getRecommendedPlaces(page, accessToken)}},
+                errorMessage = "Error Fetching Recommended Places")
+        }
+        catch (ex: Throwable) {
+            if (ex is HttpException){exceptionHandler.handleException(ex, ex.code().toString())}
+            else{exceptionHandler.handleException(ex)}
+        }
+
+        return response
+    }
+
+
+    suspend fun getRecommendedProductsByProduct(productId: String, page: Int, accessToken: String): List<Product>? {
+        var response : List<Product>? = null
+        try {
+            response = safeApiCall(
+                call = { withContext(ioDispatcher){api.getRecommendationsByProduct(productId, page, accessToken)}},
                 errorMessage = "Error Fetching Recommended Places")
         }
         catch (ex: Throwable) {

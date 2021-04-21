@@ -1,4 +1,4 @@
-package com.example.graduationproject.paging.products
+package com.example.graduationproject.paging.products.recommendedbyproduct
 
 import android.util.Log
 import androidx.paging.PageKeyedDataSource
@@ -7,14 +7,16 @@ import com.example.graduationproject.repository.ProductsRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlin.math.max
 
 private const val TAG = "RecommendedProductsSour"
 
-class RecommendedProductsSource(
+class RecommendedProductsByProductSource(
+    private val productId: String,
     private val accessToken: String,
     private val productsRepository: ProductsRepository
 ) : PageKeyedDataSource<Int, Product>() {
-
+    var maxPage = 0
 
     override fun loadInitial(
         params: LoadInitialParams<Int>,
@@ -22,7 +24,7 @@ class RecommendedProductsSource(
     ) {
         //I don't know why not to use MAIN dispatcher here
         CoroutineScope(Dispatchers.Main).launch {
-            val response = productsRepository.getRecommendedProducts(1, accessToken)
+            val response = productsRepository.getRecommendedProductsByProduct(productId, 1, accessToken)
             response.let { res ->
                 val products = res.orEmpty()
                 callback.onResult(products, null, 2)
@@ -39,10 +41,16 @@ class RecommendedProductsSource(
 
     override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, Product>) {
         CoroutineScope(Dispatchers.Main).launch {
-            val response = productsRepository.getRecommendedProducts(params.key, accessToken)
+            val response = productsRepository.getRecommendedProductsByProduct(productId, params.key, accessToken)
             response.let { res ->
                 val products = res.orEmpty()
-                callback.onResult(products, params.key + 1)
+                maxPage++
+                if (maxPage <= 2){
+                    callback.onResult(products, params.key + 1)
+                }
+                else{
+                    callback.onResult(products, null)
+                }
                 Log.i(TAG, "IIII loadInitial: $products")
             }
         }

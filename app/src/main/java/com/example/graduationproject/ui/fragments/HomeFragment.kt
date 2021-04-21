@@ -1,5 +1,6 @@
 package com.example.graduationproject.ui.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
@@ -18,6 +19,7 @@ import com.example.graduationproject.helpers.Constants
 import com.example.graduationproject.helpers.listeners.RecommendedProductClickListener
 import com.example.graduationproject.models.products.Product
 import com.example.graduationproject.models.products.VisitedProduct
+import com.example.graduationproject.ui.activities.ProductActivity
 import com.example.graduationproject.ui.activities.SplashActivity
 import com.example.graduationproject.viewmodels.HomeFragmentViewModel
 import com.example.graduationproject.viewmodels.ProductActivityViewModel
@@ -103,6 +105,8 @@ class HomeFragment : Fragment(), RecommendedProductClickListener {
         }
     }
 
+
+
     private suspend fun addPlaceToFavorite(product: Product, productPosition: Int) {
         val responseMessage = placeActivityViewModel.addProductToFavorites(
             VisitedProduct(pid = product.id),
@@ -142,7 +146,7 @@ class HomeFragment : Fragment(), RecommendedProductClickListener {
 
                         fragmentBinding.homePlacesRecyclerView.apply {
                             layoutManager = gridLayoutManager
-                            recProductsAdapter = RecommendedPlacesAdapter(this@HomeFragment)
+                            recProductsAdapter = RecommendedPlacesAdapter(R.layout.home_product_item, this@HomeFragment)
                             recProductsAdapter?.let {
                                 fragmentBinding.progressBar.visibility = View.VISIBLE
                                 it.submitList(recProducts)

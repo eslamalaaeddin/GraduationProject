@@ -4,10 +4,14 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
+import androidx.paging.LivePagedListBuilder
+import androidx.paging.PagedList
 import com.example.graduationproject.models.ResponseMessage
 import com.example.graduationproject.models.comments.ProductComment
 import com.example.graduationproject.models.products.*
 import com.example.graduationproject.models.rating.Rate
+import com.example.graduationproject.paging.products.recommendedbyproduct.RecommendedProductsByProductSource
+import com.example.graduationproject.paging.products.recommendedbyproduct.RecommendedProductsByProductSourceFactory
 import com.example.graduationproject.repository.CommentsRepository
 import com.example.graduationproject.repository.ProductsRepository
 import com.example.graduationproject.repository.RatingRepository
@@ -25,6 +29,26 @@ class ProductActivityViewModel(
 
     var favoritePages = 1
     var commentPages = 1
+
+    var recommendedProductsByProductSourceLiveData : LiveData<RecommendedProductsByProductSource>? = null
+    var recommendedProductsByProductPagedList :  LiveData<PagedList<Product>>? = null
+
+    suspend fun getRecommendedProductsByProductPagedList(productId: String, accessToken: String) : LiveData<PagedList<Product>>?{
+        val recommendedProductsByProductSourceFactory = RecommendedProductsByProductSourceFactory(productId, accessToken, productsRepository)
+        recommendedProductsByProductSourceLiveData = recommendedProductsByProductSourceFactory.recommendedProductsByProductSourceLiveData
+
+        val config: PagedList.Config = PagedList.Config.Builder()
+            .setEnablePlaceholders(true) //no items
+            .setInitialLoadSizeHint(10)
+            .setPageSize(2)
+            .setPrefetchDistance(4)
+            .build()
+
+        recommendedProductsByProductPagedList = LivePagedListBuilder<Int, Product>(recommendedProductsByProductSourceFactory, config)
+            .build()
+
+        return recommendedProductsByProductPagedList
+    }
 
     suspend fun getProductComments(placeId: String, accessToken: String): LiveData<List<Comment>?>?{
 
