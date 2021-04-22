@@ -6,6 +6,7 @@ import android.net.NetworkCapabilities
 import android.os.Build
 import android.util.Log
 import android.widget.Toast
+import com.example.graduationproject.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -27,7 +28,7 @@ class ExceptionHandler(private val context: Context) {
                 if (getConnectionType(context) == 0) {
                     Toast.makeText(
                         context,
-                        "Please check your connectivity",
+                        context.getString(R.string.check_your_connectivity),
                         Toast.LENGTH_SHORT
                     ).show()
                 }

@@ -1,11 +1,9 @@
 package com.example.graduationproject.ui.activities
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.app.Dialog
 import android.content.*
 import android.content.pm.PackageManager
-import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.drawable.Drawable
@@ -13,6 +11,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.provider.MediaStore
+import android.transition.ChangeBounds
 import android.util.Log
 import android.view.Gravity
 import android.view.View
@@ -23,6 +22,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.widget.ActionBarContainer
 import androidx.core.animation.doOnEnd
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -48,6 +48,7 @@ import kotlinx.coroutines.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
+import java.util.*
 import kotlin.math.hypot
 
 
@@ -77,11 +78,42 @@ class SettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         bindingInstance = DataBindingUtil.setContentView(this, R.layout.activity_settings)
 
+//        val fade = android.transition.Fade()
+//        val decor: View = window.decorView
+//        fade.excludeTarget(decor.findViewById<ActionBarContainer>(R.id.action_bar_container), true)
+//        fade.excludeTarget(bindingInstance.container, true)
+//        fade.excludeTarget(android.R.id.statusBarBackground, true)
+//        fade.excludeTarget(android.R.id.navigationBarBackground, true)
+//        window.enterTransition = fade
+//        window.exitTransition = fade
+//
+//        val bounds = ChangeBounds()
+//        bounds.duration = 2000
+//        window.sharedElementEnterTransition = bounds
+
         accessToken = SplashActivity.getAccessToken(this).toString()
 
         if (savedInstanceState == null){
             initUserInfo()
         }
+
+//        bindingInstance.container.setOnClickListener{
+//            try {
+//                val locale = resources.configuration.locale
+//
+//                if (locale.language == "ar"){
+//                    changeLang(this, "en")
+//                }
+//                else if (locale.language =="en"){
+//                    changeLang(this, "ar")
+//                }
+//
+//            }
+//            catch (ex: Throwable){
+//                Toast.makeText(this, ex.localizedMessage, Toast.LENGTH_SHORT).show()
+//            }
+//
+//        }
 
         Log.i(TAG, "MMMM onCreate: ONLY FIRST TIME")
         appSettingPrefs = getSharedPreferences("AppSettingPrefs", 0)
@@ -95,6 +127,7 @@ class SettingsActivity : AppCompatActivity() {
             resultIntent.putExtra("userImageUpdated", userImageUpdated)
             resultIntent.putExtra("isModeUpdated", navDrawerViewModel.isModeUpdated)
             setResult(RESULT_OK, resultIntent)
+//            supportFinishAfterTransition()
             finish()
         }
 
@@ -136,7 +169,7 @@ class SettingsActivity : AppCompatActivity() {
             if (firstName.trim().isEmpty() || lastName.trim().isEmpty()) {
                 val toast = Toast.makeText(
                     applicationContext,
-                    "Enter all information first.", Toast.LENGTH_SHORT
+                    getString(R.string.all_information_first), Toast.LENGTH_SHORT
                 )
                 toast.setGravity(Gravity.TOP, 0, 96)
                 toast.show()
@@ -144,7 +177,7 @@ class SettingsActivity : AppCompatActivity() {
             } else if (navDrawerViewModel.firstName == firstName && navDrawerViewModel.lastName == lastName) {
                 val toast = Toast.makeText(
                     applicationContext,
-                    "First and last name didn't change.", Toast.LENGTH_SHORT
+                    getString(R.string.first_last_same), Toast.LENGTH_SHORT
                 )
                 toast.setGravity(Gravity.TOP, 0, 96)
                 toast.show()
@@ -154,6 +187,14 @@ class SettingsActivity : AppCompatActivity() {
         }
 
     }
+
+        fun changeLang(context: Context, lang: String) {
+            val myLocale = Locale(lang)
+            Locale.setDefault(myLocale)
+            val config =  android.content.res.Configuration()
+            config.locale = myLocale
+            context.resources.updateConfiguration(config, context.resources.displayMetrics)
+        }
 
 
     private fun animate() {
@@ -192,6 +233,7 @@ class SettingsActivity : AppCompatActivity() {
         resultIntent.putExtra("userImageUpdated", userImageUpdated)
         resultIntent.putExtra("isModeUpdated", navDrawerViewModel.isModeUpdated)
         setResult(RESULT_OK, resultIntent)
+//        supportFinishAfterTransition()
         finish()
     }
 
@@ -220,7 +262,7 @@ class SettingsActivity : AppCompatActivity() {
             if (oldPassword.trim().isEmpty() || newPassword.trim().isEmpty()) {
                 val toast = Toast.makeText(
                     applicationContext,
-                    "Enter all information first.", Toast.LENGTH_SHORT
+                    getString(R.string.all_information_first), Toast.LENGTH_SHORT
                 )
                 toast.setGravity(Gravity.TOP, 0, 96)
                 toast.show()
@@ -300,7 +342,7 @@ class SettingsActivity : AppCompatActivity() {
                 bindingInstance.progressBar.visibility = View.GONE
                 val toast = Toast.makeText(
                     applicationContext,
-                    "Updated successfully", Toast.LENGTH_SHORT
+                    getString(R.string.updated_successfully), Toast.LENGTH_SHORT
                 )
                 toast.setGravity(Gravity.TOP, 0, 96)
                 toast.show()
@@ -398,7 +440,7 @@ class SettingsActivity : AppCompatActivity() {
                 } else {
                     val toast = Toast.makeText(
                         applicationContext,
-                        "Permissions are required.", Toast.LENGTH_SHORT
+                        getString(R.string.permissions_required), Toast.LENGTH_SHORT
                     )
                     toast.setGravity(Gravity.TOP, 0, 96)
                     toast.show()
@@ -418,7 +460,7 @@ class SettingsActivity : AppCompatActivity() {
             } catch (ex: Throwable) {
                 Toast.makeText(
                     this,
-                    "Please choose an image from images folder ",
+                    getString(R.string.from_images_folder),
                     Toast.LENGTH_LONG
                 ).show()
                 Log.i(TAG, "MMMM onActivityResultERROR : ${ex.localizedMessage}", ex)
@@ -470,7 +512,7 @@ class SettingsActivity : AppCompatActivity() {
 
                         val toast = Toast.makeText(
                             applicationContext,
-                            "Image size can't be more than 1 MB.", Toast.LENGTH_SHORT
+                            getString(R.string.no_more_one_mb), Toast.LENGTH_SHORT
                         )
                         toast.setGravity(Gravity.TOP, 0, 96)
                         toast.show()

@@ -68,7 +68,7 @@ class SignInFragment : Fragment() {
 
     private fun validateUserAndNavigateToMainActivity(mail: String, password: String) {
         if (mail.trim().isEmpty() || password.trim().isEmpty()) {
-            Toast.makeText(requireContext(), "Enter all information first", Toast.LENGTH_SHORT)
+            Toast.makeText(requireContext(), getString(R.string.all_information_first), Toast.LENGTH_SHORT)
                 .show()
         }
         else {

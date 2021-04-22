@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/noFavoriteProductsTextView"
-            android:text="No Favorites added"
+            android:text="@string/no_favorites_added"
             android:visibility="gone"
             android:layout_gravity="center"
             android:gravity="center"

@@ -9,8 +9,11 @@ import androidx.lifecycle.lifecycleScope
 import com.example.graduationproject.R
 import com.example.graduationproject.cache.CachingViewModel
 import com.example.graduationproject.databinding.ActivityTestingBinding
+import com.example.graduationproject.helpers.Constants
+import com.example.graduationproject.helpers.LocaleHelper
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.util.*
 
 
 private const val TAG = "TestingActivity"
@@ -25,14 +28,28 @@ class TestingActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_testing)
         accessToken = SplashActivity.getAccessToken(this).orEmpty()
 
+        val prefs = getSharedPreferences("AppLanguage", 0)
+        val locale = prefs.getString("Locale.Helper.Selected.Language", "")
+
+        if (locale == "ar"){
+            LocaleHelper.setLocale(this, "ar")
+        }
+        else{
+            LocaleHelper.setLocale(this, "en")
+        }
+
+        binding.button1.setOnClickListener {
+            LocaleHelper.setLocale(this, "en")
+            binding.textView.text = getString(R.string.islam)
+        }
+
+        binding.button2.setOnClickListener {
+            LocaleHelper.setLocale(this, "ar")
+            binding.textView.text = getString(R.string.islam)
+        }
+
     }
 
-    override fun onStart() {
-        super.onStart()
-//        getFavoriteProduct()
-//        getProducts()
-//        getProduct(83066)
-    }
 
 //    private fun getFavoriteProduct(){
 //        lifecycleScope.launch {

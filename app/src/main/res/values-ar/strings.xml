@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">مشروع التخرج</string>
+    <string name="dummy_description">oiafuysdafgiudfgaydsufgadsuyfguydaiugasfygdsafisdufiygdsuafgs</string>
+    <string name="dummy_comment">تعليق للاختبار</string>
+    <string name="nav_open_drawer">افتح النافذة الجانبية</string>
+    <string name="nav_close_drawer">أغلق النافذة الجانبية</string>
+
+    <string name="empty_directory">مسار فارغ</string>
+    <string name="storage_removed">التخزين محذوف أو غير موجود</string>
+    <string name="choose_file">اختر ملفًا</string>
+    <string name="error_selecting_file">خطأ باختيار الملف</string>
+    <string name="internal_storage">التخزين الداخلي</string>
+    <string name="channel_description">This channel is for user image uploading notification</string>
+
+
+    <string name="recommended_for_you">مقترح لك أنت</string>
+    <string name="first_name_edit_text">الاسم الأول</string>
+    <string name="last_name_edit_text">اسم العائلة</string>
+    <string name="update_button">تحديث</string>
+    <string name="change_password_button">تغيير كلمة المرور</string>
+    <string name="skip_button">تخطِ</string>
+    <string name="change_password_text_view">تغيير كلمة المرور        </string>
+    <string name="old_password_hint">كلمة المرور القديمة</string>
+    <string name="new_password_hint">كلمة المرور الجديدة</string>
+    <string name="cancel_button">إلغاء</string>
+    <string name="submit_button">تأكيد</string>
+    <string name="update_comment_text_view">تحديث التعليق</string>
+    <string name="delete_comment_text_view">حذف التعليق</string>
+    <string name="no_comments_yet">لا تعليقات حاليا، كن أول من يعلق</string>
+    <string name="no_internet_connection">لا اتصال بالشبكة</string>
+    <string name="delete_comment_warning">تأكيد حذف التعليق</string>
+    <string name="delete_button">حذف</string>
+    <string name="exit_button">مغادرة</string>
+    <string name="no_favorites_added">لا توجد تفضيلات</string>
+    <string name="email_address_hint">عنوان البريد</string>
+    <string name="password_hint">كلمة المرور</string>
+    <string name="sign_in_button">تسجيل الدخول</string>
+    <string name="do_not_have_account">ليس لديك حساب؟ أنشئ واحدًا</string>
+    <string name="first_name_hint">الاسم الأول</string>
+    <string name="last_name_hint">اسم العائلة</string>
+    <string name="confirm_password_hint">تأكيد كلمة المرور</string>
+    <string name="sign_up_hint">أنشئ حسابًا</string>
+    <string name="do_you_have_account">بالفعل لديك حساب؟ تسجيل الدخول</string>
+    <string name="verification_code_hint">رمز التحقق</string>
+    <string name="verify_button">تحقق</string>
+    <string name="no_verification_code">لم يصل لك رمزُ تحقق؟</string>
+    <string name="logout_warning">هل ترغب بتسجيل الخروج؟</string>
+    <string name="logout_button">تسجيل الخروج</string>
+    <string name="search_by_name_hint">بحث بالاسم...</string>
+    <string name="search_by_name_or_tag">اكتب شيئا للبحث أو استخدم الوسوم</string>
+    <string name="no_search_result_found">نأسف، لم نجد نتائج بحث</string>
+    <string name="update_comment_hint">تحديث التعليق...</string>
+    <string name="settings">الإعدادات</string>
+    <string name="about_us">عنَّا</string>
+    <string name="exit_warning">هل ترغب بمغادرة التطبيق؟</string>
+    <string name="log_out">تسجيل الخروج</string>
+    <string name="tags">اختر وسمًا</string>
+
+    <!-- Toasts -->
+    <string name="rate_added">أضيف التعليق</string>
+    <string name="rate_updated">حُدثَ التعليق</string>
+    <string name="all_information_first">أدخل كل البيانات</string>
+    <string name="first_last_same">لم يحدث تغيير</string>
+    <string name="updated_successfully">تم التحديث</string>
+    <string name="permissions_required">الأذونات مطلوبة</string>
+    <string name="from_images_folder">Please choose an image from images folder</string>
+    <string name="no_more_one_mb">لا يمكن تجاوز الصورة 1 ميغا بايت</string>
+    <string name="comment_updated">حُدث التعليق</string>
+    <string name="enter_comment_first">اكتب تعليقًا أولا</string>
+    <string name="comment_deleted">حُذف التعليق</string>
+    <string name="comment_no_change">لم يحدث تغيير</string>
+    <string name="enter_valid_email">أدخل بريدًا صحيحًا</string>
+    <string name="passwords_no_match">كلمتا المرور غيرُ متطابقتين</string>
+    <string name="passwords_six_chars">كلمة المرور لا بد أن تكون 6 أحرف على الأقل</string>
+    <string name="account_created_successfully">أُنشئ الحساب بنجاح</string>
+    <string name="no_verification_code_entered">أدخل رمز التحقق أولا</string>
+    <string name="check_your_connectivity">تحقَّق من اتصالك بالشبكة</string>
+
+    <!-- Team -->
+    <string name="team_members">أعضاء الفريق</string>
+    <string name="islam">إسلام علاءالدين عبدالعال</string>
+    <string name="khedr">مصطفى خضر المغاوري</string>
+    <string name="sleem">محمد السيد سليم</string>
+    <string name="magdy">مصطفى مجدي حجاب</string>
+    <string name="bakr">محمد أبوبكر محمد</string>
+    <string name="fwzia">فوزية ياسر إبراهيم</string>
+    <string name="yomna">يمنى محمد حافظ</string>
+    <string name="hamis">هاميس هشام محمود</string>
+    <string name="israa">إسراء محمد صالح</string>
+
+
+</resources>

@@ -60,6 +60,8 @@
                         style="?android:attr/ratingBarStyleSmall"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="left"
+                        android:layoutDirection="ltr"
                         android:numStars="5"
                         android:progressTint="@color/orange"
                         android:rating="0.0" />

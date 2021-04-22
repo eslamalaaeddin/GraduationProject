@@ -103,7 +103,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:textColor="@color/black_font"
-                    android:text="No Comments Yet\n Be the first to comment"
+                    android:text="@string/no_comments_yet"
                     android:textSize="21sp" />
 
             </LinearLayout>
@@ -128,7 +128,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:textColor="@color/black_font"
-                    android:text="No internet connection"
+                    android:text="@string/no_internet_connection"
                     android:textSize="21sp" />
 
             </LinearLayout>

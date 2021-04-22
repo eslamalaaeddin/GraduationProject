@@ -21,7 +21,6 @@
             android:name=".ui.activities.SettingsActivity"
             android:screenOrientation="portrait"
             >
-
         </activity>
 
         <service
@@ -44,12 +43,10 @@
             android:screenOrientation="portrait" />
         <activity android:name=".ui.activities.TestingActivity">
 
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
-
-
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            <!-- </intent-filter> -->
+<!--             <intent-filter>-->
+<!--             <action android:name="android.intent.action.MAIN" />-->
+<!--             <category android:name="android.intent.category.LAUNCHER" />-->
+<!--             </intent-filter>-->
         </activity>
         <activity
             android:name=".ui.activities.RegisterActivity"
@@ -73,11 +70,6 @@
             android:screenOrientation="portrait"
             android:configChanges="uiMode"
             >
-            <!--            <intent-filter>-->
-            <!--                <action android:name="android.intent.action.MAIN" />-->
-
-            <!--                <category android:name="android.intent.category.LAUNCHER" />-->
-            <!--            </intent-filter>-->
         </activity>
     </application>
 

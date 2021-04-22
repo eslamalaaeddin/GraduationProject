@@ -9,22 +9,28 @@
         <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
         <item name="android:textColorHint">@color/edit_text_hint</item>
 
-        <item name="android:windowActivityTransitions">true</item>
+<!--        <item name="android:windowActivityTransitions">true</item>-->
+        <item name="android:windowContentTransitions">true</item>
 
-<!--       <item name="android:textViewStyle">@style/RobotoTextViewStyle</item>-->
-<!--       <item name="android:buttonStyle">@style/RobotoButtonStyle</item>-->
+       <item name="android:textViewStyle">@style/RobotoTextViewStyle</item>
+       <item name="android:buttonStyle">@style/RobotoButtonStyle</item>
+       <item name="editTextStyle">@style/RobotoEditTextStyleStyle</item>
+
 
     </style>
+
 
     <style name="MyDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="android:background">@color/white_background</item>
         <item name="android:textColor">@color/black_font</item>
+        <item name="android:textViewStyle">@style/RobotoTextViewStyle</item>
         <item name="textColorAlertDialogListItem">@color/black_font</item>
     </style>
 
     <style name="DialogStyle" parent="Theme.Design.Light.BottomSheetDialog">
         <item name="android:windowIsFloating">false</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:textViewStyle">@style/RobotoTextViewStyle</item>
         <item name="android:windowSoftInputMode">adjustResize</item>
     </style>
 
@@ -42,6 +48,10 @@
     <style name="AppBottomSheetDialogTheme"
         parent="Theme.Design.Light.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/AppModalStyle</item>
+
+        <item name="android:textViewStyle">@style/RobotoTextViewStyle</item>
+        <item name="android:buttonStyle">@style/RobotoButtonStyle</item>
+        <item name="editTextStyle">@style/RobotoEditTextStyleStyle</item>
     </style>
 
     <style name="AppModalStyle"
@@ -50,11 +60,16 @@
     </style>
 
     <style name="RobotoTextViewStyle" parent="android:Widget.TextView">
-        <item name="android:fontFamily">@font/hakm_font</item>
+        <item name="android:fontFamily">@font/nexa_light</item>
     </style>
 
     <style name="RobotoButtonStyle" parent="android:Widget.Button">
-        <item name="android:fontFamily">@font/hakm_font</item>
+        <item name="android:fontFamily">@font/nexa_light</item>
+        <item name="android:padding">14dp</item>
+    </style>
+
+    <style name="RobotoEditTextStyleStyle" parent="android:Widget.EditText">
+        <item name="android:fontFamily">@font/nexa_light</item>
     </style>
 
 </resources>

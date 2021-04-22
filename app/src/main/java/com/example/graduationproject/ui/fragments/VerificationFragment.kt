@@ -74,7 +74,7 @@ class VerificationFragment : Fragment() {
 
     private fun validateVerificationCodeAndNavigateToMainActivity(code: String) {
         if (code.isEmpty()) {
-            Toast.makeText(requireContext(), "Enter verification code first", Toast.LENGTH_SHORT)
+            Toast.makeText(requireContext(), getString(R.string.no_verification_code_entered), Toast.LENGTH_SHORT)
                 .show()
         } else {
             val email = SplashActivity.getEmailFromPrefs(requireContext())

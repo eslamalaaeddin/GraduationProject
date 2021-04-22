@@ -41,7 +41,7 @@
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:textColor="@android:color/white"
-            android:text="Skip"
+            android:text="@string/skip_button"
             android:layout_gravity="end|bottom"
             android:textSize="14sp" />
 

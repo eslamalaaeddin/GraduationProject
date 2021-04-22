@@ -61,7 +61,7 @@ class UpdateCommentBottomSheet(
             val commentContent = bindingInstance.commentEditText.text.trim().toString()
             if (commentContent.isNotEmpty()) {
                 if (commentContent == comment.commentContent){
-                    Toast.makeText(requireContext(), "Comment didn't change", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), getString(R.string.comment_no_change), Toast.LENGTH_SHORT).show()
                 }
                 else{
                     dismissProgressAfterTimeOut()
@@ -74,7 +74,7 @@ class UpdateCommentBottomSheet(
                         )
                         responseMessage?.let {
                             bindingInstance.progressBar.visibility = View.GONE
-                            Toast.makeText(requireContext(), "Comment updated", Toast.LENGTH_SHORT)
+                            Toast.makeText(requireContext(), getString(R.string.comment_updated), Toast.LENGTH_SHORT)
                                 .show()
                             //call an interface to get tell Product activity that comments has been updated
                             comment.commentContent = commentContent
@@ -88,7 +88,7 @@ class UpdateCommentBottomSheet(
                 }
 
             } else {
-                Toast.makeText(requireContext(), "Enter a comment first", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.enter_comment_first), Toast.LENGTH_SHORT).show()
             }
         }
 

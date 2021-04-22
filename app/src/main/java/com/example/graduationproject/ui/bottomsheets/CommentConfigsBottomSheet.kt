@@ -139,7 +139,7 @@ class CommentConfigsBottomSheet(
                 )
                 responseMessage?.let {
                     progressBar.visibility = View.GONE
-                    Toast.makeText(requireContext(), "Comment deleted", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), getString(R.string.comment_deleted), Toast.LENGTH_SHORT).show()
                     commentListener.onCommentModified(position = position)
                     dialog.dismiss()
                     dismiss()

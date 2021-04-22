@@ -443,7 +443,7 @@ class ProductActivity : AppCompatActivity() {
                 responseMessage?.let {
                     placeDetailsBinding.addRatingToPlaceBar.isEnabled = true
                     userRate = rate.rate ?: 0.0F
-                    Toast.makeText(this@ProductActivity, "Rate added", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@ProductActivity, getString(R.string.rate_added), Toast.LENGTH_SHORT).show()
                 }
                 if (responseMessage == null) {
                     placeDetailsBinding.addRatingToPlaceBar.isEnabled = true
@@ -469,7 +469,7 @@ class ProductActivity : AppCompatActivity() {
                     )
                 responseMessage?.let {
                     placeDetailsBinding.addRatingToPlaceBar.isEnabled = true
-                    Toast.makeText(this@ProductActivity, "Rate updated", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@ProductActivity, getString(R.string.rate_updated), Toast.LENGTH_SHORT).show()
                 }
 
                 if (responseMessage == null) {

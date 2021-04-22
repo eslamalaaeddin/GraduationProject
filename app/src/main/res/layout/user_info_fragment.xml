@@ -50,6 +50,7 @@
                     android:layout_height="128dp"
                     android:layout_marginTop="32dp"
                     android:layout_marginBottom="16dp"
+                    android:transitionName="userImageTrans"
                     app:civ_border_color="@color/colorPrimary"
                     app:civ_border_width="1dp" />
 
@@ -108,7 +109,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginStart="36dp"
-                    android:text="Settings"
+                    android:text="@string/settings"
                     android:textColor="@color/black_font"
                     android:textSize="18sp" />
             </LinearLayout>
@@ -133,7 +134,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginStart="36dp"
-                    android:text="About us"
+                    android:text="@string/about_us"
                     android:textColor="@color/black_font"
                     android:textSize="18sp" />
             </LinearLayout>
@@ -159,7 +160,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginStart="36dp"
-                    android:text="Log out"
+                    android:text="@string/log_out"
                     android:textColor="@color/black_font"
                     android:textSize="18sp" />
             </LinearLayout>

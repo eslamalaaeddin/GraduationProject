@@ -92,9 +92,11 @@ class CommentsBottomSheet(
 
         if (Utils.getConnectionType(requireContext()) == 0){
             bindingInstance.noConnectionLayout.visibility = View.VISIBLE
+            bindingInstance.emptyCommentsLayout.visibility = View.GONE
         }
         else{
             bindingInstance.noConnectionLayout.visibility = View.GONE
+            ///bindingInstance.noConnectionLayout.visibility = View.GONE
             lifecycleScope.launch {
                 getComments()
                 //to get always the updated rate
@@ -206,7 +208,7 @@ class CommentsBottomSheet(
 //        dismissProgressAfterTimeOut()
         val commentString = bindingInstance.commentEditText.text.trim().toString()
         if (commentString.isEmpty()){
-            Toast.makeText(requireContext(), "Enter a comment first.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.enter_comment_first), Toast.LENGTH_SHORT).show()
         }
         else{
            dismissProgressAfterTimeOut()

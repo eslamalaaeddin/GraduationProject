@@ -1,11 +1,9 @@
 <resources>
     <string name="app_name">GraduationProject</string>
     <string name="dummy_description">oiafuysdafgiudfgaydsufgadsuyfguydaiugasfygdsafisdufiygdsuafgs</string>
-<!--    <string name="dummy_comment">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s</string>-->
-    <string name="dummy_comment">عاااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااش</string>
+    <string name="dummy_comment">This is dummy comment</string>
     <string name="nav_open_drawer">Open navigation drawer</string>
     <string name="nav_close_drawer">Close navigation drawer</string>
-
 
     <string name="empty_directory">Empty Directory</string>
     <string name="storage_removed">Storage was removed or unmounted.</string>
@@ -13,6 +11,84 @@
     <string name="error_selecting_file">Error selecting File</string>
     <string name="internal_storage">Internal storage</string>
     <string name="channel_description">This channel is for user image uploading notification</string>
+
+
+    <string name="recommended_for_you">Recommended for you</string>
+    <string name="first_name_edit_text">First name</string>
+    <string name="last_name_edit_text">Last name</string>
+    <string name="update_button">Update</string>
+    <string name="change_password_button">Change password        </string>
+    <string name="skip_button">Skip</string>
+    <string name="change_password_text_view">Change password</string>
+    <string name="old_password_hint">Old password</string>
+    <string name="new_password_hint">New password</string>
+    <string name="cancel_button">Cancel</string>
+    <string name="submit_button">Submit</string>
+    <string name="update_comment_text_view">Update comment</string>
+    <string name="delete_comment_text_view">Delete comment</string>
+    <string name="no_comments_yet">No Comments Yet\n Be the first to comment</string>
+    <string name="no_internet_connection">No internet connection</string>
+    <string name="delete_comment_warning">Are you sure you want to delete this comment?</string>
+    <string name="delete_button">Delete</string>
+    <string name="exit_button">Exit</string>
+    <string name="no_favorites_added">No Favorites added</string>
+    <string name="email_address_hint">Email address</string>
+    <string name="password_hint">Password</string>
+    <string name="sign_in_button">Sign in</string>
+    <string name="do_not_have_account">Do not have an account? Sign Up</string>
+    <string name="first_name_hint">First name</string>
+    <string name="last_name_hint">Last name</string>
+    <string name="confirm_password_hint">Confirm password</string>
+    <string name="sign_up_hint">Sign up</string>
+    <string name="do_you_have_account">Do you have an account? Sign in</string>
+    <string name="verification_code_hint">Verification code</string>
+    <string name="verify_button">Verify</string>
+    <string name="no_verification_code">Don\'t get a verification code?</string>
+    <string name="logout_warning">Are you sure you want to logout?</string>
+    <string name="exit_warning">Are you sure you want to Exit?</string>
+    <string name="logout_button">Logout</string>
+    <string name="search_by_name_hint">Search by name...</string>
+    <string name="search_by_name_or_tag">Type something to search or use tags</string>
+    <string name="no_search_result_found">Sorry, we could\'nt find matching result</string>
+    <string name="update_comment_hint">Update comment...</string>
+    <string name="settings">Settings</string>
+    <string name="about_us">About us</string>
+    <string name="log_out">Log out</string>
+    <string name="tags">Choose a tag</string>
+
+    <!-- Toasts -->
+    <string name="rate_added">Rate added</string>
+    <string name="rate_updated">Rate updated</string>
+
+    <string name="all_information_first">Enter all information first.</string>
+    <string name="first_last_same">First and last name didn\'t change.</string>
+    <string name="updated_successfully">Updated successfully</string>
+    <string name="permissions_required">Permissions are required.</string>
+    <string name="from_images_folder">Please choose an image from images folder</string>
+    <string name="no_more_one_mb">Image size can\'t be more than 1 MB.</string>
+    <string name="comment_updated">Comment updated</string>
+    <string name="enter_comment_first">Enter a comment first</string>
+    <string name="comment_deleted">Comment deleted</string>
+    <string name="comment_no_change">Comment didn\'t change</string>
+    <string name="enter_valid_email">Enter valid email</string>
+    <string name="passwords_no_match">Passwords don\'t match</string>
+    <string name="passwords_six_chars">Passwords must be at least 6 characters</string>
+    <string name="account_created_successfully">Account created successfully</string>
+    <string name="no_verification_code_entered">Enter verification code first</string>
+    <string name="check_your_connectivity">Please check your connectivity</string>
+
+    <!-- Team -->
+    <string name="team_members">Team members</string>
+
+    <string name="islam">Islam AlaaEddin Abdulal</string>
+    <string name="khedr">Mostafa Khedr El Maghawry</string>
+    <string name="sleem">Mohammad Essaid Saleem</string>
+    <string name="magdy">Mostafa Magdy Hegab</string>
+    <string name="bakr">Mohammad Abo Bakr Mohammad</string>
+    <string name="fwzia">Fawzia Yasser Ibrahim</string>
+    <string name="yomna">Yomna Mohammad Hafez</string>
+    <string name="hamis">Hamis Hesham Mahmoud</string>
+    <string name="israa">Israa Mohammad Saleh</string>
 
 
 </resources>

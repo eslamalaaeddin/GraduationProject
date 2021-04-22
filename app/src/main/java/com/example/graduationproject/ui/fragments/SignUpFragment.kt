@@ -77,20 +77,20 @@ class SignUpFragment : Fragment() {
     ) {
 
         if (firstName.trim().isEmpty() || lastName.trim().isEmpty() || email.trim().isEmpty() || password.trim().isEmpty() || confirmPassword.trim().isEmpty()) {
-            Toast.makeText(requireContext(), "Enter all information first", Toast.LENGTH_SHORT)
+            Toast.makeText(requireContext(), getString(R.string.all_information_first), Toast.LENGTH_SHORT)
                 .show()
         }
         else if(!isEmailValid(email)){
-            Toast.makeText(requireContext(), "Enter valid email", Toast.LENGTH_SHORT)
+            Toast.makeText(requireContext(), getString(R.string.enter_valid_email), Toast.LENGTH_SHORT)
                 .show()
         }
 
         else if (password != confirmPassword){
-            Toast.makeText(requireContext(), "Passwords don't match", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.passwords_no_match), Toast.LENGTH_SHORT).show()
         }
 
         else if (password.trim().count() < 6 || confirmPassword.trim().count() < 6){
-            Toast.makeText(requireContext(), "Passwords must be at least 6 characters", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.passwords_six_chars), Toast.LENGTH_SHORT).show()
         }
 
         else {
@@ -103,7 +103,7 @@ class SignUpFragment : Fragment() {
                if(responseMessage != null){
                    Toast.makeText(
                        requireContext(),
-                       "Account created successfully",
+                       getString(R.string.account_created_successfully),
                        Toast.LENGTH_SHORT
                    ).show()
                    navigateToSignInFragment()
