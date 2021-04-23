@@ -20,13 +20,13 @@ class FirebaseService : FirebaseMessagingService() {
     override fun onNewToken(newToken: String) {
         super.onNewToken(newToken)
         Log.i(TAG, "4444 onNewToken: $newToken")
-        Toast.makeText(applicationContext, newToken, Toast.LENGTH_LONG).show()
     }
 
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
 
-        val notificationType = message.data["notificationType"]
+        val movieId = message.data["movieId"]
+        val movieName = message.data["movieName"]
         val notifierName = message.data["notifierName"]
         val notifierId = message.data["notifierId"]
         val notifiedId = message.data["notifiedId"]
@@ -34,7 +34,8 @@ class FirebaseService : FirebaseMessagingService() {
 
         Log.i(TAG, "333333 onMessageReceived: $message")
         Log.i(TAG, "333333 onMessageReceived: ${message.data}")
-        Log.i(TAG, "333333 onMessageReceived: $notificationType")
+        Log.i(TAG, "333333 onMessageReceived: $movieId")
+        Log.i(TAG, "333333 onMessageReceived: $movieName")
         Log.i(TAG, "333333 onMessageReceived: $notifierName")
         Log.i(TAG, "333333 onMessageReceived: $notifierId")
         Log.i(TAG, "333333 onMessageReceived: $notifierImageUrl")
