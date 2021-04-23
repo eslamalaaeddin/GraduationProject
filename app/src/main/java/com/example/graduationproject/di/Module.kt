@@ -89,7 +89,7 @@ val searchRepositoryModule = module {
     single { provideSearchRepository(androidContext()) }
 }
 
-val homeFragmentViewModelModule = module { viewModel { HomeFragmentViewModel(get()) } }
+val homeFragmentViewModelModule = module { viewModel { HomeFragmentViewModel(get(), get()) } }
 val signUpViewModelModule = module { viewModel { SignUpViewModel(get()) } }
 val loginViewModelModule = module { viewModel { LoginViewModel(get()) } }
 val verificationFragmentViewModelModule =

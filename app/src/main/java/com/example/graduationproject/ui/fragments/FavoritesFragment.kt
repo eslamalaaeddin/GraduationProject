@@ -312,9 +312,8 @@ class FavoritesFragment : Fragment(), FavoriteProductClickListener {
         placeActivityViewModel.getProductDetails(productId, accessToken)
             ?.observe(viewLifecycleOwner) {
                 it?.let { product ->
+                    product.favorite = 1
                     lifecycleScope.launch {
-//                        cachingViewModel.insertIntoProducts(product)
-//                        cachingViewModel.insertIntoFavorites(favoriteProduct)
                         cachingViewModel.insertAsTransaction(favoriteProduct, product)
                         Log.i(TAG, "LLLL: INSERTED TRANSACTION FRAGMENT")
                     }

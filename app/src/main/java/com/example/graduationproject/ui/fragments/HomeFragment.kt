@@ -13,8 +13,10 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.graduationproject.R
 import com.example.graduationproject.adapters.RecommendedPlacesAdapter
+import com.example.graduationproject.cache.CachingViewModel
 import com.example.graduationproject.databinding.FragmentHomeBinding
 import com.example.graduationproject.helper.Constants
+import com.example.graduationproject.helper.Utils
 import com.example.graduationproject.helper.listeners.RecommendedProductClickListener
 import com.example.graduationproject.models.products.Product
 import com.example.graduationproject.models.products.VisitedProduct
@@ -31,8 +33,9 @@ private const val TAG = "HomeFragment"
 class HomeFragment : Fragment(), RecommendedProductClickListener {
     private val homeFragmentViewModel by viewModel<HomeFragmentViewModel>()
     private val placeActivityViewModel by viewModel<ProductActivityViewModel>()
+    private val cachingViewModel by viewModel<CachingViewModel>()
     private lateinit var fragmentBinding: FragmentHomeBinding
-    private lateinit var gridLayoutManager : GridLayoutManager
+    private lateinit var gridLayoutManager: GridLayoutManager
     private var recProductsAdapter: RecommendedPlacesAdapter? = null
     private var accessToken = ""
 
@@ -55,21 +58,59 @@ class HomeFragment : Fragment(), RecommendedProductClickListener {
         fragmentBinding.progressBar.visibility = View.VISIBLE
 
         Log.i(TAG, "RRRRR onViewCreated: RECREATED")
-
-        getRecommendedPlaces()
+//        if (Utils.getConnectionType(requireContext()) == 0) {
+//            getRecommendedPlacesFromDb()
+//
+//        } else {
+            getRecommendedPlaces()
+//        }
 
         initArrowImageButton()
         initScrollListener()
     }
 
-    private fun initArrowImageButton(){
+    private fun getRecommendedPlacesFromDb() {
+        try {
+            lifecycleScope.launch {
+                dismissProgressAfterTimeOut()
+                homeFragmentViewModel.getRecommendedProductsPagedListFromDb()
+                    ?.observe(viewLifecycleOwner)
+                    { recProducts ->
+                        fragmentBinding.homePlacesRecyclerView.apply {
+                            layoutManager = gridLayoutManager
+                            recProductsAdapter = RecommendedPlacesAdapter(
+                                R.layout.home_product_item,
+                                this@HomeFragment
+                            )
+                            recProductsAdapter?.let {
+                                fragmentBinding.progressBar.visibility = View.VISIBLE
+                                it.submitList(recProducts)
+                                adapter = it
+                                lifecycleScope.launchWhenStarted {
+                                    Handler().postDelayed({
+                                        fragmentBinding.progressBar.visibility = View.GONE
+                                    }, 750)
+                                }
+                            }
+                        }
+                    }
+            }
+        } catch (ex: Throwable) {
+            Log.i(TAG, "getRecommendedPlaces: ${ex.localizedMessage}")
+        } finally {
+            dismissProgressAfterTimeOut()
+        }
+
+    }
+
+    private fun initArrowImageButton() {
         fragmentBinding.arrowUpImageButton.setOnClickListener {
             fragmentBinding.homePlacesRecyclerView.smoothScrollToPosition(0)
             fragmentBinding.arrowUpImageButton.visibility = View.GONE
         }
     }
 
-    private fun initScrollListener(){
+    private fun initScrollListener() {
         fragmentBinding.homePlacesRecyclerView.addOnScrollListener(object :
             RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
@@ -82,11 +123,10 @@ class HomeFragment : Fragment(), RecommendedProductClickListener {
                 }
 
 
-
             }
 
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                if (gridLayoutManager.findFirstCompletelyVisibleItemPosition() < 2 ) {
+                if (gridLayoutManager.findFirstCompletelyVisibleItemPosition() < 2) {
                     fragmentBinding.arrowUpImageButton.visibility = View.GONE
                 }
             }
@@ -95,14 +135,13 @@ class HomeFragment : Fragment(), RecommendedProductClickListener {
 
 
     override fun onFavoriteIconClicked(product: Product, productPosition: Int) {
-        val isPlaceFavorite = product.isFavorite == 1
+        val isPlaceFavorite = product.favorite == 1
         if (isPlaceFavorite) {
             lifecycleScope.launch { deletePlaceFromFavorite(product, productPosition) }
         } else {
             lifecycleScope.launch { addPlaceToFavorite(product, productPosition) }
         }
     }
-
 
 
     private suspend fun addPlaceToFavorite(product: Product, productPosition: Int) {
@@ -114,7 +153,7 @@ class HomeFragment : Fragment(), RecommendedProductClickListener {
             //this line has no effect as you can't modify a state of items of a recycler view
 //            add_to_favorite_image_view.setImageResource(R.drawable.ic_heart_filled)
             //the following two lines are meant to only change the state of a specific item
-            product.isFavorite = if (product.isFavorite == 0) 1 else 0
+            product.favorite = if (product.favorite == 0) 1 else 0
             recProductsAdapter?.notifyItemChanged(productPosition, product)
             // getRecommendedPlaces()
         }
@@ -128,7 +167,7 @@ class HomeFragment : Fragment(), RecommendedProductClickListener {
         responseMessage?.let {
 //            add_to_favorite_image_view.setImageResource(R.drawable.ic_heart)
             // getRecommendedPlaces()
-            product.isFavorite = if (product.isFavorite == 0) 1 else 0
+            product.favorite = if (product.favorite == 0) 1 else 0
             recProductsAdapter?.notifyItemChanged(productPosition, product)
 
         }
@@ -144,7 +183,10 @@ class HomeFragment : Fragment(), RecommendedProductClickListener {
 
                         fragmentBinding.homePlacesRecyclerView.apply {
                             layoutManager = gridLayoutManager
-                            recProductsAdapter = RecommendedPlacesAdapter(R.layout.home_product_item, this@HomeFragment)
+                            recProductsAdapter = RecommendedPlacesAdapter(
+                                R.layout.home_product_item,
+                                this@HomeFragment
+                            )
                             recProductsAdapter?.let {
                                 fragmentBinding.progressBar.visibility = View.VISIBLE
                                 it.submitList(recProducts)
@@ -152,7 +194,7 @@ class HomeFragment : Fragment(), RecommendedProductClickListener {
                                 lifecycleScope.launchWhenStarted {
                                     Handler().postDelayed({
                                         fragmentBinding.progressBar.visibility = View.GONE
-                                    },750)
+                                    }, 750)
                                 }
                             }
                         }

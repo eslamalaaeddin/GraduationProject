@@ -13,13 +13,16 @@ data class Product(
     var id: Long? = null,
     var image: String? = null,
     @SerializedName("is_favorite")
-    @Ignore var isFavorite: Int? = null,
+    var favorite: Int? = null,
     var name: String? = null,
     var rating: Float? = null,
     var description: String? = null,
     var tags: String? = null,
     @ColumnInfo(name = "user_rate")
     var userRate: Float? = null
-){
-
+)
+{
+    override fun toString(): String {
+        return name.orEmpty()
+    }
 }

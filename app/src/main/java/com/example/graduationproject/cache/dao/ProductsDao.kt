@@ -6,11 +6,6 @@ import com.example.graduationproject.models.products.Product
 @Dao
 interface ProductsDao {
 
-    //same as favorite so it is commented
-    @Query("SELECT * FROM products LIMIT 20 OFFSET :page")
-    suspend fun getProductsFromDb(page: Int) : MutableList<Product>
-    //page 0, 10, 20, 30, 40.... so it will start from zero
-
     @Query("SELECT * FROM products WHERE products.id = :productId LIMIT 1")
     suspend fun getProduct(productId: Long) : Product?
 
@@ -19,4 +14,14 @@ interface ProductsDao {
 
     @Delete
     suspend fun deleteFromProducts(product: Product)
+
+    @Query("SELECT * FROM products LIMIT 10 OFFSET :offset")
+    suspend fun getProductsFromDb(offset: Int) : MutableList<Product>?
+
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertProducts(cachedProducts: List<Product>)
+
+    @Query("DELETE FROM products WHERE favorite = 0 ")
+    suspend fun deleteProducts()
 }

@@ -5,11 +5,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.graduationproject.R
 import com.example.graduationproject.helper.Constants.BASE_PRODUCT_IMAGE_URL
+import com.example.graduationproject.helper.Utils
 import com.example.graduationproject.helper.listeners.RecommendedProductClickListener
 import com.example.graduationproject.models.products.Product
 import com.example.graduationproject.ui.activities.ProductActivity
@@ -47,7 +49,7 @@ class RecommendedPlacesAdapter(
                 val placeImageUrl = "$BASE_PRODUCT_IMAGE_URL/${product.image}"
                 Log.i(TAG, "bind: $placeImageUrl")
 //                Picasso.get().load(product.image).into(itemView.place_image_view)
-                if (product.isFavorite == 1){
+                if (product.favorite == 1){
                     itemView.add_to_favorite_image_view.setImageResource(R.drawable.ic_heart_filled)
                 }
                 else{
@@ -59,10 +61,14 @@ class RecommendedPlacesAdapter(
                 //Temp
                 val place = getItem(adapterPosition)
                 val intent = Intent(itemView.context, ProductActivity::class.java)
+                val connectionState = Utils.getConnectionType(itemView.context)
                 place?.let {
                     intent.putExtra("placeId", place.id)
+                    intent.putExtra("connectionState", connectionState)
                     itemView.context.startActivity(intent)
                 }
+
+//                Toast.makeText(itemView.context, "$itemCount", Toast.LENGTH_SHORT).show()
 
             }
         }

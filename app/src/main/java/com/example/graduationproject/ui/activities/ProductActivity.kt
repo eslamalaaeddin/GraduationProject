@@ -324,7 +324,7 @@ class ProductActivity : AppCompatActivity() {
                 overallProductRate = rate ?: 0F
                 Log.i(TAG, "PPPP OverallRATE: ${overallProductRate}")
 
-                isPlaceFavorite = it.isFavorite == 1
+                isPlaceFavorite = it.favorite == 1
                 if (isPlaceFavorite) {
                     add_to_favorite_image_view.setImageResource(R.drawable.ic_heart_filled)
                 } else {
@@ -361,6 +361,7 @@ class ProductActivity : AppCompatActivity() {
             currentFavoriteProduct?.let { fav ->
                 currentProduct?.let { product ->
                     product.userRate = userRate
+                    product.favorite = 1
                     cachingViewModel.insertAsTransaction(fav, product)
                     Log.i(TAG, "LLLL PRODUCT ADDED TRANSACTION: ")
                 }
