@@ -11,7 +11,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.provider.MediaStore
-import android.transition.ChangeBounds
 import android.util.Log
 import android.view.Gravity
 import android.view.View
@@ -22,7 +21,6 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.appcompat.widget.ActionBarContainer
 import androidx.core.animation.doOnEnd
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -33,11 +31,11 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.example.graduationproject.R
 import com.example.graduationproject.databinding.ActivitySettingsBinding
-import com.example.graduationproject.helpers.Constants
-import com.example.graduationproject.helpers.Constants.ACTION_IMAGE_UPLOADED_FAIL
-import com.example.graduationproject.helpers.Constants.ACTION_IMAGE_UPLOADED_SUCCESS
-import com.example.graduationproject.helpers.Constants.ACTION_IMAGE_UPLOADED_SUCCESS_NO_UI
-import com.example.graduationproject.helpers.fileutils.FileUtils
+import com.example.graduationproject.helper.Constants
+import com.example.graduationproject.helper.Constants.ACTION_IMAGE_UPLOADED_FAIL
+import com.example.graduationproject.helper.Constants.ACTION_IMAGE_UPLOADED_SUCCESS
+import com.example.graduationproject.helper.Constants.ACTION_IMAGE_UPLOADED_SUCCESS_NO_UI
+import com.example.graduationproject.helper.fileutils.FileUtils
 import com.example.graduationproject.models.user.UserName
 import com.example.graduationproject.models.user.UserPassword
 import com.example.graduationproject.services.ImageUploaderService

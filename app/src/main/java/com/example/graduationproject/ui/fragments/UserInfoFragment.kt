@@ -30,10 +30,10 @@ import com.example.graduationproject.R
 import com.example.graduationproject.cache.CachingViewModel
 import com.example.graduationproject.databinding.UserInfoFragmentBinding
 import com.example.graduationproject.dummy.PostAttachmentListener
-import com.example.graduationproject.helpers.Constants
-import com.example.graduationproject.helpers.Constants.BASE_USER_IMAGE_URL
-import com.example.graduationproject.helpers.Constants.SETTINGS_ACTIVITY_CODE
-import com.example.graduationproject.helpers.Utils
+import com.example.graduationproject.helper.Constants
+import com.example.graduationproject.helper.Constants.BASE_USER_IMAGE_URL
+import com.example.graduationproject.helper.Constants.SETTINGS_ACTIVITY_CODE
+import com.example.graduationproject.helper.Utils
 import com.example.graduationproject.ui.activities.RegisterActivity
 import com.example.graduationproject.ui.activities.SettingsActivity
 import com.example.graduationproject.ui.activities.SplashActivity

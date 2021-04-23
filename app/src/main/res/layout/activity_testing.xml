@@ -10,27 +10,19 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
+        <Button
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginBottom="64dp"
-            android:text="@string/exit_warning" />
+            android:id="@+id/button"
+            android:text="Notify"/>
 
         <Button
-            android:id="@+id/button1"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center|start"
-            android:text="En" />
-
-        <Button
+            android:layout_gravity="top"
             android:id="@+id/button2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center|end"
-            android:text="Ar" />
+            android:text="Token"/>
     </FrameLayout>
 
 

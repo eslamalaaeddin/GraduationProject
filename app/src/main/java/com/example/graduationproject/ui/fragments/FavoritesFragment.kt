@@ -22,10 +22,10 @@ import com.example.graduationproject.R
 import com.example.graduationproject.adapters.FavoriteProductsAdapter
 import com.example.graduationproject.cache.CachingViewModel
 import com.example.graduationproject.databinding.FragmentFavoritesBinding
-import com.example.graduationproject.helpers.Constants.FAVORITE_PRODUCT_REQUEST_CODE
-import com.example.graduationproject.helpers.Constants.TIME_OUT_MILLISECONDS
-import com.example.graduationproject.helpers.Utils
-import com.example.graduationproject.helpers.listeners.FavoriteProductClickListener
+import com.example.graduationproject.helper.Constants.FAVORITE_PRODUCT_REQUEST_CODE
+import com.example.graduationproject.helper.Constants.TIME_OUT_MILLISECONDS
+import com.example.graduationproject.helper.Utils
+import com.example.graduationproject.helper.listeners.FavoriteProductClickListener
 import com.example.graduationproject.models.products.FavoriteProduct
 import com.example.graduationproject.models.products.VisitedProduct
 import com.example.graduationproject.ui.activities.ProductActivity

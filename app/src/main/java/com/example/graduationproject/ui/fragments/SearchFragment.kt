@@ -18,8 +18,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.graduationproject.R
 import com.example.graduationproject.adapters.SearchedProductsAdapter
 import com.example.graduationproject.databinding.SearchFragmentBinding
-import com.example.graduationproject.helpers.Constants
-import com.example.graduationproject.helpers.listeners.TagClickListener
+import com.example.graduationproject.helper.Constants
+import com.example.graduationproject.helper.listeners.TagClickListener
 import com.example.graduationproject.ui.activities.SplashActivity
 import com.example.graduationproject.viewmodels.SearchFragmentViewModel
 import kotlinx.coroutines.delay

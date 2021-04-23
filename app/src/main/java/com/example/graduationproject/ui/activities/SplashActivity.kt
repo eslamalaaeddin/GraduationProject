@@ -1,39 +1,28 @@
 package com.example.graduationproject.ui.activities
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
-import android.preference.PreferenceManager
-import android.util.Log
 import android.view.Window
 import android.view.WindowManager
-import android.widget.Toast
-import androidx.lifecycle.lifecycleScope
 import com.example.graduationproject.R
-import com.example.graduationproject.helpers.Constants.ACCESS_TOKEN
-import com.example.graduationproject.helpers.Constants.ACCESS_TOKEN_EX_TIME
-import com.example.graduationproject.helpers.Constants.APP_PREFS
-import com.example.graduationproject.helpers.Constants.LOGGED_OUT
-import com.example.graduationproject.helpers.Constants.REFRESH_TOKEN
-import com.example.graduationproject.helpers.Constants.REFRESH_TOKEN_EX_TIME
-import com.example.graduationproject.helpers.Constants.SEARCH_METHOD
-import com.example.graduationproject.helpers.Constants.SIGNED_UP_VERIFIED_SIGNED_IN
-import com.example.graduationproject.helpers.Constants.USER_EMAIL
-import com.example.graduationproject.helpers.Constants.USER_ID
-import com.example.graduationproject.helpers.Constants.USER_IMAGE_URL
-import com.example.graduationproject.helpers.Constants.USER_NAME
-import com.example.graduationproject.helpers.Constants.WELCOMED
-import com.example.graduationproject.models.authentication.RefreshToken
+import com.example.graduationproject.helper.Constants.ACCESS_TOKEN
+import com.example.graduationproject.helper.Constants.ACCESS_TOKEN_EX_TIME
+import com.example.graduationproject.helper.Constants.APP_PREFS
+import com.example.graduationproject.helper.Constants.LOGGED_OUT
+import com.example.graduationproject.helper.Constants.REFRESH_TOKEN
+import com.example.graduationproject.helper.Constants.REFRESH_TOKEN_EX_TIME
+import com.example.graduationproject.helper.Constants.SEARCH_METHOD
+import com.example.graduationproject.helper.Constants.SIGNED_UP_VERIFIED_SIGNED_IN
+import com.example.graduationproject.helper.Constants.USER_EMAIL
+import com.example.graduationproject.helper.Constants.USER_ID
+import com.example.graduationproject.helper.Constants.USER_IMAGE_URL
+import com.example.graduationproject.helper.Constants.USER_NAME
+import com.example.graduationproject.helper.Constants.WELCOMED
 import com.example.graduationproject.viewmodels.SplashActivityViewModel
-import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.text.DateFormat
-
-import java.text.SimpleDateFormat
-import java.util.*
 
 private const val TAG = "SplashActivity"
 

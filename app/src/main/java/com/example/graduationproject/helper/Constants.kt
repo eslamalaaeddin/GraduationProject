@@ -1,4 +1,4 @@
-package com.example.graduationproject.helpers
+package com.example.graduationproject.helper
 
 object Constants {
 

@@ -14,9 +14,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.example.graduationproject.R
 import com.example.graduationproject.cache.CachingViewModel
-import com.example.graduationproject.databinding.FragmentInSignBinding
 import com.example.graduationproject.databinding.FragmentVerificationBinding
-import com.example.graduationproject.helpers.Constants
+import com.example.graduationproject.helper.Constants
 import com.example.graduationproject.models.authentication.Verify
 import com.example.graduationproject.ui.activities.MainActivity
 import com.example.graduationproject.ui.activities.SplashActivity

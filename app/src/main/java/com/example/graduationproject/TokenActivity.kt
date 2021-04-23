@@ -9,7 +9,7 @@ import android.os.SystemClock
 import android.widget.Button
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import com.example.graduationproject.helpers.Constants
+import com.example.graduationproject.helper.Constants
 import com.example.graduationproject.ui.activities.SplashActivity
 
 private const val TAG = "TokenActivity"

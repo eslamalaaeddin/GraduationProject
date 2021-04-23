@@ -18,7 +18,7 @@ import com.example.graduationproject.adapters.PlaceImagesAdapter
 import com.example.graduationproject.adapters.RecommendedPlacesAdapter
 import com.example.graduationproject.cache.CachingViewModel
 import com.example.graduationproject.databinding.ActivityProductBinding
-import com.example.graduationproject.helpers.Constants
+import com.example.graduationproject.helper.Constants
 import com.example.graduationproject.models.products.FavoriteProduct
 import com.example.graduationproject.models.products.Product
 import com.example.graduationproject.models.products.ProductImage

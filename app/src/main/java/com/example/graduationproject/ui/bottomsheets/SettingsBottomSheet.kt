@@ -16,7 +16,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.graduationproject.R
 import com.example.graduationproject.databinding.SettingBottomSheetBinding
-import com.example.graduationproject.helpers.Constants.BASE_USER_IMAGE_URL
+import com.example.graduationproject.helper.Constants.BASE_USER_IMAGE_URL
 import com.example.graduationproject.models.user.User
 import com.example.graduationproject.models.user.UserName
 import com.example.graduationproject.models.user.UserPassword

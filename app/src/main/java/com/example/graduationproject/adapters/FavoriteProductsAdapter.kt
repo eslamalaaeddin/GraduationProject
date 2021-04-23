@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.graduationproject.R
-import com.example.graduationproject.helpers.listeners.FavoriteProductClickListener
+import com.example.graduationproject.helper.listeners.FavoriteProductClickListener
 import com.example.graduationproject.models.products.FavoriteProduct
 import com.example.graduationproject.ui.activities.ProductActivity
 import com.squareup.picasso.Picasso

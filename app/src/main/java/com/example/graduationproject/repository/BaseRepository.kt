@@ -2,8 +2,8 @@ package com.example.graduationproject.repository
 
 import android.content.Context
 import android.util.Log
-import com.example.graduationproject.helpers.ExceptionHandler
-import com.example.graduationproject.helpers.Result
+import com.example.graduationproject.helper.ExceptionHandler
+import com.example.graduationproject.helper.Result
 import retrofit2.HttpException
 import retrofit2.Response
 

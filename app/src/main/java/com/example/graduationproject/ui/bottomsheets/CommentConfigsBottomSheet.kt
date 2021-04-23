@@ -12,8 +12,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import com.example.graduationproject.R
 import com.example.graduationproject.databinding.CommentConfigurationsBottomSheetBinding
-import com.example.graduationproject.helpers.Constants
-import com.example.graduationproject.helpers.listeners.CommentListener
+import com.example.graduationproject.helper.Constants
+import com.example.graduationproject.helper.listeners.CommentListener
 import com.example.graduationproject.models.comments.ProductComment
 import com.example.graduationproject.models.products.Comment
 import com.example.graduationproject.ui.activities.SplashActivity

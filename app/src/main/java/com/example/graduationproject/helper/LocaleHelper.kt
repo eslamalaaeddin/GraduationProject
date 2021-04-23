@@ -1,9 +1,8 @@
-package com.example.graduationproject.helpers
+package com.example.graduationproject.helper
 
 import android.annotation.TargetApi
 import android.content.Context
 import android.os.Build
-import android.preference.PreferenceManager
 import java.util.*
 
 

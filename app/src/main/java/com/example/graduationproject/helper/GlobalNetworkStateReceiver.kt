@@ -1,11 +1,11 @@
-package com.example.graduationproject.helpers
+package com.example.graduationproject.helper
 
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Handler
 import android.widget.Toast
-import com.example.graduationproject.helpers.Utils.getConnectionType
+import com.example.graduationproject.helper.Utils.getConnectionType
 
 
 class GlobalNetworkStateReceiver : BroadcastReceiver() {

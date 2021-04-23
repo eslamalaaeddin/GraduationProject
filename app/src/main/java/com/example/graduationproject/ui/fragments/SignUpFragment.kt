@@ -12,7 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.graduationproject.R
 import com.example.graduationproject.databinding.FragmentUpSignBinding
-import com.example.graduationproject.helpers.Constants
+import com.example.graduationproject.helper.Constants
 import com.example.graduationproject.models.authentication.SignUp
 import com.example.graduationproject.ui.activities.SplashActivity
 import com.example.graduationproject.viewmodels.SignUpViewModel

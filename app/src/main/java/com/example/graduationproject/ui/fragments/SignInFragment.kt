@@ -13,7 +13,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.graduationproject.R
 import com.example.graduationproject.cache.CachingViewModel
 import com.example.graduationproject.databinding.FragmentInSignBinding
-import com.example.graduationproject.helpers.Constants
+import com.example.graduationproject.helper.Constants
 import com.example.graduationproject.models.authentication.Login
 import com.example.graduationproject.ui.activities.SplashActivity
 import com.example.graduationproject.viewmodels.LoginViewModel

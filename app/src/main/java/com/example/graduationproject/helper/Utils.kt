@@ -1,22 +1,9 @@
-package com.example.graduationproject.helpers
+package com.example.graduationproject.helper
 
-import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
-import android.util.Log
-import android.widget.Toast
-import androidx.lifecycle.lifecycleScope
-import com.example.graduationproject.models.authentication.RefreshToken
-import com.example.graduationproject.ui.activities.MainActivity
-import com.example.graduationproject.ui.activities.RegisterActivity
-import com.example.graduationproject.ui.activities.SplashActivity
-import kotlinx.coroutines.launch
-import java.text.DateFormat
-import java.text.SimpleDateFormat
-import java.util.*
 
 object Utils {
 
@@ -83,8 +70,8 @@ object Utils {
 //                } else {
 //                    val oldAccessToken = SplashActivity.getAccessToken(this).toString()
 //                    val refreshToken = SplashActivity.getRefreshToken(this).toString()
-//                    Log.i(com.example.graduationproject.ui.activities.TAG, "TOKEN old access token: $oldAccessToken")
-//                    Log.i(com.example.graduationproject.ui.activities.TAG, "TOKEN refresh token: $refreshToken")
+//                    Log.i(com.example.graduationproject.ui.activities.com.example.graduationproject.notification.com.example.graduationproject.notification.TAG, "TOKEN old access token: $oldAccessToken")
+//                    Log.i(com.example.graduationproject.ui.activities.com.example.graduationproject.notification.com.example.graduationproject.notification.TAG, "TOKEN refresh token: $refreshToken")
 //                    getNewAccessToken(oldAccessToken, refreshToken)
 //                }
 //            } else {
@@ -108,9 +95,9 @@ object Utils {
 //
 //    private fun isAccessTokenExpired(accessTokenTimestamp: Long): Boolean {
 //        val currentTimeInSeconds = System.currentTimeMillis() / 1000
-//        Log.i(com.example.graduationproject.ui.activities.TAG, "ISLAM isAccessTokenExpired: Current time $currentTimeInSeconds")
-//        Log.i(com.example.graduationproject.ui.activities.TAG, "ISLAM isAccessTokenExpired: Expiration time  $accessTokenTimestamp")
-//        Log.i(com.example.graduationproject.ui.activities.TAG, "ISLAM isAccessTokenExpired: Differenece time  ${accessTokenTimestamp - currentTimeInSeconds}")
+//        Log.i(com.example.graduationproject.ui.activities.com.example.graduationproject.notification.com.example.graduationproject.notification.TAG, "ISLAM isAccessTokenExpired: Current time $currentTimeInSeconds")
+//        Log.i(com.example.graduationproject.ui.activities.com.example.graduationproject.notification.com.example.graduationproject.notification.TAG, "ISLAM isAccessTokenExpired: Expiration time  $accessTokenTimestamp")
+//        Log.i(com.example.graduationproject.ui.activities.com.example.graduationproject.notification.com.example.graduationproject.notification.TAG, "ISLAM isAccessTokenExpired: Differenece time  ${accessTokenTimestamp - currentTimeInSeconds}")
 //        return currentTimeInSeconds - accessTokenTimestamp >= 0
 ////        return (currentTimeInSeconds - (accessTokenTimestamp + 7200)) >= 0
 //    }
@@ -140,7 +127,7 @@ object Utils {
 //                    refreshTokenExTime
 //                )
 //                Log.i(
-//                    com.example.graduationproject.ui.activities.TAG, "ISLAM onCreate: ${
+//                    com.example.graduationproject.ui.activities.com.example.graduationproject.notification.com.example.graduationproject.notification.TAG, "ISLAM onCreate: ${
 //                        SplashActivity.getAccessToken(
 //                            this@SplashActivity
 //                        )

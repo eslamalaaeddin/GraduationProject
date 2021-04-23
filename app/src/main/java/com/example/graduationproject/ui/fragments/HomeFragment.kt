@@ -1,6 +1,5 @@
 package com.example.graduationproject.ui.fragments
 
-import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
@@ -15,11 +14,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.graduationproject.R
 import com.example.graduationproject.adapters.RecommendedPlacesAdapter
 import com.example.graduationproject.databinding.FragmentHomeBinding
-import com.example.graduationproject.helpers.Constants
-import com.example.graduationproject.helpers.listeners.RecommendedProductClickListener
+import com.example.graduationproject.helper.Constants
+import com.example.graduationproject.helper.listeners.RecommendedProductClickListener
 import com.example.graduationproject.models.products.Product
 import com.example.graduationproject.models.products.VisitedProduct
-import com.example.graduationproject.ui.activities.ProductActivity
 import com.example.graduationproject.ui.activities.SplashActivity
 import com.example.graduationproject.viewmodels.HomeFragmentViewModel
 import com.example.graduationproject.viewmodels.ProductActivityViewModel

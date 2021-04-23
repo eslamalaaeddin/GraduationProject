@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.graduationproject.helpers.fileutils;
+package com.example.graduationproject.helper.fileutils;
 
 import android.content.ContentResolver;
 import android.content.ContentUris;
@@ -46,7 +46,7 @@ import java.util.Comparator;
 public class FileUtils {
     private FileUtils() {} //private constructor to enforce Singleton pattern
 
-    /** TAG for log messages. */
+    /** com.example.graduationproject.notification.com.example.graduationproject.notification.TAG for log messages. */
     static final String TAG = "FileUtils";
     private static final boolean DEBUG = false; // Set to true to enable logging
 

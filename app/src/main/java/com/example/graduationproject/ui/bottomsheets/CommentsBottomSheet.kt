@@ -19,9 +19,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.graduationproject.R
 import com.example.graduationproject.adapters.CommentsAdapter
 import com.example.graduationproject.databinding.CommentsBottomSheetBinding
-import com.example.graduationproject.helpers.Constants
-import com.example.graduationproject.helpers.Utils
-import com.example.graduationproject.helpers.listeners.CommentListener
+import com.example.graduationproject.helper.Constants
+import com.example.graduationproject.helper.Utils
+import com.example.graduationproject.helper.listeners.CommentListener
 import com.example.graduationproject.models.comments.ProductComment
 import com.example.graduationproject.models.products.Comment
 import com.example.graduationproject.viewmodels.ProductActivityViewModel

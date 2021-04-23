@@ -91,21 +91,5 @@ class CachingViewModel(private val cachingRepository: CachingRepository) : ViewM
     }
 
 
-    //USERS DAO
-//    suspend fun getUser(userId: Long) = liveData {
-//        val user = cachingRepository.getUser(userId)
-//        emit(user)
-//    }
-
-    //suspend fun insertUser(user: User) = cachingRepository.insertUser(user)
-
-//    try
-//    {
-//
-//    }
-//    catch (ex: Throwable)
-//    {
-//        Log.e(TAG, ex.localizedMessage.orEmpty())
-//    }
 
 }

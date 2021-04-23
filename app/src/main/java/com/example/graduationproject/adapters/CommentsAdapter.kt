@@ -8,8 +8,8 @@ import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.graduationproject.R
-import com.example.graduationproject.helpers.Constants.BASE_USER_IMAGE_URL
-import com.example.graduationproject.helpers.listeners.CommentListener
+import com.example.graduationproject.helper.Constants.BASE_USER_IMAGE_URL
+import com.example.graduationproject.helper.listeners.CommentListener
 import com.example.graduationproject.models.products.Comment
 import de.hdodenhof.circleimageview.CircleImageView
 

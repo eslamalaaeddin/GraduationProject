@@ -1,24 +1,7 @@
 package com.example.graduationproject
 
-import android.annotation.SuppressLint
-import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
-import android.os.Build
-import android.view.View
-import androidx.annotation.RequiresApi
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.observe
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.transition.Transition
-import com.example.graduationproject.helpers.Constants
-import kotlinx.coroutines.launch
 import java.text.DateFormat
 import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.LocalTime
-import java.time.ZoneOffset
-import java.time.format.DateTimeFormatter
 import java.util.*
 
 const val accessTokenExpirationDate = "Sun, 27 Dec 2020 15:42:25 GMT"
@@ -69,7 +52,7 @@ fun main() {
 //                bindingInstance.userNameTextView.text =
 //                    "${currentUser.firstName} ${currentUser.lastName}"
 //                bindingInstance.userEmailTextView.text = currentUser.email
-//                val userImageUrl = "${Constants.BASE_USER_IMAGE_URL}${currentUser.image}"
+//                val userImageUrl = "${com.example.graduationproject.notification.Constants.BASE_USER_IMAGE_URL}${currentUser.image}"
 //
 //                if (userImageUrl.isNotEmpty()) {
 //                    Glide.with(requireContext())

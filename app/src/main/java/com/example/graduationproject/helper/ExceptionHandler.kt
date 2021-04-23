@@ -1,4 +1,4 @@
-package com.example.graduationproject.helpers
+package com.example.graduationproject.helper
 
 import android.content.Context
 import android.net.ConnectivityManager
