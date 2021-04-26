@@ -2,6 +2,8 @@ package com.example.graduationproject.network
 
 import android.content.Context
 import android.util.Log
+import com.example.graduationproject.helper.Utils.getAccessToken
+import com.example.graduationproject.helper.Utils.getRefreshToken
 import com.example.graduationproject.models.authentication.RefreshToken
 import com.example.graduationproject.models.authentication.Token
 import com.example.graduationproject.ui.activities.SplashActivity
@@ -18,8 +20,8 @@ class TokenAuthenticator(private val context: Context) : Authenticator {
     val api = retrofitInstance.create(Api::class.java)
 
     override fun authenticate(route: Route?, response: Response): Request? {
-        val oldToken = SplashActivity.getAccessToken(context)
-        val refreshToken = SplashActivity.getRefreshToken(context)
+        val oldToken = getAccessToken(context)
+        val refreshToken = getRefreshToken(context)
         if (response.code == 401) {
             val refreshCall: Call<Token> = api.refreshTheToken(RefreshToken(oldToken, refreshToken))
 

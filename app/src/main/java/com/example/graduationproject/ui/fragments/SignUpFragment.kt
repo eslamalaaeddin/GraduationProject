@@ -2,6 +2,7 @@ package com.example.graduationproject.ui.fragments
 
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.graduationproject.R
 import com.example.graduationproject.databinding.FragmentUpSignBinding
 import com.example.graduationproject.helper.Constants
+import com.example.graduationproject.helper.Utils.saveEmailInPrefs
 import com.example.graduationproject.models.authentication.SignUp
 import com.example.graduationproject.ui.activities.SplashActivity
 import com.example.graduationproject.viewmodels.SignUpViewModel
@@ -98,7 +100,7 @@ class SignUpFragment : Fragment() {
             lifecycleScope.launch {
                 bindingInstance.progressBar.visibility = View.VISIBLE
                 bindingInstance.signUpButton.isEnabled = false
-                SplashActivity.saveEmailInPrefs(requireContext(), email)
+                saveEmailInPrefs(requireContext(), email)
                val responseMessage = signUpViewModel.signUp(signUp)
                if(responseMessage != null){
                    Toast.makeText(
@@ -138,7 +140,7 @@ class SignUpFragment : Fragment() {
 
     private fun dismissProgressAfterTimeOut() {
         lifecycleScope.launchWhenStarted {
-            Handler().postDelayed({
+            Handler(Looper.getMainLooper()).postDelayed({
                 bindingInstance.progressBar.visibility = View.GONE
                 bindingInstance.signUpButton.isEnabled = true
             }, Constants.TIME_OUT_MILLISECONDS)

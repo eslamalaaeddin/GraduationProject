@@ -9,6 +9,7 @@ import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -29,11 +30,18 @@ import com.bumptech.glide.request.transition.Transition
 import com.example.graduationproject.R
 import com.example.graduationproject.cache.CachingViewModel
 import com.example.graduationproject.databinding.UserInfoFragmentBinding
-import com.example.graduationproject.dummy.PostAttachmentListener
 import com.example.graduationproject.helper.Constants
 import com.example.graduationproject.helper.Constants.BASE_USER_IMAGE_URL
 import com.example.graduationproject.helper.Constants.SETTINGS_ACTIVITY_CODE
 import com.example.graduationproject.helper.Utils
+import com.example.graduationproject.helper.Utils.getAccessToken
+import com.example.graduationproject.helper.Utils.getEmailFromPrefs
+import com.example.graduationproject.helper.Utils.getUserId
+import com.example.graduationproject.helper.Utils.getUserImageUrl
+import com.example.graduationproject.helper.Utils.getUserName
+import com.example.graduationproject.helper.Utils.setAccessToken
+import com.example.graduationproject.helper.Utils.setLoggedOut
+import com.example.graduationproject.helper.Utils.setRefreshToken
 import com.example.graduationproject.ui.activities.RegisterActivity
 import com.example.graduationproject.ui.activities.SettingsActivity
 import com.example.graduationproject.ui.activities.SplashActivity
@@ -44,7 +52,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 private const val TAG = "NavigationDrawerBottomS"
 
 
-class UserInfoFragment : Fragment(), PostAttachmentListener {
+class UserInfoFragment : Fragment() {
     private lateinit var bindingInstance: UserInfoFragmentBinding
     private val navDrawerViewModel by viewModel<NavigationDrawerViewModel>()
     private val cachingViewModel by viewModel<CachingViewModel>()
@@ -69,8 +77,8 @@ class UserInfoFragment : Fragment(), PostAttachmentListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        accessToken = SplashActivity.getAccessToken(requireContext()).toString()
-        userId = SplashActivity.getUserId(requireContext())
+        accessToken = getAccessToken(requireContext()).toString()
+        userId = getUserId(requireContext())
 
         bindingInstance.settingsLayout.setOnClickListener {
             navigateToSettingsActivity()
@@ -147,16 +155,16 @@ class UserInfoFragment : Fragment(), PostAttachmentListener {
     }
 
     private fun updateStateAndLogOut() {
-        SplashActivity.setLoggedOut(requireContext(), true)
-        SplashActivity.setAccessToken(requireContext(), "")
-        SplashActivity.setRefreshToken(requireContext(), "")
+        setLoggedOut(requireContext(), true)
+        setAccessToken(requireContext(), "")
+        setRefreshToken(requireContext(), "")
         startActivity(Intent(requireContext(), RegisterActivity::class.java))
         requireActivity().finish()
     }
 
     private fun navigateToSettingsActivity() {
-        userName = SplashActivity.getUserName(requireContext()).toString()
-        userImageUrl = SplashActivity.getUserImageUrl(requireContext()).toString()
+        userName = getUserName(requireContext()).toString()
+        userImageUrl = getUserImageUrl(requireContext()).toString()
 
         val settingsIntent = Intent(requireContext(), SettingsActivity::class.java)
         settingsIntent.putExtra("userFirstName", userName.substringBefore(" "))
@@ -168,8 +176,8 @@ class UserInfoFragment : Fragment(), PostAttachmentListener {
     }
 
     fun fade(){
-        userName = SplashActivity.getUserName(requireContext()).toString()
-        userImageUrl = SplashActivity.getUserImageUrl(requireContext()).toString()
+        userName = getUserName(requireContext()).toString()
+        userImageUrl = getUserImageUrl(requireContext()).toString()
 
         val settingsIntent = Intent(requireContext(), SettingsActivity::class.java)
         settingsIntent.putExtra("userFirstName", userName.substringBefore(" "))
@@ -272,9 +280,9 @@ class UserInfoFragment : Fragment(), PostAttachmentListener {
     private fun getUserAndUpdateUiOffLine() {
         bindingInstance.progressBar.visibility = View.VISIBLE
 
-        userName = SplashActivity.getUserName(requireContext()).toString()
-        userEmail = SplashActivity.getEmailFromPrefs(requireContext()).toString()
-        userImageUrl = SplashActivity.getUserImageUrl(requireContext()).toString()
+        userName = getUserName(requireContext()).toString()
+        userEmail = getEmailFromPrefs(requireContext()).toString()
+        userImageUrl = getUserImageUrl(requireContext()).toString()
 
         bindingInstance.userNameTextView.text = userName
         bindingInstance.userEmailTextView.text = userEmail
@@ -306,18 +314,10 @@ class UserInfoFragment : Fragment(), PostAttachmentListener {
 
     private fun dismissProgressAfterTimeOut() {
         lifecycleScope.launchWhenStarted {
-            Handler().postDelayed({
+            Handler(Looper.getMainLooper()).postDelayed({
                 bindingInstance.progressBar.visibility = View.GONE
             }, Constants.TIME_OUT_MILLISECONDS)
         }
     }
-
-    override fun onAttachmentAdded(data: Intent?, dataType: String, fromCamera: Boolean) {
-        Log.i(TAG, "555555  $data")
-        Log.i(TAG, "555555  ${data?.data}")
-        Log.i(TAG, "555555  ${data?.data?.encodedPath}")
-        Log.i(TAG, "555555  ${data?.toUri(0)}")
-    }
-
 
 }

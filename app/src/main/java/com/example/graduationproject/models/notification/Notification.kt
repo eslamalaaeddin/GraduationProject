@@ -8,5 +8,7 @@ data class Notification(
     var notifiedId: String? = null,//it is used to delete notificatoin
     var imageBitmap: Bitmap? = null,
     var notifierName: String? = null,
-    var notifierImageUrl: String? = null
+    var notifierImageUrl: String? = null,
+    var movieId: Long? = 0,
+    var movieName: String? = null
 )

@@ -94,10 +94,8 @@ val signUpViewModelModule = module { viewModel { SignUpViewModel(get()) } }
 val loginViewModelModule = module { viewModel { LoginViewModel(get()) } }
 val verificationFragmentViewModelModule =
     module { viewModel { VerificationFragmentViewModel(get()) } }
-val splashActivityViewModelModule = module { viewModel { SplashActivityViewModel(get()) } }
 val placeActivityViewModelModule =
     module { viewModel { ProductActivityViewModel(get(), get(), get()) } }
-val addPlaceViewModelModule = module { viewModel { AddPlaceViewModel(get()) } }
 val userProfileActivityViewModelModule = module { viewModel { UserProfileViewModel(get()) } }
 val navigationDrawerViewModelModule = module { viewModel { NavigationDrawerViewModel(get()) } }
 val searchViewModelModule = module { viewModel { SearchFragmentViewModel(get()) } }

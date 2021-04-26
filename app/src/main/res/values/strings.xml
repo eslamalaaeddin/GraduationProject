@@ -89,6 +89,9 @@
     <string name="yomna">Yomna Mohammad Hafez</string>
     <string name="hamis">Hamis Hesham Mahmoud</string>
     <string name="israa">Israa Mohammad Saleh</string>
+    <string name="recommend_it">Recommend it!</string>
+    <string name="search_for_user">Search for users</string>
+    <string name="search_by_user_name">Search by user name...</string>
 
 
 </resources>

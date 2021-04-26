@@ -11,10 +11,12 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.Uri
 import android.os.Build
+import android.text.SpannableStringBuilder
 import android.widget.RemoteViews
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.text.bold
 import com.example.graduationproject.R
 import com.example.graduationproject.di.*
 import com.example.graduationproject.models.notification.Notifier
@@ -47,10 +49,8 @@ class BaseApplication : Application() {
                     signUpViewModelModule,
                     loginViewModelModule,
                     verificationFragmentViewModelModule,
-                    splashActivityViewModelModule,
                     placeActivityViewModelModule,
                     ratingRepositoryModule,
-                    addPlaceViewModelModule,
                     userRepositoryModule,
                     userProfileActivityViewModelModule,
                     navigationDrawerViewModelModule,
@@ -101,15 +101,24 @@ class BaseApplication : Application() {
         var destination: Class<*>? = null
 
         fun fireClientSideNotification(
-            notifier: Notifier
+            notifier: Notifier,
+            movieId: Long,
+            movieString: String?
         ) {
 
             val remoteView = RemoteViews(context?.packageName, R.layout.custom_notification_layout)
 
             ////////////////////// CUSTOMIZING THE NOTIFICATION //////////////////////////////
+            val movieName = movieString ?: "a movie"
+//            val string = SpannableStringBuilder()
+//                .bold { append(notifier.name) }
+//                .append(" recommended ")
+//                .bold { append(movieName)}
+//                .append(" for you.").toString()
+
             remoteView.setTextViewText(
-                R.id.notificationContentTextView,
-                "${notifier.name} recommended a movie for you."
+                R.id.notificationContentTextView, "${notifier.name} recommended $movieName for you."
+//                R.id.notificationContentTextView, string
             )
             destination = ProductActivity::class.java
             remoteView.setImageViewBitmap(R.id.notificationImageView, notifier.imageBitmap)
@@ -132,7 +141,9 @@ class BaseApplication : Application() {
 
             //3 Create the action
             val actionIntent = Intent(context, destination)
-
+            actionIntent.putExtra("placeId", movieId)
+            val connectionState = getConnectionType()
+            actionIntent.putExtra("connectionState", connectionState)
 
             val pendingIntent =
                 PendingIntent.getActivity(

@@ -3,6 +3,7 @@ package com.example.graduationproject.ui.fragments
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,17 @@ import androidx.core.app.ActivityCompat.finishAffinity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import com.example.graduationproject.helper.Utils.getEmailFromPrefs
+import com.example.graduationproject.helper.Utils.saveEmailInPrefs
+import com.example.graduationproject.helper.Utils.setAccessToken
+import com.example.graduationproject.helper.Utils.setAccessTokenExpirationTime
+import com.example.graduationproject.helper.Utils.setLoggedOut
+import com.example.graduationproject.helper.Utils.setRefreshToken
+import com.example.graduationproject.helper.Utils.setRefreshTokenExpirationTime
+import com.example.graduationproject.helper.Utils.setSignedIn
+import com.example.graduationproject.helper.Utils.setUserId
+import com.example.graduationproject.helper.Utils.setUserImageUrl
+import com.example.graduationproject.helper.Utils.setUserName
 import com.example.graduationproject.R
 import com.example.graduationproject.cache.CachingViewModel
 import com.example.graduationproject.databinding.FragmentVerificationBinding
@@ -76,7 +88,7 @@ class VerificationFragment : Fragment() {
             Toast.makeText(requireContext(), getString(R.string.no_verification_code_entered), Toast.LENGTH_SHORT)
                 .show()
         } else {
-            val email = SplashActivity.getEmailFromPrefs(requireContext())
+            val email = getEmailFromPrefs(requireContext())
             Log.i(TAG, "AHMAD validateVerificationCodeAndNavigateToMainActivity: $code")
             val verify = Verify(email, code.trim().toInt())
             Log.i(TAG, "PPPP: $verify")
@@ -139,16 +151,16 @@ class VerificationFragment : Fragment() {
         userImageUrl: String,
         email: String
     ) {
-        SplashActivity.setAccessToken(requireContext(), accessToken)
-        SplashActivity.setRefreshToken(requireContext(), refreshToken)
-        SplashActivity.setAccessTokenExpirationTime(requireContext(), accessTokenExTime)
-        SplashActivity.setRefreshTokenExpirationTime(requireContext(), refreshTokenExTime)
-        SplashActivity.setUserId(requireContext(), userId)
-        SplashActivity.setUserName(requireContext(), userName)
-        SplashActivity.setUserImageUrl(requireContext(), userImageUrl)
-        SplashActivity.setSignedIn(requireContext(), true)
-        SplashActivity.setLoggedOut(requireContext(), false)
-        SplashActivity.saveEmailInPrefs(requireContext(), email)
+        setAccessToken(requireContext(), accessToken)
+        setRefreshToken(requireContext(), refreshToken)
+        setAccessTokenExpirationTime(requireContext(), accessTokenExTime)
+        setRefreshTokenExpirationTime(requireContext(), refreshTokenExTime)
+        setUserId(requireContext(), userId)
+        setUserName(requireContext(), userName)
+        setUserImageUrl(requireContext(), userImageUrl)
+        setSignedIn(requireContext(), true)
+        setLoggedOut(requireContext(), false)
+        saveEmailInPrefs(requireContext(), email)
     }
 
     private fun navigateToMainActivity() {
@@ -159,7 +171,7 @@ class VerificationFragment : Fragment() {
 
     private fun dismissProgressAfterTimeOut() {
         lifecycleScope.launchWhenStarted {
-            Handler().postDelayed({
+            Handler(Looper.getMainLooper()).postDelayed({
                 bindingInstance.progressBar.visibility = View.GONE
                 bindingInstance.verifyButton.isEnabled = true
             }, Constants.TIME_OUT_MILLISECONDS)

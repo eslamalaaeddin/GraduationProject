@@ -8,6 +8,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Handler
 import android.os.IBinder
+import android.os.Looper
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -19,6 +20,7 @@ import com.example.graduationproject.helper.Constants.CHANNEL_ID
 import com.example.graduationproject.helper.Constants.CHANNEL_NAME
 import com.example.graduationproject.helper.Constants.NOTIFICATION_ID
 import com.example.graduationproject.helper.Constants.TIME_OUT_MILLISECONDS
+import com.example.graduationproject.helper.Utils.setUserImageUrl
 import com.example.graduationproject.helper.fileutils.FileUtils
 import com.example.graduationproject.models.ImageResponse
 import com.example.graduationproject.network.RetrofitInstance
@@ -36,7 +38,7 @@ private const val TAG = "ImageUploaderService"
 class ImageUploaderService : Service() {
     private lateinit var notification: NotificationCompat.Builder
     private lateinit var notificationManager: NotificationManagerCompat
-    val handler = Handler()
+    val handler = Handler(Looper.getMainLooper())
     override fun onBind(intent: Intent): IBinder? {
         return null
     }
@@ -103,7 +105,7 @@ class ImageUploaderService : Service() {
                         intent.putExtra("newImageUrl", it.image.orEmpty())
                         sendBroadcast(intent)
                         sendBroadcast(noUiIntent)
-                        SplashActivity.setUserImageUrl(this@ImageUploaderService, it.image.orEmpty())
+                        setUserImageUrl(this@ImageUploaderService, it.image.orEmpty())
                     }
                 }
             }

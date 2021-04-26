@@ -2,6 +2,7 @@ package com.example.graduationproject.ui.bottomsheets
 
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.graduationproject.R
 import com.example.graduationproject.databinding.UpdateCommentBottomSheetBinding
 import com.example.graduationproject.helper.Constants
+import com.example.graduationproject.helper.Utils.getAccessToken
 import com.example.graduationproject.helper.listeners.CommentListener
 import com.example.graduationproject.models.comments.ProductComment
 import com.example.graduationproject.models.products.Comment
@@ -52,7 +54,7 @@ class UpdateCommentBottomSheet(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        accessToken = SplashActivity.getAccessToken(requireContext()).orEmpty()
+        accessToken = getAccessToken(requireContext()).orEmpty()
 
         bindingInstance.commentEditText.setText(comment.commentContent.orEmpty())
         bindingInstance.commentEditText.setSelection(bindingInstance.commentEditText.text.length)
@@ -96,7 +98,7 @@ class UpdateCommentBottomSheet(
 
     private fun dismissProgressAfterTimeOut() {
         lifecycleScope.launchWhenStarted {
-            Handler().postDelayed({
+            Handler(Looper.getMainLooper()).postDelayed({
                 bindingInstance.progressBar.visibility = View.GONE
             }, Constants.TIME_OUT_MILLISECONDS)
 

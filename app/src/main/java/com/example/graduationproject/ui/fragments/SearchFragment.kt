@@ -3,22 +3,26 @@ package com.example.graduationproject.ui.fragments
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.*
 import android.widget.AbsListView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.observe
+import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.graduationproject.R
 import com.example.graduationproject.adapters.SearchedProductsAdapter
 import com.example.graduationproject.databinding.SearchFragmentBinding
 import com.example.graduationproject.helper.Constants
+import com.example.graduationproject.helper.Utils.getAccessToken
 import com.example.graduationproject.helper.listeners.TagClickListener
 import com.example.graduationproject.ui.activities.SplashActivity
 import com.example.graduationproject.viewmodels.SearchFragmentViewModel
@@ -52,7 +56,7 @@ class SearchFragment : Fragment() , TagClickListener{
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        accessToken = SplashActivity.getAccessToken(requireContext()).orEmpty()
+        accessToken = getAccessToken(requireContext()).orEmpty()
         linearLayoutManager = LinearLayoutManager(requireContext())
 //        bindingInstance.progressBar.visibility = View.VISIBLE
 
@@ -90,7 +94,7 @@ class SearchFragment : Fragment() , TagClickListener{
                             bindingInstance.arrowUpImageButton.visibility = View.GONE
                         }
                     }
-                    bindingInstance.searchProductsEditText.hint = "Search by name..."
+                    bindingInstance.searchProductsEditText.hint = getString(R.string.search_by_name_hint)
                 }
 
                 else if ( query.count() < 3) {
@@ -195,6 +199,20 @@ class SearchFragment : Fragment() , TagClickListener{
                                 it.submitList(products)
                                 adapter = it
 
+//                                products.addWeakCallback(null, object : PagedList.Callback() {
+//                                    override fun onChanged(position: Int, count: Int) {
+//                                        updateView(it.itemCount)
+//                                    }
+//
+//                                    override fun onInserted(position: Int, count: Int) {
+//
+//                                    }
+//
+//                                    override fun onRemoved(position: Int, count: Int) {
+//
+//                                    }
+//                                })
+
 //                                if (products.toList().isEmpty()) {
 //                                    bindingInstance.emptyResultLayout.visibility = View.VISIBLE
 //                                } else {
@@ -202,7 +220,7 @@ class SearchFragment : Fragment() , TagClickListener{
 //                                }
 
                                 lifecycleScope.launchWhenStarted {
-                                    Handler().postDelayed({
+                                    Handler(Looper.getMainLooper()).postDelayed({
                                         bindingInstance.progressBar.visibility = View.GONE
                                     },750)
                                 }
@@ -217,6 +235,15 @@ class SearchFragment : Fragment() , TagClickListener{
         }
 
     }
+
+//    private fun updateView(itemCount: Int) {
+//        if (itemCount > 0){
+//            Toast.makeText(requireContext(), "NOT EMPTY", Toast.LENGTH_SHORT).show()
+//        }
+//        else{
+//            Toast.makeText(requireContext(), "EMPTY", Toast.LENGTH_SHORT).show()
+//        }
+//    }
 
     private fun searchProductsByTag(tag: String) {
         bindingInstance.progressBar.visibility = View.VISIBLE
@@ -236,7 +263,7 @@ class SearchFragment : Fragment() , TagClickListener{
                                 it.submitList(products)
                                 adapter = it
                                 lifecycleScope.launchWhenStarted {
-                                    Handler().postDelayed({
+                                    Handler(Looper.getMainLooper()).postDelayed({
                                         bindingInstance.progressBar.visibility = View.GONE
                                     },750)
                                 }
@@ -256,7 +283,7 @@ class SearchFragment : Fragment() , TagClickListener{
         bindingInstance.progressBar.visibility = View.VISIBLE
         lifecycleScope.launchWhenStarted {
             bindingInstance.progressBar.visibility = View.VISIBLE
-            Handler().postDelayed({
+            Handler(Looper.getMainLooper()).postDelayed({
                 bindingInstance.progressBar.visibility = View.GONE
             }, Constants.TIME_OUT_MILLISECONDS)
         }

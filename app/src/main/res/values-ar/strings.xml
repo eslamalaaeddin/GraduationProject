@@ -90,5 +90,9 @@
     <string name="hamis">هاميس هشام محمود</string>
     <string name="israa">إسراء محمد صالح</string>
 
+    <string name="recommend_it">اقترحه!</string>
+    <string name="search_for_user">ابحث عن مستخدمين</string>
+    <string name="search_by_user_name">ابحث باسم المستخدم...</string>
+
 
 </resources>

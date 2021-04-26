@@ -10,6 +10,7 @@ import android.widget.Button
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.example.graduationproject.helper.Constants
+import com.example.graduationproject.helper.Utils.getAccessToken
 import com.example.graduationproject.ui.activities.SplashActivity
 
 private const val TAG = "TokenActivity"
@@ -22,7 +23,7 @@ class TokenActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_token)
         requestButton = findViewById(R.id.requestButton)
-        accessToken = SplashActivity.getAccessToken(this).orEmpty()
+        accessToken = getAccessToken(this).orEmpty()
 
         requestButton.setOnClickListener {
             showImageUploadingProgress()

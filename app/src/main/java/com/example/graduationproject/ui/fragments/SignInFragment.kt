@@ -2,6 +2,7 @@ package com.example.graduationproject.ui.fragments
 
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,8 +15,18 @@ import com.example.graduationproject.R
 import com.example.graduationproject.cache.CachingViewModel
 import com.example.graduationproject.databinding.FragmentInSignBinding
 import com.example.graduationproject.helper.Constants
+import com.example.graduationproject.helper.Utils.getEmailFromPrefs
+import com.example.graduationproject.helper.Utils.saveEmailInPrefs
+import com.example.graduationproject.helper.Utils.setAccessToken
+import com.example.graduationproject.helper.Utils.setAccessTokenExpirationTime
+import com.example.graduationproject.helper.Utils.setLoggedOut
+import com.example.graduationproject.helper.Utils.setRefreshToken
+import com.example.graduationproject.helper.Utils.setRefreshTokenExpirationTime
+import com.example.graduationproject.helper.Utils.setSignedIn
+import com.example.graduationproject.helper.Utils.setUserId
+import com.example.graduationproject.helper.Utils.setUserImageUrl
+import com.example.graduationproject.helper.Utils.setUserName
 import com.example.graduationproject.models.authentication.Login
-import com.example.graduationproject.ui.activities.SplashActivity
 import com.example.graduationproject.viewmodels.LoginViewModel
 import com.example.graduationproject.viewmodels.NavigationDrawerViewModel
 import kotlinx.android.synthetic.main.fragment_in_sign.*
@@ -46,7 +57,7 @@ class SignInFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        bindingInstance.mailEditText.setText(SplashActivity.getEmailFromPrefs(requireContext()))
+        bindingInstance.mailEditText.setText(getEmailFromPrefs(requireContext()))
 
         doNotHaveAccountTextView.setOnClickListener {
             val action = SignInFragmentDirections.actionSignInFragmentToSignUpFragment()
@@ -120,7 +131,7 @@ class SignInFragment : Fragment() {
 
     private fun dismissProgressAfterTimeOut() {
         lifecycleScope.launchWhenStarted {
-            Handler().postDelayed({
+            Handler(Looper.getMainLooper()).postDelayed({
                 bindingInstance.progressBar.visibility = View.GONE
                 bindingInstance.signInButton.isEnabled = true
             }, Constants.TIME_OUT_MILLISECONDS)
@@ -143,16 +154,16 @@ class SignInFragment : Fragment() {
         userImageUrl : String,
         mail: String
     ) {
-        SplashActivity.setAccessToken(requireContext(), accessToken)
-        SplashActivity.setRefreshToken(requireContext(), refreshToken)
-        SplashActivity.setAccessTokenExpirationTime(requireContext(), accessTokenExTime)
-        SplashActivity.setRefreshTokenExpirationTime(requireContext(), refreshTokenExTime)
-        SplashActivity.setUserId(requireContext(), userId)
-        SplashActivity.setUserName(requireContext(), userName)
-        SplashActivity.setUserImageUrl(requireContext(), userImageUrl)
-        SplashActivity.saveEmailInPrefs(requireContext(), mail)
-        SplashActivity.setSignedIn(requireContext(), true)
-        SplashActivity.setLoggedOut(requireContext(), false)
+        setAccessToken(requireContext(), accessToken)
+        setRefreshToken(requireContext(), refreshToken)
+        setAccessTokenExpirationTime(requireContext(), accessTokenExTime)
+        setRefreshTokenExpirationTime(requireContext(), refreshTokenExTime)
+        setUserId(requireContext(), userId)
+        setUserName(requireContext(), userName)
+        setUserImageUrl(requireContext(), userImageUrl)
+        saveEmailInPrefs(requireContext(), mail)
+        setSignedIn(requireContext(), true)
+        setLoggedOut(requireContext(), false)
     }
 
     private fun navigateToMainActivity() {

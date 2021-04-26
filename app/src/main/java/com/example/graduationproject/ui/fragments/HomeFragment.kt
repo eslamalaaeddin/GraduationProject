@@ -2,6 +2,7 @@ package com.example.graduationproject.ui.fragments
 
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.*
 import android.widget.AbsListView
@@ -17,6 +18,7 @@ import com.example.graduationproject.cache.CachingViewModel
 import com.example.graduationproject.databinding.FragmentHomeBinding
 import com.example.graduationproject.helper.Constants
 import com.example.graduationproject.helper.Utils
+import com.example.graduationproject.helper.Utils.getAccessToken
 import com.example.graduationproject.helper.listeners.RecommendedProductClickListener
 import com.example.graduationproject.models.products.Product
 import com.example.graduationproject.models.products.VisitedProduct
@@ -53,7 +55,7 @@ class HomeFragment : Fragment(), RecommendedProductClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        accessToken = SplashActivity.getAccessToken(requireContext()).orEmpty()
+        accessToken = getAccessToken(requireContext()).orEmpty()
         gridLayoutManager = GridLayoutManager(context, 2)
         fragmentBinding.progressBar.visibility = View.VISIBLE
 
@@ -87,7 +89,7 @@ class HomeFragment : Fragment(), RecommendedProductClickListener {
                                 it.submitList(recProducts)
                                 adapter = it
                                 lifecycleScope.launchWhenStarted {
-                                    Handler().postDelayed({
+                                    Handler(Looper.getMainLooper()).postDelayed({
                                         fragmentBinding.progressBar.visibility = View.GONE
                                     }, 750)
                                 }
@@ -192,7 +194,7 @@ class HomeFragment : Fragment(), RecommendedProductClickListener {
                                 it.submitList(recProducts)
                                 adapter = it
                                 lifecycleScope.launchWhenStarted {
-                                    Handler().postDelayed({
+                                    Handler(Looper.getMainLooper()).postDelayed({
                                         fragmentBinding.progressBar.visibility = View.GONE
                                     }, 750)
                                 }
@@ -211,7 +213,7 @@ class HomeFragment : Fragment(), RecommendedProductClickListener {
     private fun dismissProgressAfterTimeOut() {
         lifecycleScope.launchWhenStarted {
             fragmentBinding.progressBar.visibility = View.VISIBLE
-            Handler().postDelayed({
+            Handler(Looper.getMainLooper()).postDelayed({
                 fragmentBinding.progressBar.visibility = View.GONE
             }, Constants.TIME_OUT_MILLISECONDS)
         }

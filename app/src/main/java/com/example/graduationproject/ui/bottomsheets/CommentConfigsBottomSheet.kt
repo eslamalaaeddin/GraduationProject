@@ -3,6 +3,7 @@ package com.example.graduationproject.ui.bottomsheets
 import android.app.Dialog
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.graduationproject.R
 import com.example.graduationproject.databinding.CommentConfigurationsBottomSheetBinding
 import com.example.graduationproject.helper.Constants
+import com.example.graduationproject.helper.Utils.getAccessToken
 import com.example.graduationproject.helper.listeners.CommentListener
 import com.example.graduationproject.models.comments.ProductComment
 import com.example.graduationproject.models.products.Comment
@@ -49,7 +51,7 @@ class CommentConfigsBottomSheet(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        accessToken = SplashActivity.getAccessToken(requireContext()).orEmpty()
+        accessToken = getAccessToken(requireContext()).orEmpty()
 
         bindingInstance.updateCommentLayout.setOnClickListener {
             //get current comment
@@ -127,7 +129,7 @@ class CommentConfigsBottomSheet(
         deleteButton.setOnClickListener {
             lifecycleScope.launchWhenStarted {
                 progressBar.visibility = View.VISIBLE
-                Handler().postDelayed({
+                Handler(Looper.getMainLooper()).postDelayed({
                     progressBar.visibility = View.GONE
                 }, Constants.TIME_OUT_MILLISECONDS)
             }

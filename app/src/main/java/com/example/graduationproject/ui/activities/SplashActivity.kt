@@ -1,33 +1,21 @@
 package com.example.graduationproject.ui.activities
 
-import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.view.Window
 import android.view.WindowManager
+import androidx.appcompat.app.AppCompatActivity
 import com.example.graduationproject.R
-import com.example.graduationproject.helper.Constants.ACCESS_TOKEN
-import com.example.graduationproject.helper.Constants.ACCESS_TOKEN_EX_TIME
-import com.example.graduationproject.helper.Constants.APP_PREFS
-import com.example.graduationproject.helper.Constants.LOGGED_OUT
-import com.example.graduationproject.helper.Constants.REFRESH_TOKEN
-import com.example.graduationproject.helper.Constants.REFRESH_TOKEN_EX_TIME
-import com.example.graduationproject.helper.Constants.SEARCH_METHOD
-import com.example.graduationproject.helper.Constants.SIGNED_UP_VERIFIED_SIGNED_IN
-import com.example.graduationproject.helper.Constants.USER_EMAIL
-import com.example.graduationproject.helper.Constants.USER_ID
-import com.example.graduationproject.helper.Constants.USER_IMAGE_URL
-import com.example.graduationproject.helper.Constants.USER_NAME
-import com.example.graduationproject.helper.Constants.WELCOMED
-import com.example.graduationproject.viewmodels.SplashActivityViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import com.example.graduationproject.helper.Utils.getLoggedOut
+import com.example.graduationproject.helper.Utils.getSignedIn
+import com.example.graduationproject.helper.Utils.getWelcomed
+import com.example.graduationproject.helper.Utils.setWelcomed
 
 private const val TAG = "SplashActivity"
 
 class SplashActivity : AppCompatActivity() {
-    private val splashActivityViewModel by viewModel<SplashActivityViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         makeFullScreen()
@@ -35,10 +23,10 @@ class SplashActivity : AppCompatActivity() {
 
         val signedInORSignedUpVerified = getSignedIn(this)
         val welcomed = getWelcomed(this)
-        val loggedOut  = getLoggedOut(this)
+        val loggedOut = getLoggedOut(this)
 
 
-        Handler().postDelayed({
+        Handler(Looper.getMainLooper()).postDelayed({
             when {
                 loggedOut -> {
 //                    Toast.makeText(this, "Logged out", Toast.LENGTH_SHORT).show()
@@ -82,156 +70,5 @@ class SplashActivity : AppCompatActivity() {
 
         supportActionBar?.hide()
     }
-
-    companion object {
-        fun getSignedIn(context: Context): Boolean {
-            val prefs = context.getSharedPreferences(APP_PREFS, 0)
-            return prefs.getBoolean(SIGNED_UP_VERIFIED_SIGNED_IN, false)
-        }
-
-        fun getWelcomed(context: Context): Boolean {
-            val prefs = context.getSharedPreferences(APP_PREFS, 0)
-            return prefs.getBoolean(WELCOMED, false)
-        }
-
-        fun setSignedIn(context: Context, state: Boolean) {
-            context.getSharedPreferences(APP_PREFS, 0)
-                .edit()
-                .putBoolean(SIGNED_UP_VERIFIED_SIGNED_IN, state)
-                .apply()
-        }
-
-        fun setLoggedOut(context: Context, state: Boolean) {
-            context.getSharedPreferences(APP_PREFS, 0)
-                .edit()
-                .putBoolean(LOGGED_OUT, state)
-                .apply()
-        }
-
-        fun getLoggedOut(context: Context): Boolean {
-            val prefs = context.getSharedPreferences(APP_PREFS, 0)
-            return prefs.getBoolean(LOGGED_OUT, false)
-        }
-
-        fun setWelcomed(context: Context, state: Boolean) {
-            context.getSharedPreferences(APP_PREFS, 0)
-                .edit()
-                .putBoolean(WELCOMED, state)
-                .apply()
-        }
-
-        fun setAccessToken(context: Context, accessToken: String) {
-            context.getSharedPreferences(APP_PREFS, 0)
-                .edit()
-                .putString(ACCESS_TOKEN, accessToken)
-                .apply()
-        }
-
-        fun setUserId(context: Context, userId: Long) {
-            context.getSharedPreferences(APP_PREFS, 0)
-                .edit()
-                .putLong(USER_ID, userId)
-                .apply()
-        }
-
-        fun setUserName(context: Context, userName: String) {
-            context.getSharedPreferences(APP_PREFS, 0)
-                .edit()
-                .putString(USER_NAME, userName)
-                .apply()
-        }
-
-        fun setUserImageUrl(context: Context, userImageUrl: String) {
-            context.getSharedPreferences(APP_PREFS, 0)
-                .edit()
-                .putString(USER_IMAGE_URL, userImageUrl)
-                .apply()
-        }
-
-        fun getUserId(context: Context): Long {
-            val prefs = context.getSharedPreferences(APP_PREFS, 0)
-            return prefs.getLong(USER_ID, 0)
-        }
-
-        fun setSearchMethod(context: Context, searchMethod: String) {
-            context.getSharedPreferences(APP_PREFS, 0)
-                .edit()
-                .putString(SEARCH_METHOD, searchMethod)
-                .apply()
-        }
-
-        fun getSearchMethod(context: Context): String? {
-            val prefs = context.getSharedPreferences(APP_PREFS, 0)
-            return prefs.getString(SEARCH_METHOD,"name" )
-        }
-
-        fun getUserName(context: Context): String? {
-            val prefs = context.getSharedPreferences(APP_PREFS, 0)
-            return prefs.getString(USER_NAME,"" )
-        }
-
-        fun getUserImageUrl(context: Context): String? {
-            val prefs = context.getSharedPreferences(APP_PREFS, 0)
-            return prefs.getString(USER_IMAGE_URL,"user.png" )
-        }
-
-        fun saveEmailInPrefs(context: Context, userEmail: String) {
-            context.getSharedPreferences(APP_PREFS, 0)
-                .edit()
-                .putString(USER_EMAIL, userEmail)
-                .apply()
-        }
-
-        fun getEmailFromPrefs(context: Context): String? {
-            val prefs = context.getSharedPreferences(APP_PREFS, 0)
-            return prefs.getString(USER_EMAIL, "")
-        }
-
-        fun setAccessTokenExpirationTime(context: Context, accessTokenExTime: String) {
-            context.getSharedPreferences(APP_PREFS, 0)
-                .edit()
-                .putString(ACCESS_TOKEN_EX_TIME, accessTokenExTime)
-                .apply()
-        }
-
-        fun getAccessToken(context: Context): String? {
-            val prefs = context.getSharedPreferences(APP_PREFS, 0)
-            return prefs.getString(ACCESS_TOKEN, "")
-        }
-
-        fun getAccessTokenExpirationTime(context: Context): String? {
-            val prefs = context.getSharedPreferences(APP_PREFS, 0)
-            return prefs.getString(ACCESS_TOKEN_EX_TIME, "")
-        }
-
-        fun setRefreshToken(context: Context, refreshToken: String) {
-            context.getSharedPreferences(APP_PREFS, 0)
-                .edit()
-                .putString(REFRESH_TOKEN, refreshToken)
-                .apply()
-        }
-
-        fun setRefreshTokenExpirationTime(context: Context, refreshTokenExTime: String) {
-            context.getSharedPreferences(APP_PREFS, 0)
-                .edit()
-                .putString(REFRESH_TOKEN_EX_TIME, refreshTokenExTime)
-                .apply()
-        }
-
-        fun getRefreshToken(context: Context): String? {
-            val prefs = context.getSharedPreferences(APP_PREFS, 0)
-            return prefs.getString(REFRESH_TOKEN, "")
-        }
-
-        fun getRefreshTokenExpirationTime(context: Context): String? {
-            val prefs = context.getSharedPreferences(APP_PREFS, 0)
-            return prefs.getString(REFRESH_TOKEN_EX_TIME, "")
-        }
-
-
-    }
-
-
-
 
 }

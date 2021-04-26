@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -19,13 +20,21 @@ import com.example.graduationproject.adapters.RecommendedPlacesAdapter
 import com.example.graduationproject.cache.CachingViewModel
 import com.example.graduationproject.databinding.ActivityProductBinding
 import com.example.graduationproject.helper.Constants
+import com.example.graduationproject.helper.Utils
+import com.example.graduationproject.helper.Utils.getAccessToken
+import com.example.graduationproject.helper.Utils.getUserId
+import com.example.graduationproject.helper.Utils.getUserImageUrl
+import com.example.graduationproject.helper.Utils.getUserName
 import com.example.graduationproject.models.products.FavoriteProduct
 import com.example.graduationproject.models.products.Product
 import com.example.graduationproject.models.products.ProductImage
 import com.example.graduationproject.models.products.VisitedProduct
 import com.example.graduationproject.models.rating.Rate
+import com.example.graduationproject.notification.NotificationsHandler
 import com.example.graduationproject.ui.bottomsheets.CommentsBottomSheet
 import com.example.graduationproject.viewmodels.ProductActivityViewModel
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.android.synthetic.main.activity_product.*
 import kotlinx.android.synthetic.main.fragment_up_sign.*
 import kotlinx.android.synthetic.main.home_product_item.view.*
@@ -58,10 +67,10 @@ class ProductActivity : AppCompatActivity() {
     private var recProductsAdapter: RecommendedPlacesAdapter? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        accessToken = SplashActivity.getAccessToken(this).orEmpty()
-        userId = SplashActivity.getUserId(this)
-        userName = SplashActivity.getUserName(this).orEmpty()
-        userImageUrl = SplashActivity.getUserImageUrl(this).orEmpty()
+        accessToken = getAccessToken(this).orEmpty()
+        userId = getUserId(this)
+        userName = getUserName(this).orEmpty()
+        userImageUrl = getUserImageUrl(this).orEmpty()
 
         placeDetailsBinding = DataBindingUtil.setContentView(this, R.layout.activity_product)
 
@@ -75,6 +84,8 @@ class ProductActivity : AppCompatActivity() {
             LinearLayoutManager.HORIZONTAL,
             false
         )
+
+        initRecommendationButton()
 
 
         //OFFLINE
@@ -197,6 +208,33 @@ class ProductActivity : AppCompatActivity() {
 
     }
 
+    private fun initRecommendationButton() {
+        placeDetailsBinding.recommendButton.setOnClickListener {
+            //Open recommend users bottom sheet
+            FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val token = task.result?.toString()
+                    val handler = NotificationsHandler(
+                        notifierId = getUserId(this).toString(),
+                        notifierName = getUserName(this),
+                        notifierImageUrl = "${Constants.BASE_USER_IMAGE_URL}${getUserImageUrl(this)}",
+                        notifiedId = "51749856081962",
+                        notifiedTokens = mutableListOf(token.orEmpty()),
+                        movieId = productId,
+                        movieName = currentProduct?.name
+                    )
+                    handler.fireServerSideNotification()
+                    Log.i(TAG, "333333 onCreate: $token")
+                }
+                if (!task.isSuccessful) {
+                    Log.w(TAG, "getInstanceId failed", task.exception)
+                    return@OnCompleteListener
+                }
+
+            })
+        }
+    }
+
     private fun getRecommendedProductsByProduct() {
         try {
             lifecycleScope.launch {
@@ -217,7 +255,7 @@ class ProductActivity : AppCompatActivity() {
                                 it.submitList(recProducts)
                                 adapter = it
                                 lifecycleScope.launchWhenStarted {
-                                    Handler().postDelayed({
+                                    Handler(Looper.getMainLooper()).postDelayed({
                                         placeDetailsBinding.progressBar.visibility = View.GONE
                                     },750)
                                 }
@@ -490,7 +528,7 @@ class ProductActivity : AppCompatActivity() {
         lifecycleScope.launchWhenStarted {
             placeDetailsBinding.progressBar.visibility = View.VISIBLE
 //            placeDetailsBinding.addCommentFab.isEnabled = false
-            Handler().postDelayed({
+            Handler(Looper.getMainLooper()).postDelayed({
                 placeDetailsBinding.progressBar.visibility = View.GONE
 //                placeDetailsBinding.addCommentFab.isEnabled = true
             }, Constants.TIME_OUT_MILLISECONDS)
@@ -503,7 +541,7 @@ class ProductActivity : AppCompatActivity() {
             placeDetailsBinding.progressBar.visibility = View.VISIBLE
             placeDetailsBinding.addRemoveFavoriteFrameLayout.isEnabled = false
             placeDetailsBinding.addToFavoriteImageView.isEnabled = false
-            Handler().postDelayed({
+            Handler(Looper.getMainLooper()).postDelayed({
                 placeDetailsBinding.progressBar.visibility = View.GONE
                 placeDetailsBinding.addRemoveFavoriteFrameLayout.isEnabled = true
                 placeDetailsBinding.addToFavoriteImageView.isEnabled = true

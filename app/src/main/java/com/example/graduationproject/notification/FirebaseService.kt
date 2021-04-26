@@ -41,19 +41,25 @@ class FirebaseService : FirebaseMessagingService() {
         Log.i(TAG, "333333 onMessageReceived: $notifierImageUrl")
 
 
-        createClientSideNotification(
-            notifierName,
-            notifierId,
-            notifierImageUrl,
-            notifiedId = notifiedId
-        )
+        movieId?.toLong()?.let {
+            createClientSideNotification(
+                notifierName,
+                notifierId,
+                notifierImageUrl,
+                notifiedId = notifiedId,
+                movieId = it,
+                movieName = movieName
+            )
+        }
     }
 
     private fun createClientSideNotification(
         notifierName: String?,
         notifierId: String?,
         notifierImageUrl: String?,
-        notifiedId: String?
+        notifiedId: String?,
+        movieId: Long,
+        movieName: String?
     ){
 
         CoroutineScope(Dispatchers.IO).launch {
@@ -74,7 +80,7 @@ class FirebaseService : FirebaseMessagingService() {
                             imageUrl = notifierImageUrl,
                             imageBitmap = bitmap
                         )
-                        BaseApplication.fireClientSideNotification(notifier)
+                        BaseApplication.fireClientSideNotification(notifier, movieId, movieName)
                     }
                 })
         }

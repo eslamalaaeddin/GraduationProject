@@ -12,6 +12,9 @@ import androidx.navigation.NavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.graduationproject.R
 import com.example.graduationproject.databinding.ActivityMainBinding
+import com.example.graduationproject.helper.Utils.setAccessToken
+import com.example.graduationproject.helper.Utils.setLoggedOut
+import com.example.graduationproject.helper.Utils.setRefreshToken
 import com.example.graduationproject.ui.fragments.UserInfoFragment
 import com.example.graduationproject.ui.fragments.FavoritesFragment
 import com.example.graduationproject.ui.fragments.HomeFragment
@@ -24,16 +27,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         bindingInstance = DataBindingUtil.setContentView(this, R.layout.activity_main)
-//        setContentView(R.layout.activity_main)
-
-//        val host: NavHostFragment = supportFragmentManager
-//            .findFragmentById(R.id.my_nav_host_fragment) as NavHostFragment? ?: return
-//
-//        val navController = host.navController
-//
-//        setupBottomNavMenu(navController = navController)
-
-        //check if it is not there add it else do not do anything
 
         bindingInstance.testingButton.setOnClickListener {
             startActivity(Intent(this, TestingActivity::class.java))
@@ -71,35 +64,15 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun showLogoutDialog() {
-        val dialog = Dialog(this)
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setCancelable(true)
-        dialog.setContentView(R.layout.logout_dialog)
-
-        val cancelButton = dialog.findViewById(R.id.cancelLogoutButton) as Button
-        val logoutButton = dialog.findViewById(R.id.confirmLogoutButton) as Button
-        cancelButton.setOnClickListener {
-            dialog.dismiss()
-        }
-        logoutButton.setOnClickListener {
-            updateStateAndLogOut()
-        }
-        dialog.show()
-
-    }
 
     private fun updateStateAndLogOut() {
-        SplashActivity.setLoggedOut(this, true)
-        SplashActivity.setAccessToken(this, "")
-        SplashActivity.setRefreshToken(this, "")
+        setLoggedOut(this, true)
+        setAccessToken(this, "")
+        setRefreshToken(this, "")
         startActivity(Intent(this, RegisterActivity::class.java))
         finish()
     }
 
-    private fun setupBottomNavMenu(navController: NavController) {
-        bottomNavigationView.setupWithNavController(navController)
-    }
 
     private fun navigateToHomeFragment() {
         val homeFragment = HomeFragment()

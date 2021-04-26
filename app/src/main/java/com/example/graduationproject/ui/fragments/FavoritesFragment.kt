@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.*
 import android.widget.AbsListView
@@ -25,6 +26,7 @@ import com.example.graduationproject.databinding.FragmentFavoritesBinding
 import com.example.graduationproject.helper.Constants.FAVORITE_PRODUCT_REQUEST_CODE
 import com.example.graduationproject.helper.Constants.TIME_OUT_MILLISECONDS
 import com.example.graduationproject.helper.Utils
+import com.example.graduationproject.helper.Utils.getAccessToken
 import com.example.graduationproject.helper.listeners.FavoriteProductClickListener
 import com.example.graduationproject.models.products.FavoriteProduct
 import com.example.graduationproject.models.products.VisitedProduct
@@ -69,7 +71,7 @@ class FavoritesFragment : Fragment(), FavoriteProductClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        accessToken = SplashActivity.getAccessToken(requireContext()).orEmpty()
+        accessToken = getAccessToken(requireContext()).orEmpty()
 
         if (Utils.getConnectionType(requireContext()) == 0) {
             Log.i(TAG, "00000 onViewCreated: OFFLINE")
@@ -379,7 +381,7 @@ class FavoritesFragment : Fragment(), FavoriteProductClickListener {
 
     private fun dismissProgressAfterTimeOut() {
         lifecycleScope.launchWhenStarted {
-            Handler().postDelayed({
+            Handler(Looper.getMainLooper()).postDelayed({
                 fragmentFavoritesBinding.progressBar.visibility = View.GONE
             }, TIME_OUT_MILLISECONDS)
 

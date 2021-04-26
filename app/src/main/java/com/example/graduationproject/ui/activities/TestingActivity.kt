@@ -9,10 +9,9 @@ import com.example.graduationproject.R
 import com.example.graduationproject.cache.CachingViewModel
 import com.example.graduationproject.databinding.ActivityTestingBinding
 import com.example.graduationproject.helper.Constants
-import com.example.graduationproject.helper.LocaleHelper
+import com.example.graduationproject.helper.Utils.getAccessToken
 import com.example.graduationproject.notification.NotificationsHandler
 import com.google.android.gms.tasks.OnCompleteListener
-import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.messaging.FirebaseMessaging
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -28,7 +27,7 @@ class TestingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_testing)
-        accessToken = SplashActivity.getAccessToken(this).orEmpty()
+        accessToken = getAccessToken(this).orEmpty()
 
         binding.button.setOnClickListener {
             handler.fireServerSideNotification()
@@ -47,7 +46,7 @@ class TestingActivity : AppCompatActivity() {
                         notifierName = "Islam AlaaEddin",
                         notifierImageUrl = "${Constants.BASE_USER_IMAGE_URL}1618983959-54912808635191.jpg",
                         notifiedId = "51749856081962",
-                        notifiedToken = token
+                        notifiedTokens = mutableListOf(token.orEmpty())
                     )
                     Log.i(TAG, "333333 onCreate: $token")
                 }

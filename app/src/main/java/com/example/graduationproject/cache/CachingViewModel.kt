@@ -41,21 +41,6 @@ class CachingViewModel(private val cachingRepository: CachingRepository) : ViewM
     private suspend fun deleteFromFavorites(favoriteProduct: FavoriteProduct) =
         cachingRepository.deleteFromFavorites(favoriteProduct)
 
-//    //PRODUCTS DAO
-//    suspend fun getProductsFromDb(): LiveData<MutableList<Product>>? {
-//        if (productPages != -1) {
-//            productsLiveData = liveData {
-//                Log.i(TAG, "FFF BeforePage: $productPages")
-//                val data = cachingRepository.getProductsFromDb(productPages++)
-//                Log.i(TAG, "FFF AfterPage: $productPages")
-//                if (data.isNotEmpty()) {
-//                    emit(data)
-//                }
-//            }
-//            return productsLiveData
-//        }
-//        return null
-//    }
 
     suspend fun getProductFromDb(productId: Long) : LiveData<Product?> = liveData {
         val data = cachingRepository.getProduct(productId)
@@ -92,8 +77,6 @@ class CachingViewModel(private val cachingRepository: CachingRepository) : ViewM
         }
 
     }
-
-//    suspend fun getProductsFromDb(): List<Product> = cachingRepository.getProductsFromDb()
 
 
 }

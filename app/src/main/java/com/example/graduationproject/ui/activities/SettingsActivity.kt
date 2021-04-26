@@ -10,6 +10,7 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.provider.MediaStore
 import android.util.Log
 import android.view.Gravity
@@ -35,6 +36,8 @@ import com.example.graduationproject.helper.Constants
 import com.example.graduationproject.helper.Constants.ACTION_IMAGE_UPLOADED_FAIL
 import com.example.graduationproject.helper.Constants.ACTION_IMAGE_UPLOADED_SUCCESS
 import com.example.graduationproject.helper.Constants.ACTION_IMAGE_UPLOADED_SUCCESS_NO_UI
+import com.example.graduationproject.helper.Utils.getAccessToken
+import com.example.graduationproject.helper.Utils.setUserName
 import com.example.graduationproject.helper.fileutils.FileUtils
 import com.example.graduationproject.models.user.UserName
 import com.example.graduationproject.models.user.UserPassword
@@ -89,7 +92,7 @@ class SettingsActivity : AppCompatActivity() {
 //        bounds.duration = 2000
 //        window.sharedElementEnterTransition = bounds
 
-        accessToken = SplashActivity.getAccessToken(this).toString()
+        accessToken = getAccessToken(this).toString()
 
         if (savedInstanceState == null){
             initUserInfo()
@@ -344,7 +347,7 @@ class SettingsActivity : AppCompatActivity() {
                 )
                 toast.setGravity(Gravity.TOP, 0, 96)
                 toast.show()
-                SplashActivity.setUserName(this@SettingsActivity, "$firstName $lastName")
+                setUserName(this@SettingsActivity, "$firstName $lastName")
                 navDrawerViewModel.firstName = firstName
                 navDrawerViewModel.lastName = lastName
                 userNameUpdated = true
@@ -579,7 +582,7 @@ class SettingsActivity : AppCompatActivity() {
         lifecycleScope.launchWhenStarted {
 //            bindingInstance.progressBar.visibility = View.VISIBLE
             //  bindingInstance.updateInfoButton.isEnabled = false
-            Handler().postDelayed({
+            Handler(Looper.getMainLooper()).postDelayed({
                 bindingInstance.progressBar.visibility = View.GONE
                 // bindingInstance.updateInfoButton.isEnabled = true
             }, Constants.TIME_OUT_MILLISECONDS)

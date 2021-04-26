@@ -17,6 +17,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.graduationproject.R
 import com.example.graduationproject.databinding.SettingBottomSheetBinding
 import com.example.graduationproject.helper.Constants.BASE_USER_IMAGE_URL
+import com.example.graduationproject.helper.Utils.getAccessToken
 import com.example.graduationproject.models.user.User
 import com.example.graduationproject.models.user.UserName
 import com.example.graduationproject.models.user.UserPassword
@@ -53,7 +54,7 @@ class SettingsBottomSheet(private val user: User): BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        accessToken = SplashActivity.getAccessToken(requireContext()).toString()
+        accessToken = getAccessToken(requireContext()).toString()
        // updateUserUi()
 
         bindingInstance.upButtonView.setOnClickListener {dismiss()}
