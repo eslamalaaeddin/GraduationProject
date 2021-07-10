@@ -21,7 +21,7 @@ class CommentsAdapter(
     private val commentListener: CommentListener
     ) : RecyclerView.Adapter< CommentsAdapter.CommentsHolder>() {
 
-    inner class CommentsHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener, View.OnLongClickListener {
+    inner class CommentsHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val personNameTextView : TextView = itemView.findViewById(R.id.comment_person_name_text_view)
         private val personImage: CircleImageView =  itemView.findViewById(R.id.comment_person_image_view)
         private val placeRatingBar : RatingBar = itemView.findViewById(R.id.comment_place_rating_bar)
@@ -35,51 +35,30 @@ class CommentsAdapter(
                     commentListener.onMoreOnCommentClicked(comment, adapterPosition)
                 }
             }
-            itemView.setOnClickListener(this)
-            itemView.setOnLongClickListener(this)
         }
 
 
         fun bind(comment: Comment) {
+            //User data
             personNameTextView.text = comment.userName
                 val userImageUrl = "$BASE_USER_IMAGE_URL${comment.userImage}"
                 if (userImageUrl.isNotEmpty()){
                     Glide.with(itemView.context)
                         .load(userImageUrl)
-//                        .skipMemoryCache(true)
-//                        .diskCacheStrategy(DiskCacheStrategy.NONE)
                         .into(personImage)
-
-//                    Picasso.get().load(userImageUrl).into(personImage)
                 }
                 else{
                     personImage.setImageResource(R.drawable.avatar)
                 }
             Log.i(TAG, "DDDD bind: $comment")
             //Rate
-//            if (comment.rate == null){
-//                placeRatingBar.visibility = View.GONE
-//            }
-//            else{
                 placeRatingBar.rating = comment.rate ?: 0F
-//            }
             //CommentContent
             commentTextView.text = comment.commentContent
-            //1618612359-56681229741093.jpg
+            //To show the 3 dots to each user independently
             moreOnCommentButton.visibility = if (userId == comment.userId) View.VISIBLE else View.GONE
 
         }
-
-        override fun onClick(item: View?) {
-            //Temp code
-//            Toast.makeText(itemView.context, "$userId \n ${comments[adapterPosition].userId}", Toast.LENGTH_SHORT).show()
-
-        }
-
-        override fun onLongClick(item: View?): Boolean {
-            return true
-        }
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommentsHolder {

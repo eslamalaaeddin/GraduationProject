@@ -34,6 +34,7 @@ class CommentConfigsBottomSheet(
     private lateinit var bindingInstance: CommentConfigurationsBottomSheetBinding
     private val placeActivityViewModel by viewModel<ProductActivityViewModel>()
     private lateinit var accessToken: String
+    private lateinit var loadingHandler: Handler
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -52,7 +53,7 @@ class CommentConfigsBottomSheet(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         accessToken = getAccessToken(requireContext()).orEmpty()
-
+        loadingHandler = Handler(Looper.getMainLooper())
         bindingInstance.updateCommentLayout.setOnClickListener {
             //get current comment
             //show it in a dialog box
@@ -129,7 +130,7 @@ class CommentConfigsBottomSheet(
         deleteButton.setOnClickListener {
             lifecycleScope.launchWhenStarted {
                 progressBar.visibility = View.VISIBLE
-                Handler(Looper.getMainLooper()).postDelayed({
+                loadingHandler.postDelayed({
                     progressBar.visibility = View.GONE
                 }, Constants.TIME_OUT_MILLISECONDS)
             }
@@ -159,6 +160,11 @@ class CommentConfigsBottomSheet(
         }
         dialog.show()
 
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        loadingHandler.removeCallbacksAndMessages(null)
     }
 
 

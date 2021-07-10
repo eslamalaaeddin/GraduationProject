@@ -22,18 +22,24 @@ class HomeFragmentViewModel(
     var recommendedProductsPagedList: LiveData<PagedList<Product>>? = null
 
     suspend fun getRecommendedProductsPagedList(accessToken: String): LiveData<PagedList<Product>>? {
+        //Constructing the Paging source
         val recommendedProductsSourceFactory =
-            RecommendedProductsSourceFactory(accessToken, productsRepository, cachingRepository, networkState = BaseApplication.getConnectionType())
+            RecommendedProductsSourceFactory(accessToken,
+                    productsRepository, cachingRepository, networkState = BaseApplication.getConnectionType())
+        //This makes the product source used as live data.
         recommendedProductsSourceLiveData =
             recommendedProductsSourceFactory.recommendedProductsSourceLiveData
 
+        //Configures how a PagedList loads content from its PagingSource.
         val config: PagedList.Config = PagedList.Config.Builder()
-            .setEnablePlaceholders(true) //no items
-            .setInitialLoadSizeHint(10)
-            .setPageSize(2)
+            .setEnablePlaceholders(true)
+            .setInitialLoadSizeHint(10)//Number of items loaded initially.
+            .setPageSize(2)//Number of items loaded at a time.
             .setPrefetchDistance(4)
             .build()
 
+        //<Key, Value> --> Key is the page number, Value is the base type needed.
+        //It creates a live data of the paged list --> LiveData<PagedList<Product>>
         recommendedProductsPagedList =
             LivePagedListBuilder<Int, Product>(recommendedProductsSourceFactory, config)
                 .build()

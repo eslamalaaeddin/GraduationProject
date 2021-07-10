@@ -32,6 +32,7 @@ class UpdateCommentBottomSheet(
     private lateinit var bindingInstance: UpdateCommentBottomSheetBinding
     private val placeActivityViewModel by viewModel<ProductActivityViewModel>()
     private lateinit var accessToken: String
+    private lateinit var loadingHandler: Handler
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,6 +56,7 @@ class UpdateCommentBottomSheet(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         accessToken = getAccessToken(requireContext()).orEmpty()
+        loadingHandler = Handler(Looper.getMainLooper())
 
         bindingInstance.commentEditText.setText(comment.commentContent.orEmpty())
         bindingInstance.commentEditText.setSelection(bindingInstance.commentEditText.text.length)
@@ -98,11 +100,16 @@ class UpdateCommentBottomSheet(
 
     private fun dismissProgressAfterTimeOut() {
         lifecycleScope.launchWhenStarted {
-            Handler(Looper.getMainLooper()).postDelayed({
+            loadingHandler.postDelayed({
                 bindingInstance.progressBar.visibility = View.GONE
             }, Constants.TIME_OUT_MILLISECONDS)
 
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        loadingHandler.removeCallbacksAndMessages(null)
     }
 
 }

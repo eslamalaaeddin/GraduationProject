@@ -20,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/detail_place_image_view"
-            android:visibility="invisible"
+            android:visibility="visible"
             android:scaleType="fitXY"/>
 
     </FrameLayout>

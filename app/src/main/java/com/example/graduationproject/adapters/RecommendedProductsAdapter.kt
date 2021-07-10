@@ -15,6 +15,7 @@ import com.example.graduationproject.helper.Utils
 import com.example.graduationproject.helper.listeners.RecommendedProductClickListener
 import com.example.graduationproject.models.products.Product
 import com.example.graduationproject.ui.activities.ProductActivity
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.home_product_item.view.*
 
 private const val TAG = "RecommendedPlacesAdapte"
@@ -48,7 +49,7 @@ class RecommendedPlacesAdapter(
 //                val placeImageUrl = "$BASE_IMAGE_URL${product.id}/${product.image}"
                 val placeImageUrl = "$BASE_PRODUCT_IMAGE_URL/${product.image}"
                 Log.i(TAG, "bind: $placeImageUrl")
-//                Picasso.get().load(product.image).into(itemView.place_image_view)
+                Picasso.get().load(product.image).into(itemView.place_image_view)
                 if (product.favorite == 1){
                     itemView.add_to_favorite_image_view.setImageResource(R.drawable.ic_heart_filled)
                 }

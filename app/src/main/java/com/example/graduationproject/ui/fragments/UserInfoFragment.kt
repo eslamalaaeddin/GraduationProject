@@ -61,6 +61,7 @@ class UserInfoFragment : Fragment() {
     private var userName: String = ""
     private var userEmail: String = ""
     private var userImageUrl: String = ""
+    private lateinit var loadingHandler: Handler
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -79,6 +80,8 @@ class UserInfoFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         accessToken = getAccessToken(requireContext()).toString()
         userId = getUserId(requireContext())
+
+        loadingHandler = Handler(Looper.getMainLooper())
 
         bindingInstance.settingsLayout.setOnClickListener {
             navigateToSettingsActivity()
@@ -314,10 +317,15 @@ class UserInfoFragment : Fragment() {
 
     private fun dismissProgressAfterTimeOut() {
         lifecycleScope.launchWhenStarted {
-            Handler(Looper.getMainLooper()).postDelayed({
+            loadingHandler.postDelayed({
                 bindingInstance.progressBar.visibility = View.GONE
             }, Constants.TIME_OUT_MILLISECONDS)
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        loadingHandler.removeCallbacksAndMessages(null)
     }
 
 }

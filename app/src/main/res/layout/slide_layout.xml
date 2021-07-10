@@ -8,28 +8,32 @@
     android:orientation="vertical">
 
     <ImageView
-        android:layout_width="128dp"
-        android:layout_height="128dp"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
         android:id="@+id/logo_image_view"
-        android:src="@drawable/ic_splash_logo"/>
+        />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/heading_text_view"
         tools:text="Travel App"
-        android:textSize="36sp"
+        android:textSize="24sp"
         android:gravity="center"
         android:textColor="@color/black"
-        android:layout_margin="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
         />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/heading_description_text_view"
-        tools:text="doaj;fdoasfjaodfj;ofjsdfnd;salfjad;fjdl;kafjdsalkfjlsdaflkdsj;flsdajklflkdasfjdkslafdsaf;lsadfjksd;flsdafjl;kasdl;kfsd;klfajlksdfjsdfjsdkl;fa;ldjflkdsjflsdkafsjda;flkdsjaflk;sadjfalksdjfasdlkfjlkdsjflsadjf;sadfdslkf;lasdfjklds;flkdslkfsadljkf;a;kdsl;l"
+        tools:text="Our application recommends based on users history of interests, and collected feedback from movies that they previously interacted with."
         android:textSize="16sp"
+        android:gravity="center"
         android:textColor="@color/black"
         android:layout_margin="16dp"
         />

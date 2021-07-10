@@ -63,6 +63,7 @@ class ProductActivity : AppCompatActivity() {
     private var userRate: Float = 0.0F
     private var REMOVED = false
     private var ADDED = false
+    private lateinit var loadingHandler: Handler
     private lateinit var linearLayoutManager: LinearLayoutManager
     private var recProductsAdapter: RecommendedPlacesAdapter? = null
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,6 +72,8 @@ class ProductActivity : AppCompatActivity() {
         userId = getUserId(this)
         userName = getUserName(this).orEmpty()
         userImageUrl = getUserImageUrl(this).orEmpty()
+
+        loadingHandler = Handler(Looper.getMainLooper())
 
         placeDetailsBinding = DataBindingUtil.setContentView(this, R.layout.activity_product)
 
@@ -255,7 +258,7 @@ class ProductActivity : AppCompatActivity() {
                                 it.submitList(recProducts)
                                 adapter = it
                                 lifecycleScope.launchWhenStarted {
-                                    Handler(Looper.getMainLooper()).postDelayed({
+                                    loadingHandler.postDelayed({
                                         placeDetailsBinding.progressBar.visibility = View.GONE
                                     },750)
                                 }
@@ -528,7 +531,7 @@ class ProductActivity : AppCompatActivity() {
         lifecycleScope.launchWhenStarted {
             placeDetailsBinding.progressBar.visibility = View.VISIBLE
 //            placeDetailsBinding.addCommentFab.isEnabled = false
-            Handler(Looper.getMainLooper()).postDelayed({
+            loadingHandler.postDelayed({
                 placeDetailsBinding.progressBar.visibility = View.GONE
 //                placeDetailsBinding.addCommentFab.isEnabled = true
             }, Constants.TIME_OUT_MILLISECONDS)
@@ -541,13 +544,18 @@ class ProductActivity : AppCompatActivity() {
             placeDetailsBinding.progressBar.visibility = View.VISIBLE
             placeDetailsBinding.addRemoveFavoriteFrameLayout.isEnabled = false
             placeDetailsBinding.addToFavoriteImageView.isEnabled = false
-            Handler(Looper.getMainLooper()).postDelayed({
+            loadingHandler.postDelayed({
                 placeDetailsBinding.progressBar.visibility = View.GONE
                 placeDetailsBinding.addRemoveFavoriteFrameLayout.isEnabled = true
                 placeDetailsBinding.addToFavoriteImageView.isEnabled = true
             }, Constants.TIME_OUT_MILLISECONDS)
         }
 
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        loadingHandler.removeCallbacksAndMessages(null)
     }
 
 

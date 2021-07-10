@@ -40,6 +40,7 @@ class BaseApplication : Application() {
             androidLogger(Level.DEBUG)
             androidContext(this@BaseApplication)
             modules(
+                //List of modules declared in Module class
                 listOf(
                     apiModule,
                     placesRepositoryModule,

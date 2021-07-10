@@ -7,6 +7,7 @@ import android.os.Looper
 import android.view.Window
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.example.graduationproject.R
 import com.example.graduationproject.helper.Utils.getLoggedOut
 import com.example.graduationproject.helper.Utils.getSignedIn
@@ -16,6 +17,7 @@ import com.example.graduationproject.helper.Utils.setWelcomed
 private const val TAG = "SplashActivity"
 
 class SplashActivity : AppCompatActivity() {
+    private lateinit var handler: Handler
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         makeFullScreen()
@@ -25,8 +27,9 @@ class SplashActivity : AppCompatActivity() {
         val welcomed = getWelcomed(this)
         val loggedOut = getLoggedOut(this)
 
+        handler = Handler(Looper.getMainLooper())
 
-        Handler(Looper.getMainLooper()).postDelayed({
+        handler.postDelayed({
             when {
                 loggedOut -> {
 //                    Toast.makeText(this, "Logged out", Toast.LENGTH_SHORT).show()
@@ -69,6 +72,11 @@ class SplashActivity : AppCompatActivity() {
         )
 
         supportActionBar?.hide()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        handler.removeCallbacksAndMessages(null)
     }
 
 }

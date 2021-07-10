@@ -62,6 +62,7 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var accessToken: String
     private lateinit var notificationBroadcastReceiver: NotificationBroadcastReceiver
     private val navDrawerViewModel by viewModel<NavigationDrawerViewModel>()
+    private lateinit var loadingHandler : Handler
 //    private var firstName = ""
 //    private var lastName = ""
 //    private var imageUrl = ""
@@ -79,6 +80,7 @@ class SettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         bindingInstance = DataBindingUtil.setContentView(this, R.layout.activity_settings)
 
+        loadingHandler = Handler(Looper.getMainLooper())
 //        val fade = android.transition.Fade()
 //        val decor: View = window.decorView
 //        fade.excludeTarget(decor.findViewById<ActionBarContainer>(R.id.action_bar_container), true)
@@ -327,6 +329,7 @@ class SettingsActivity : AppCompatActivity() {
             the receiver continues to work
          */
         unregisterReceiver(notificationBroadcastReceiver)
+        loadingHandler.removeCallbacksAndMessages(null)
     }
 
     private fun updateUserInfo(firstName: String, lastName: String) {
@@ -582,12 +585,13 @@ class SettingsActivity : AppCompatActivity() {
         lifecycleScope.launchWhenStarted {
 //            bindingInstance.progressBar.visibility = View.VISIBLE
             //  bindingInstance.updateInfoButton.isEnabled = false
-            Handler(Looper.getMainLooper()).postDelayed({
+            loadingHandler.postDelayed({
                 bindingInstance.progressBar.visibility = View.GONE
                 // bindingInstance.updateInfoButton.isEnabled = true
             }, Constants.TIME_OUT_MILLISECONDS)
         }
-
     }
+
+
 
 }

@@ -23,7 +23,7 @@
         <ImageView
             android:id="@+id/movie_image_view"
             android:layout_width="88dp"
-            android:visibility="invisible"
+            android:visibility="visible"
             android:layout_height="100dp"
             android:scaleType="fitXY" />
 

@@ -40,7 +40,7 @@ class HomeFragment : Fragment(), RecommendedProductClickListener {
     private lateinit var gridLayoutManager: GridLayoutManager
     private var recProductsAdapter: RecommendedPlacesAdapter? = null
     private var accessToken = ""
-
+    private lateinit var loadingHandler: Handler
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -58,6 +58,7 @@ class HomeFragment : Fragment(), RecommendedProductClickListener {
         accessToken = getAccessToken(requireContext()).orEmpty()
         gridLayoutManager = GridLayoutManager(context, 2)
         fragmentBinding.progressBar.visibility = View.VISIBLE
+        loadingHandler = Handler(Looper.getMainLooper())
 
         Log.i(TAG, "RRRRR onViewCreated: RECREATED")
 //        if (Utils.getConnectionType(requireContext()) == 0) {
@@ -89,7 +90,7 @@ class HomeFragment : Fragment(), RecommendedProductClickListener {
                                 it.submitList(recProducts)
                                 adapter = it
                                 lifecycleScope.launchWhenStarted {
-                                    Handler(Looper.getMainLooper()).postDelayed({
+                                    loadingHandler.postDelayed({
                                         fragmentBinding.progressBar.visibility = View.GONE
                                     }, 750)
                                 }
@@ -194,7 +195,7 @@ class HomeFragment : Fragment(), RecommendedProductClickListener {
                                 it.submitList(recProducts)
                                 adapter = it
                                 lifecycleScope.launchWhenStarted {
-                                    Handler(Looper.getMainLooper()).postDelayed({
+                                    loadingHandler.postDelayed({
                                         fragmentBinding.progressBar.visibility = View.GONE
                                     }, 750)
                                 }
@@ -213,10 +214,15 @@ class HomeFragment : Fragment(), RecommendedProductClickListener {
     private fun dismissProgressAfterTimeOut() {
         lifecycleScope.launchWhenStarted {
             fragmentBinding.progressBar.visibility = View.VISIBLE
-            Handler(Looper.getMainLooper()).postDelayed({
+            loadingHandler.postDelayed({
                 fragmentBinding.progressBar.visibility = View.GONE
             }, Constants.TIME_OUT_MILLISECONDS)
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        loadingHandler.removeCallbacksAndMessages(null)
     }
 
 

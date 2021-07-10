@@ -42,6 +42,7 @@ class UsersSearchBottomSheet : BottomSheetDialogFragment() {
     private val searchFragmentViewModel by viewModel<SearchFragmentViewModel>()
     private var searchedUsersAdapter: SearchedUsersAdapter? = null
     private var accessToken = ""
+    private lateinit var loadingHandler: Handler
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(DialogFragment.STYLE_NORMAL, R.style.DialogStyle)
@@ -78,7 +79,7 @@ class UsersSearchBottomSheet : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         accessToken = getAccessToken(requireContext()).orEmpty()
         linearLayoutManager = LinearLayoutManager(requireContext())
-
+        loadingHandler = Handler(Looper.getMainLooper())
 //        initEditTextListener()
         val dummyList = mutableListOf<User>()
         dummyList.add(User(firstName = "A", lastName = "a", image = Utils.getUserImageUrl(requireContext())))
@@ -143,7 +144,7 @@ class UsersSearchBottomSheet : BottomSheetDialogFragment() {
                                 adapter = it
 
                                 lifecycleScope.launchWhenStarted {
-                                    Handler(Looper.getMainLooper()).postDelayed({
+                                    loadingHandler.postDelayed({
                                         bindingInstance.progressBar.visibility = View.GONE
                                     }, 750)
                                 }
@@ -160,12 +161,16 @@ class UsersSearchBottomSheet : BottomSheetDialogFragment() {
     }
 
     private fun dismissProgressAfterTimeOut() {
-        bindingInstance.progressBar.visibility = View.VISIBLE
         lifecycleScope.launchWhenStarted {
             bindingInstance.progressBar.visibility = View.VISIBLE
-            Handler(Looper.getMainLooper()).postDelayed({
+            loadingHandler.postDelayed({
                 bindingInstance.progressBar.visibility = View.GONE
             }, Constants.TIME_OUT_MILLISECONDS)
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        loadingHandler.removeCallbacksAndMessages(null)
     }
 }

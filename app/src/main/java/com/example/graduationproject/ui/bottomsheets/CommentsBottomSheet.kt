@@ -3,6 +3,7 @@ package com.example.graduationproject.ui.bottomsheets
 import android.app.Dialog
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -53,6 +54,7 @@ class CommentsBottomSheet(
     var visibleItemCount: Int = 0
     var totalItemCount: Int = 0
     private var userRate: Float = 0F
+    private lateinit var loadingHandler: Handler
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -89,6 +91,7 @@ class CommentsBottomSheet(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         layoutManager = LinearLayoutManager(requireContext())
+        loadingHandler = Handler(Looper.getMainLooper())
 
         if (Utils.getConnectionType(requireContext()) == 0){
             bindingInstance.noConnectionLayout.visibility = View.VISIBLE
@@ -334,10 +337,15 @@ class CommentsBottomSheet(
     private fun dismissProgressAfterTimeOut() {
         lifecycleScope.launchWhenStarted {
             bindingInstance.progressBar.visibility = View.VISIBLE
-            Handler().postDelayed({
+            loadingHandler.postDelayed({
                 bindingInstance.progressBar.visibility = View.GONE
                 bindingInstance.addCommentFab.isEnabled = true
             }, Constants.TIME_OUT_MILLISECONDS)
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        loadingHandler.removeCallbacksAndMessages(null)
     }
 }

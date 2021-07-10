@@ -40,6 +40,7 @@ class SignInFragment : Fragment() {
     private val navigationDrawerViewModel by viewModel<NavigationDrawerViewModel>()
     private val cachingViewModel by viewModel<CachingViewModel>()
     private lateinit var bindingInstance: FragmentInSignBinding
+    private lateinit var loadingHandler: Handler
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -56,6 +57,8 @@ class SignInFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        loadingHandler = Handler(Looper.getMainLooper())
 
         bindingInstance.mailEditText.setText(getEmailFromPrefs(requireContext()))
 
@@ -131,7 +134,7 @@ class SignInFragment : Fragment() {
 
     private fun dismissProgressAfterTimeOut() {
         lifecycleScope.launchWhenStarted {
-            Handler(Looper.getMainLooper()).postDelayed({
+            loadingHandler.postDelayed({
                 bindingInstance.progressBar.visibility = View.GONE
                 bindingInstance.signInButton.isEnabled = true
             }, Constants.TIME_OUT_MILLISECONDS)
@@ -171,6 +174,11 @@ class SignInFragment : Fragment() {
         val action = SignInFragmentDirections.actionSignInFragmentToMainActivity()
         findNavController().navigate(action)
         activity?.finish()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        loadingHandler.removeCallbacksAndMessages(null)
     }
 
 }

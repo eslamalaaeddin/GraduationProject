@@ -38,6 +38,10 @@ class SearchFragment : Fragment() , TagClickListener{
     private lateinit var linearLayoutManager : LinearLayoutManager
     private var searchedProductsAdapter: SearchedProductsAdapter? = null
     private var accessToken = ""
+    private var tagSearch = false
+    private var wasTagging = false
+    private var theLastQuery = ""
+    private lateinit var loadingHandler: Handler
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -58,7 +62,9 @@ class SearchFragment : Fragment() , TagClickListener{
 
         accessToken = getAccessToken(requireContext()).orEmpty()
         linearLayoutManager = LinearLayoutManager(requireContext())
-//        bindingInstance.progressBar.visibility = View.VISIBLE
+//        bindingInsta nce.progressBar.visibility = View.VISIBLE
+
+        loadingHandler = Handler(Looper.getMainLooper())
 
         initArrowImageButton()
 
@@ -84,27 +90,39 @@ class SearchFragment : Fragment() , TagClickListener{
             @SuppressLint("RestrictedApi")
             override fun afterTextChanged(q: Editable?) {
                 val query = q?.trim().toString()
-                if (query.isEmpty()){
-                    //UI Razala
+                theLastQuery = query
+
+                 if ((query.isEmpty() || query.isBlank()) && !tagSearch) {
+                        lifecycleScope.launchWhenStarted {
+                            delay(750)
+                            bindingInstance.emptyQueryLayout.visibility = View.VISIBLE
+                            searchedProductsAdapter?.let {
+                                it.submitList(null)
+                                bindingInstance.arrowUpImageButton.visibility = View.GONE
+                            }
+                        }
+                        bindingInstance.searchProductsEditText.hint =
+                            getString(R.string.search_by_name_hint)
+
+                }
+                //As they might be movies with one char
+//                else if (query.count() < 3) {
+//                    searchedProductsAdapter?.let {
+//                        it.submitList(null)
+//                        bindingInstance.arrowUpImageButton.visibility = View.GONE
+//                    }
+//                }
+
+                else {
+
                     lifecycleScope.launchWhenStarted {
-                        delay(750)
-                        bindingInstance.emptyQueryLayout.visibility = View.VISIBLE
-                        searchedProductsAdapter?.let {
-                            it.submitList(null)
-                            bindingInstance.arrowUpImageButton.visibility = View.GONE
+                        //for fast typing, immediate search would lead to bad performance, so better to wait
+                        delay(1000)
+                        if (query.trim().isNotBlank() || query.trim().isNotEmpty()) {
+                            Log.i(TAG, "88888 afterTextChanged: Empty but i will search")
+                            searchProductsByName(query)
                         }
                     }
-                    bindingInstance.searchProductsEditText.hint = getString(R.string.search_by_name_hint)
-                }
-
-                else if ( query.count() < 3) {
-                    searchedProductsAdapter?.let {
-                        it.submitList(null)
-                        bindingInstance.arrowUpImageButton.visibility = View.GONE
-                    }
-                } else {
-                    bindingInstance.emptyQueryLayout.visibility = View.GONE
-                    searchProductsByName(query)
                 }
             }
         })
@@ -176,6 +194,7 @@ class SearchFragment : Fragment() , TagClickListener{
 
 
     override fun onTagClicked(tag: String) {
+        tagSearch = true
         bindingInstance.searchProductsEditText.text.clear()
         bindingInstance.searchProductsEditText.hint = "#$tag"
         searchProductsByTag(tag)
@@ -183,9 +202,9 @@ class SearchFragment : Fragment() , TagClickListener{
 
     private fun searchProductsByName(productName: String) {
         bindingInstance.progressBar.visibility = View.VISIBLE
+        bindingInstance.emptyQueryLayout.visibility = View.GONE
         try {
             lifecycleScope.launch {
-//                delay(1000)
                 dismissProgressAfterTimeOut()
                 searchFragmentViewModel.getProductsPagedListByName(productName, accessToken)
                     ?.observe(viewLifecycleOwner)
@@ -196,31 +215,20 @@ class SearchFragment : Fragment() , TagClickListener{
                             searchedProductsAdapter?.let {
 
                                 bindingInstance.progressBar.visibility = View.VISIBLE
-                                it.submitList(products)
-                                adapter = it
+                                if (theLastQuery.isEmpty() || theLastQuery.isBlank()){
+                                    it.submitList(null)
+                                    bindingInstance.arrowUpImageButton.visibility = View.GONE
+                                    bindingInstance.emptyQueryLayout.visibility = View.VISIBLE
+                                    adapter = it
+                                }
 
-//                                products.addWeakCallback(null, object : PagedList.Callback() {
-//                                    override fun onChanged(position: Int, count: Int) {
-//                                        updateView(it.itemCount)
-//                                    }
-//
-//                                    override fun onInserted(position: Int, count: Int) {
-//
-//                                    }
-//
-//                                    override fun onRemoved(position: Int, count: Int) {
-//
-//                                    }
-//                                })
-
-//                                if (products.toList().isEmpty()) {
-//                                    bindingInstance.emptyResultLayout.visibility = View.VISIBLE
-//                                } else {
-//                                    bindingInstance.emptyResultLayout.visibility = View.GONE
-//                                }
+                                else{
+                                    it.submitList(products)
+                                    adapter = it
+                                }
 
                                 lifecycleScope.launchWhenStarted {
-                                    Handler(Looper.getMainLooper()).postDelayed({
+                                    loadingHandler.postDelayed({
                                         bindingInstance.progressBar.visibility = View.GONE
                                     },750)
                                 }
@@ -262,8 +270,9 @@ class SearchFragment : Fragment() , TagClickListener{
                                 bindingInstance.progressBar.visibility = View.VISIBLE
                                 it.submitList(products)
                                 adapter = it
+                                tagSearch = false
                                 lifecycleScope.launchWhenStarted {
-                                    Handler(Looper.getMainLooper()).postDelayed({
+                                    loadingHandler.postDelayed({
                                         bindingInstance.progressBar.visibility = View.GONE
                                     },750)
                                 }
@@ -283,7 +292,7 @@ class SearchFragment : Fragment() , TagClickListener{
         bindingInstance.progressBar.visibility = View.VISIBLE
         lifecycleScope.launchWhenStarted {
             bindingInstance.progressBar.visibility = View.VISIBLE
-            Handler(Looper.getMainLooper()).postDelayed({
+            loadingHandler.postDelayed({
                 bindingInstance.progressBar.visibility = View.GONE
             }, Constants.TIME_OUT_MILLISECONDS)
         }

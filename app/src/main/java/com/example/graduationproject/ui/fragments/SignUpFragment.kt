@@ -29,7 +29,7 @@ private const val TAG = "SignUpFragment"
 class SignUpFragment : Fragment() {
     private val signUpViewModel by viewModel<SignUpViewModel>()
     private lateinit var bindingInstance: FragmentUpSignBinding
-
+    private lateinit var loadingHandler: Handler
 
 
     override fun onCreateView(
@@ -48,6 +48,9 @@ class SignUpFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        loadingHandler = Handler(Looper.getMainLooper())
+
         haveAccountTextView.setOnClickListener {
             val action = SignUpFragmentDirections.actionSignUpFragmentToSignInFragment()
             findNavController().navigate(action)
@@ -140,12 +143,17 @@ class SignUpFragment : Fragment() {
 
     private fun dismissProgressAfterTimeOut() {
         lifecycleScope.launchWhenStarted {
-            Handler(Looper.getMainLooper()).postDelayed({
+            loadingHandler.postDelayed({
                 bindingInstance.progressBar.visibility = View.GONE
                 bindingInstance.signUpButton.isEnabled = true
             }, Constants.TIME_OUT_MILLISECONDS)
         }
 
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        loadingHandler.removeCallbacksAndMessages(null)
     }
 
 

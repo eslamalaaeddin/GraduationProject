@@ -36,7 +36,7 @@ class PlaceImagesAdapter(
 
         fun bind(productImage: ProductImage) {
             if (productImage.name?.isNotEmpty() == true) {
-//                Picasso.get().load(productImage.name).into(itemView.detail_place_image_view)
+                Picasso.get().load(productImage.name).into(itemView.detail_place_image_view)
             }
         }
 

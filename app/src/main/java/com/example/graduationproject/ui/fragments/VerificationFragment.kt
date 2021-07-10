@@ -45,6 +45,7 @@ class VerificationFragment : Fragment() {
     private val navigationDrawerViewModel by viewModel<NavigationDrawerViewModel>()
     private val cachingViewModel by viewModel<CachingViewModel>()
     private lateinit var bindingInstance: FragmentVerificationBinding
+    private lateinit var loadingHandler: Handler
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -63,6 +64,7 @@ class VerificationFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        loadingHandler = Handler(Looper.getMainLooper())
 
         noVerificationSendTextView.setOnClickListener {
             Toast.makeText(
@@ -171,10 +173,15 @@ class VerificationFragment : Fragment() {
 
     private fun dismissProgressAfterTimeOut() {
         lifecycleScope.launchWhenStarted {
-            Handler(Looper.getMainLooper()).postDelayed({
+            loadingHandler.postDelayed({
                 bindingInstance.progressBar.visibility = View.GONE
                 bindingInstance.verifyButton.isEnabled = true
             }, Constants.TIME_OUT_MILLISECONDS)
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        loadingHandler.removeCallbacksAndMessages(null)
     }
 }

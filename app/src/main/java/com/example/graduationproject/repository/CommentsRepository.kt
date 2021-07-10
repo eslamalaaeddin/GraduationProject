@@ -11,7 +11,9 @@ import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 
 private const val TAG = "CommentsRepository"
-class CommentsRepository(private val api: Api, private val context: Context,   private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO) : BaseRepository(context) {
+class CommentsRepository(private val api: Api,
+                         private val context: Context,
+                         private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO) : BaseRepository(context) {
 
     suspend fun addCommentOnProduct(productComment: ProductComment, accessToken: String): ReturnedComment?{
         var comment : ReturnedComment? = null

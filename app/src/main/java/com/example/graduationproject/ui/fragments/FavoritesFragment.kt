@@ -55,6 +55,7 @@ class FavoritesFragment : Fragment(), FavoriteProductClickListener {
     var pastVisibleItems = 0
     var visibleItemCount: Int = 0
     var totalItemCount: Int = 0
+    private lateinit var loadingHandler: Handler
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -72,6 +73,8 @@ class FavoritesFragment : Fragment(), FavoriteProductClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         accessToken = getAccessToken(requireContext()).orEmpty()
+
+        loadingHandler = Handler(Looper.getMainLooper())
 
         if (Utils.getConnectionType(requireContext()) == 0) {
             Log.i(TAG, "00000 onViewCreated: OFFLINE")
@@ -381,7 +384,7 @@ class FavoritesFragment : Fragment(), FavoriteProductClickListener {
 
     private fun dismissProgressAfterTimeOut() {
         lifecycleScope.launchWhenStarted {
-            Handler(Looper.getMainLooper()).postDelayed({
+            loadingHandler.postDelayed({
                 fragmentFavoritesBinding.progressBar.visibility = View.GONE
             }, TIME_OUT_MILLISECONDS)
 
@@ -442,6 +445,11 @@ class FavoritesFragment : Fragment(), FavoriteProductClickListener {
                 }
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        loadingHandler.removeCallbacksAndMessages(null)
     }
 
 

@@ -15,7 +15,7 @@
     <string name="channel_description">This channel is for user image uploading notification</string>
 
 
-    <string name="recommended_for_you">مقترح لك أنت</string>
+    <string name="recommended_for_you">مقترح لك</string>
     <string name="first_name_edit_text">الاسم الأول</string>
     <string name="last_name_edit_text">اسم العائلة</string>
     <string name="update_button">تحديث</string>
@@ -59,8 +59,8 @@
     <string name="tags">اختر وسمًا</string>
 
     <!-- Toasts -->
-    <string name="rate_added">أضيف التعليق</string>
-    <string name="rate_updated">حُدثَ التعليق</string>
+    <string name="rate_added">أضيف التقييم</string>
+    <string name="rate_updated">حُدثَ التقييم</string>
     <string name="all_information_first">أدخل كل البيانات</string>
     <string name="first_last_same">لم يحدث تغيير</string>
     <string name="updated_successfully">تم التحديث</string>
