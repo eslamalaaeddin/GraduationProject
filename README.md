@@ -84,4 +84,12 @@ Glide <br>
  </body>
  </head>
  </html>
-
+ 
+ # Run this project locally
+ 1- Clone [this repository](https://github.com/mostafaHegab/grad-proj-api) and follow all the instructions. <br>
+ 2- Clone the mobile application repository. <br>
+ 3- In the Constants class from the helper package change the HOST constant to on of the following values following: <br>
+      http://10.0.2.2:  --> if you are using your Emulator <br>
+      http://10.0.3.2:  --> if you are using GenyMotion <br>
+      Some ip address   --> that the server is running on <br>
+ 4- Run the app and enjoy ")
