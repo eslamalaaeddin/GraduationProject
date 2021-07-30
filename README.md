@@ -28,15 +28,60 @@ Glide <br>
 
 # Overview
 
-<p align="center">
- <img src = "images/user_overview_part1.png" width = "1080" height = "1920">
-</p>
+[User overview part one](https://drive.google.com/file/d/1Stcrl6TffByT-eIU3IkvfzztU1N6IaQG/view?usp=sharing) <br>
 
-<p align="center">
- <img src = "images/user_overview_part2.png" width = "1080" height = "1920">
-</p>
+[User overview part two](https://drive.google.com/file/d/18pz51Ubt9C-pAv12hxJFXHg6sne5YblN/view?usp=sharing) <br>
 
-<p align="center">
- <img src = "images/dev_overview.png" width = "1080" height = "1920">
-</p>
+[Android Developer overview](https://drive.google.com/file/d/1Y-oVr8bwy9zVVwLObQaPEkCi3ra7EOvt/view?usp=sharing) <br>
+
+# Screen shots: 
+---
+
+<!DOCTYPE html>
+<html>
+   <head>
+   </head>
+   <body>
+    <table align="center">
+         <tr>
+            <td><img src="images\1-splach.jpg" width=288 height=512></td>
+           <td><img src="images\2.1- welcome.jpg" width=288 height=512></td>
+           <td><img src="images\2.2 welcome.jpg" width=288 height=512></td>
+        </tr>
+    </table>
+    
+   <table align="center">
+        <tr>
+           <td><img src="images\2.3 welcome.jpg" width=288 height=512></td>
+          <td><img src="images\3-sign_up.jpg" width=288 height=512></td>
+          <td><img src="images\4-sign_in.jpg" width=288 height=512></td>
+       </tr>
+   </table>
+
+   <table align="center">
+        <tr>
+           <td><img src="images\5- home.jpg" width=288 height=512></td>
+          <td><img src="images\6-favorites.jpg" width=288 height=512></td>
+          <td><img src="images\12-toy_story_search.jpg" width=288 height=512></td>
+       </tr>
+   </table>
+
+   <table align="center">
+        <tr>
+           <td><img src="images\7- search.jpg" width=288 height=512></td>
+          <td><img src="images\10- detail.jpg" width=288 height=512></td>
+          <td><img src="images\11-comments.jpg" width=288 height=512></td>
+       </tr>
+   </table>
+    
+   <table align="center">
+        <tr>
+          <td><img src="images\8- user_info.jpg" width=288 height=512></td>
+          <td><img src="images\9- settings.jpg" width=288 height=512></td>
+       </tr>
+   </table>
+   
+ </body>
+ </head>
+ </html>
 
