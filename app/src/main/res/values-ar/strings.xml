@@ -77,6 +77,7 @@
     <string name="account_created_successfully">أُنشئ الحساب بنجاح</string>
     <string name="no_verification_code_entered">أدخل رمز التحقق أولا</string>
     <string name="check_your_connectivity">تحقَّق من اتصالك بالشبكة</string>
+    <string name="write_a_comment">اكتب تعليقًا...</string>
 
     <!-- Team -->
     <string name="team_members">أعضاء الفريق</string>

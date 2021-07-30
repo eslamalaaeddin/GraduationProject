@@ -19,7 +19,7 @@ class SearchRepository(
         try {
             response = safeApiCall(
                 call = { withContext(ioDispatcher){api.searchByProductTag(tag, page, accessToken)} },
-                errorMessage = "Error Fetching Recommended Places")
+                errorMessage = "Error searching by tag")
         }
         catch (ex: Throwable) {
             if (ex is HttpException){exceptionHandler.handleException(ex, ex.code().toString())}
@@ -34,7 +34,7 @@ class SearchRepository(
         try {
             response = safeApiCall(
                 call = { withContext(ioDispatcher){api.searchByProductName(productName, page, accessToken)} },
-                errorMessage = "Error Fetching Recommended Places")
+                errorMessage = "Error searching by name")
         }
         catch (ex: Throwable) {
             if (ex is HttpException){exceptionHandler.handleException(ex, ex.code().toString())}

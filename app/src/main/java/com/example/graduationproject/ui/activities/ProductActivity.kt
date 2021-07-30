@@ -16,25 +16,21 @@ import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.graduationproject.R
 import com.example.graduationproject.adapters.PlaceImagesAdapter
-import com.example.graduationproject.adapters.RecommendedPlacesAdapter
+import com.example.graduationproject.adapters.RecommendedProductsAdapter
 import com.example.graduationproject.cache.CachingViewModel
 import com.example.graduationproject.databinding.ActivityProductBinding
 import com.example.graduationproject.helper.Constants
-import com.example.graduationproject.helper.Utils
 import com.example.graduationproject.helper.Utils.getAccessToken
 import com.example.graduationproject.helper.Utils.getUserId
 import com.example.graduationproject.helper.Utils.getUserImageUrl
 import com.example.graduationproject.helper.Utils.getUserName
 import com.example.graduationproject.models.products.FavoriteProduct
+import com.example.graduationproject.models.products.PostFavoriteProduct
 import com.example.graduationproject.models.products.Product
 import com.example.graduationproject.models.products.ProductImage
-import com.example.graduationproject.models.products.VisitedProduct
 import com.example.graduationproject.models.rating.Rate
-import com.example.graduationproject.notification.NotificationsHandler
 import com.example.graduationproject.ui.bottomsheets.CommentsBottomSheet
 import com.example.graduationproject.viewmodels.ProductActivityViewModel
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.android.synthetic.main.activity_product.*
 import kotlinx.android.synthetic.main.fragment_up_sign.*
 import kotlinx.android.synthetic.main.home_product_item.view.*
@@ -47,7 +43,7 @@ private const val TAG = "ProductActivity"
 
 class ProductActivity : AppCompatActivity() {
     private lateinit var placeDetailsBinding: ActivityProductBinding
-    private val placeActivityViewModel by viewModel<ProductActivityViewModel>()
+    private val productActivityViewModel by viewModel<ProductActivityViewModel>()
     private val cachingViewModel by viewModel<CachingViewModel>()
     private var productId: Long = 0
     private var connectionState: Int = 0
@@ -65,7 +61,7 @@ class ProductActivity : AppCompatActivity() {
     private var ADDED = false
     private lateinit var loadingHandler: Handler
     private lateinit var linearLayoutManager: LinearLayoutManager
-    private var recProductsAdapter: RecommendedPlacesAdapter? = null
+    private var recProductsAdapter: RecommendedProductsAdapter? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         accessToken = getAccessToken(this).orEmpty()
@@ -78,7 +74,7 @@ class ProductActivity : AppCompatActivity() {
         placeDetailsBinding = DataBindingUtil.setContentView(this, R.layout.activity_product)
 
         setUpToolbar()
-        productId = intent.getLongExtra("placeId", 0)
+        productId = intent.getLongExtra("productId", 0)
         connectionState = intent.getIntExtra("connectionState", -1)
         fromFavorite = intent.getBooleanExtra("fromFavorite", false)
 
@@ -88,12 +84,8 @@ class ProductActivity : AppCompatActivity() {
             false
         )
 
-        initRecommendationButton()
-
-
         //OFFLINE
         if (connectionState == 0) {
-            Log.i(TAG, "UUUU onCreate: OFFLINE PRODUCT")
             placeDetailsBinding.recommendedForYouTextView.visibility = View.INVISIBLE
             try {
                 lifecycleScope.launch {
@@ -140,7 +132,7 @@ class ProductActivity : AppCompatActivity() {
                                         LinearLayoutManager.HORIZONTAL,
                                         false
                                     )
-                                    adapter = PlaceImagesAdapter(productId.toString(), placeImages)
+                                    adapter = PlaceImagesAdapter(placeImages)
                                     //snapHelper.attachToRecyclerView(this)
                                 }
                             }
@@ -157,7 +149,6 @@ class ProductActivity : AppCompatActivity() {
         else {
             placeDetailsBinding.recommendedForYouTextView.visibility = View.VISIBLE
             lifecycleScope.launch {
-                Log.i(TAG, "UUUU onCreate: ONLINE PRODUCT")
                 getUserSpecificRateOnline()
                 getProductDetailsOnline()
                 getRecommendedProductsByProduct()
@@ -169,10 +160,13 @@ class ProductActivity : AppCompatActivity() {
             //it sends a put request each time as it is changed by the getUserSpecificRate()
             val rate = Rate(rate = rating)
             if (connectionState != 0) {
+                //-1 means that no rate yet
                 if (userRate == -1.0F) {
-                    addRateToPlace(rate)
-                } else if (rating != userRate) {
-                    updateRateFromPlace(rate)
+                    addRateToProduct(rate)
+                }
+                //to check if the user rates with the same previous rate
+                else if (rating != userRate) {
+                    updateRateToProduct(rate)
                 }
             }
 
@@ -185,10 +179,11 @@ class ProductActivity : AppCompatActivity() {
                 lifecycleScope.launch { deleteProductFromFavorite() }
             } else {
                 placeDetailsBinding.addToFavoriteImageView.setImageResource(R.drawable.ic_heart_filled)
-                lifecycleScope.launch { addPlaceToFavorite() }
+                lifecycleScope.launch { addProductToFavorite() }
             }
         }
 
+        //Open comments bottom sheet
         placeDetailsBinding.addCommentFab.setOnClickListener {
             val commentsBottomSheet = CommentsBottomSheet(
                 accessToken,
@@ -198,7 +193,6 @@ class ProductActivity : AppCompatActivity() {
                 userImageUrl
             )
             commentsBottomSheet.show(supportFragmentManager, commentsBottomSheet.tag)
-            //Open comments bottom sheet
         }
 
         placeDetailsBinding.upButton.setOnClickListener {
@@ -211,38 +205,12 @@ class ProductActivity : AppCompatActivity() {
 
     }
 
-    private fun initRecommendationButton() {
-        placeDetailsBinding.recommendButton.setOnClickListener {
-            //Open recommend users bottom sheet
-            FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val token = task.result?.toString()
-                    val handler = NotificationsHandler(
-                        notifierId = getUserId(this).toString(),
-                        notifierName = getUserName(this),
-                        notifierImageUrl = "${Constants.BASE_USER_IMAGE_URL}${getUserImageUrl(this)}",
-                        notifiedId = "51749856081962",
-                        notifiedTokens = mutableListOf(token.orEmpty()),
-                        movieId = productId,
-                        movieName = currentProduct?.name
-                    )
-                    handler.fireServerSideNotification()
-                    Log.i(TAG, "333333 onCreate: $token")
-                }
-                if (!task.isSuccessful) {
-                    Log.w(TAG, "getInstanceId failed", task.exception)
-                    return@OnCompleteListener
-                }
-
-            })
-        }
-    }
 
     private fun getRecommendedProductsByProduct() {
         try {
             lifecycleScope.launch {
                 //dismissProgressAfterTimeOut()
-                placeActivityViewModel.getRecommendedProductsByProductPagedList(
+                productActivityViewModel.getRecommendedProductsByProductPagedList(
                     productId.toString(),
                     accessToken
                 )
@@ -252,7 +220,7 @@ class ProductActivity : AppCompatActivity() {
                         placeDetailsBinding.recommendedProductsByProductRecyclerView.apply {
                             layoutManager = linearLayoutManager
 
-                            recProductsAdapter = RecommendedPlacesAdapter(itemLayout = R.layout.item_recommended_by_product)
+                            recProductsAdapter = RecommendedProductsAdapter(itemLayout = R.layout.item_recommended_by_product)
                             recProductsAdapter?.let {
                                 placeDetailsBinding.progressBar.visibility = View.VISIBLE
                                 it.submitList(recProducts)
@@ -280,7 +248,6 @@ class ProductActivity : AppCompatActivity() {
             delay(1000)
             val productsLiveData = cachingViewModel.getProductFromDb(productId)
             productsLiveData.observe(this@ProductActivity) {
-                Log.i(TAG, "syncRates: $it")
                 it?.let {
                     val productFromDb = it
                     currentProduct?.let { serverProduct ->
@@ -332,17 +299,14 @@ class ProductActivity : AppCompatActivity() {
         )
     }
 
+    //Get product data and bind it to views
     private suspend fun getProductDetailsOnline() {
         dismissProgressAfterTimeOut()
         val productDetailsLiveData =
-            placeActivityViewModel.getProductDetails(productId.toString(), accessToken)
+            productActivityViewModel.getProductDetails(productId.toString(), accessToken)
         productDetailsLiveData?.observe(this@ProductActivity) { product ->
             product?.let {
-                //create object of favorite product to added it to room
-                //I HAVE TO ADD OR REMOVE PRODUCT ITSELF INTO DB
-
                 currentProduct = product
-
                 currentFavoriteProduct = FavoriteProduct(
                     id = it.id,
                     image = it.image,
@@ -350,8 +314,6 @@ class ProductActivity : AppCompatActivity() {
                     rating = it.rating
                 )
                 placeDetailsBinding.progressBar.visibility = View.GONE
-//                placeDetailsBinding.addCommentFab.isEnabled = true
-
                 placeDetailsBinding.detailsPlaceNameTextView.text = it.name
                 placeDetailsBinding.placeDescriptionTextView.text = it.description
                 //comedy,fantasy,drama ==> Comedy, Fantasy, Drama
@@ -360,10 +322,8 @@ class ProductActivity : AppCompatActivity() {
                         .joinToString(", ") { item -> item.capitalize() }
 
                 val rate = it.rating
-                Log.i(TAG, "PPPP getProductDetails: $rate")
                 placeDetailsBinding.detailsPlaceRatingBar.rating = rate ?: 0F
                 overallProductRate = rate ?: 0F
-                Log.i(TAG, "PPPP OverallRATE: ${overallProductRate}")
 
                 isPlaceFavorite = it.favorite == 1
                 if (isPlaceFavorite) {
@@ -372,6 +332,7 @@ class ProductActivity : AppCompatActivity() {
                     add_to_favorite_image_view.setImageResource(R.drawable.ic_heart)
                 }
 
+                //to add product image
                 placeDetailsBinding.placeImagesRecyclerView.apply {
                     val placeImages = mutableListOf<ProductImage>()
                     placeImages.add(ProductImage(name = product.image))
@@ -380,8 +341,7 @@ class ProductActivity : AppCompatActivity() {
                         LinearLayoutManager.HORIZONTAL,
                         false
                     )
-                    adapter = PlaceImagesAdapter(productId.toString(), placeImages)
-                    //snapHelper.attachToRecyclerView(this)
+                    adapter = PlaceImagesAdapter(placeImages)
                 }
             }
             if (product == null) {
@@ -390,27 +350,23 @@ class ProductActivity : AppCompatActivity() {
         }
     }
 
-    private suspend fun addPlaceToFavorite() {
+    private suspend fun addProductToFavorite() {
         dismissProgressForFavoriteAfterTimeOut()
-        val responseMessage = placeActivityViewModel.addProductToFavorites(
-            VisitedProduct(pid = productId),
+        val responseMessage = productActivityViewModel.addProductToFavorites(
+            PostFavoriteProduct(pid = productId),
             accessToken
         )
         responseMessage?.let {
-            //commented to work offline and faster
-            // add_to_favorite_image_view.setImageResource(R.drawable.ic_heart_filled)
             currentFavoriteProduct?.let { fav ->
                 currentProduct?.let { product ->
                     product.userRate = userRate
                     product.favorite = 1
                     cachingViewModel.insertAsTransaction(fav, product)
-                    Log.i(TAG, "LLLL PRODUCT ADDED TRANSACTION: ")
                 }
             }
             isPlaceFavorite = true
             ADDED = true
             REMOVED = false
-//            Toast.makeText(this, it.message, Toast.LENGTH_SHORT).show()
             placeDetailsBinding.progressBar.visibility = View.GONE
             placeDetailsBinding.addRemoveFavoriteFrameLayout.isEnabled = true
             placeDetailsBinding.addToFavoriteImageView.isEnabled = true
@@ -425,7 +381,7 @@ class ProductActivity : AppCompatActivity() {
 
     private suspend fun deleteProductFromFavorite() {
         dismissProgressForFavoriteAfterTimeOut()
-        val responseMessage = placeActivityViewModel.deleteProductFromFavorites(
+        val responseMessage = productActivityViewModel.deleteProductFromFavorites(
             productId.toString(),
             accessToken
         )
@@ -435,17 +391,12 @@ class ProductActivity : AppCompatActivity() {
 
             currentFavoriteProduct?.let { fav ->
                 currentProduct?.let { product ->
-//                    cachingViewModel.deleteFromFavorites(fav)
-//                    cachingViewModel.deleteFromProducts(product)
                     cachingViewModel.deleteAsTransaction(fav, product)
                     Log.i(TAG, "LLLL PRODUCT REMOVED TRANSACTION: ")
                 }
             }
 
-            //commented to work offline and faster
-            //add_to_favorite_image_view.setImageResource(R.drawable.ic_heart)
             isPlaceFavorite = false
-//            Toast.makeText(this, it.message, Toast.LENGTH_SHORT).show()
             placeDetailsBinding.progressBar.visibility = View.GONE
             placeDetailsBinding.addRemoveFavoriteFrameLayout.isEnabled = true
             placeDetailsBinding.addToFavoriteImageView.isEnabled = true
@@ -459,25 +410,23 @@ class ProductActivity : AppCompatActivity() {
     }
 
     private suspend fun getUserSpecificRateOnline() {
-        val rate = placeActivityViewModel.getUserSpecificRate(
+        val rate = productActivityViewModel.getUserSpecificRate(
             productId.toString(),
             accessToken
         )
         rate?.let {
-            Log.i(TAG, "llll USER RATE BEFORE INITIALIZING : $userRate")
             userRate = it.rate ?: 0F
-            Log.i(TAG, "llll USER RATE AFTER INITIALIZING: $userRate")
             placeDetailsBinding.addRatingToPlaceBar.rating = it.rate ?: 0F
             placeDetailsBinding.addCommentFab.visibility = View.VISIBLE
         }
     }
 
-    private fun addRateToPlace(rate: Rate) {
+    private fun addRateToProduct(rate: Rate) {
         try {
             lifecycleScope.launch {
                 placeDetailsBinding.addRatingToPlaceBar.isEnabled = false
                 val responseMessage =
-                    placeActivityViewModel.addRatingToProduct(
+                    productActivityViewModel.addRatingToProduct(
                         rate,
                         productId.toString(),
                         accessToken
@@ -499,12 +448,12 @@ class ProductActivity : AppCompatActivity() {
 
     }
 
-    private fun updateRateFromPlace(rate: Rate) {
+    private fun updateRateToProduct(rate: Rate) {
         try {
             lifecycleScope.launch {
                 placeDetailsBinding.addRatingToPlaceBar.isEnabled = false
                 val responseMessage =
-                    placeActivityViewModel.updateRatingToProduct(
+                    productActivityViewModel.updateRatingToProduct(
                         rate,
                         productId.toString(),
                         accessToken
@@ -521,19 +470,13 @@ class ProductActivity : AppCompatActivity() {
         } catch (ex: Throwable) {
             placeDetailsBinding.addRatingToPlaceBar.isEnabled = true
         }
-//        finally {
-//            placeDetailsBinding.addRatingToPlaceBar.isEnabled = true
-//        }
-
     }
 
     private fun dismissProgressAfterTimeOut() {
         lifecycleScope.launchWhenStarted {
             placeDetailsBinding.progressBar.visibility = View.VISIBLE
-//            placeDetailsBinding.addCommentFab.isEnabled = false
             loadingHandler.postDelayed({
                 placeDetailsBinding.progressBar.visibility = View.GONE
-//                placeDetailsBinding.addCommentFab.isEnabled = true
             }, Constants.TIME_OUT_MILLISECONDS)
         }
 

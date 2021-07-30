@@ -14,10 +14,8 @@ import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.*
-import okhttp3.ResponseBody
 
 interface Api {
-    //    @FormUrlEncoded
     @POST("auth/signup")
     suspend fun signUp(@Body signUp: SignUp): Response<ResponseMessage>
 
@@ -25,20 +23,11 @@ interface Api {
     suspend fun verifyUser(@Body verify: Verify): Response<Token>
 
     @POST("auth/login")
-//    fun login(@Body login: Login): Call<Token>
     suspend fun login(@Body login: Login): Response<Token>
 
-    @POST("auth/send_reset_code")
-    fun sendResetCode(@Body email: ResetCode): Call<ResponseMessage>
-
-    @POST("auth/refresh_token")
-    suspend fun refreshToken(@Body refreshToken: RefreshToken): Response<Token>
-
-    @POST("auth/refresh_token")
-    fun refreshTheToken(@Body refreshToken: RefreshToken): Call<Token>
 
     @GET("products/rec")
-    suspend fun getRecommendedPlaces(
+    suspend fun getRecommendedProducts(
         @Query("page") page: Int,
         @Header("Authorization") accessToken: String
     ): Response<List<Product>>
@@ -71,21 +60,20 @@ interface Api {
 
     @GET("products/{id}")
     suspend fun getProductDetails(
-        @Path("id") placeId: String,
+        @Path("id") productId: String,
         @Header("Authorization") accessToken: String
     ): Response<Product>
 
     @GET("products/{id}/images")
-    suspend fun getPlaceImages(
-        @Path("id") placeId: String,
+    suspend fun getProductImages(
+        @Path("id") productId: String,
         @Header("Authorization") accessToken: String
     ): Response<List<ProductImage>>
 
 
-    //it was suspend and i modified it
     @GET("products/{id}/comments")
     suspend fun getProductComments(
-        @Path("id") placeId: String,
+        @Path("id") productId: String,
         @Query("page") page: Int,
         @Header("Authorization") accessToken: String
     ): Response<List<Comment>>
@@ -97,16 +85,16 @@ interface Api {
         @Header("Authorization") accessToken: String
     ): Response<MutableList<FavoriteProduct>>
 
-    //Here i used VisitedProduct as the body object as it has the field that i want
+    //Here i used PostFavoriteProduct as the body object as it has the field that i want
     @POST("products/fav")
-    suspend fun addPlaceToUserFavoritePlaces(
-        @Body favoriteProduct: VisitedProduct,
+    suspend fun addProductToUserFavoriteProducts(
+        @Body favoriteProduct: PostFavoriteProduct,
         @Header("Authorization") accessToken: String
     ): Response<ResponseMessage>
 
     @DELETE("products/fav/{id}")
-    suspend fun deleteUserFavoritePlace(
-        @Path("id") placeId: String,
+    suspend fun deleteUserFavoriteProduct(
+        @Path("id") productId: String,
         @Header("Authorization") accessToken: String
     ): Response<ResponseMessage>
 
@@ -134,20 +122,20 @@ interface Api {
 
     @GET("ratings/{id}")
     suspend fun getUserSpecificRate(
-        @Path("id") placeId: String,
+        @Path("id") productId: String,
         @Header("Authorization") accessToken: String
     ): Response<Rate>
 
     @POST("ratings/{id}")
-    suspend fun addRatingToPlace(
-        @Path("id") placeId: String,
+    suspend fun addRatingToProduct(
+        @Path("id") productId: String,
         @Body rate: Rate,
         @Header("Authorization") accessToken: String
     ): Response<ResponseMessage>
 
     @PUT("ratings/{id}")
-    suspend fun updateRatingToPlace(
-        @Path("id") placeId: String,
+    suspend fun updateRatingToProduct(
+        @Path("id") productId: String,
         @Body rate: Rate,
         @Header("Authorization") accessToken: String
     ): Response<ResponseMessage>

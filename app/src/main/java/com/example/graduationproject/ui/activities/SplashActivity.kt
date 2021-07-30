@@ -32,14 +32,12 @@ class SplashActivity : AppCompatActivity() {
         handler.postDelayed({
             when {
                 loggedOut -> {
-//                    Toast.makeText(this, "Logged out", Toast.LENGTH_SHORT).show()
                     startActivity(Intent(this, RegisterActivity::class.java))
                     overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
                     finish()
                 }
 
                 signedInORSignedUpVerified -> {
-//                    tokenizeUser(accessTokenExTime, refreshTokenExTime)
                     startActivity(Intent(this, MainActivity::class.java))
                     overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
                     finish()
@@ -57,8 +55,6 @@ class SplashActivity : AppCompatActivity() {
                     finish()
                 }
             }
-//            startActivity(Intent(this, MainActivity::class.java))
-//            finish()
 
         }, 2000)
     }

@@ -63,9 +63,6 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var notificationBroadcastReceiver: NotificationBroadcastReceiver
     private val navDrawerViewModel by viewModel<NavigationDrawerViewModel>()
     private lateinit var loadingHandler : Handler
-//    private var firstName = ""
-//    private var lastName = ""
-//    private var imageUrl = ""
     private var userBitmap: Bitmap? = null
     private var userNameUpdated = false
     private var userImageUpdated = false
@@ -81,44 +78,12 @@ class SettingsActivity : AppCompatActivity() {
         bindingInstance = DataBindingUtil.setContentView(this, R.layout.activity_settings)
 
         loadingHandler = Handler(Looper.getMainLooper())
-//        val fade = android.transition.Fade()
-//        val decor: View = window.decorView
-//        fade.excludeTarget(decor.findViewById<ActionBarContainer>(R.id.action_bar_container), true)
-//        fade.excludeTarget(bindingInstance.container, true)
-//        fade.excludeTarget(android.R.id.statusBarBackground, true)
-//        fade.excludeTarget(android.R.id.navigationBarBackground, true)
-//        window.enterTransition = fade
-//        window.exitTransition = fade
-//
-//        val bounds = ChangeBounds()
-//        bounds.duration = 2000
-//        window.sharedElementEnterTransition = bounds
-
         accessToken = getAccessToken(this).toString()
 
         if (savedInstanceState == null){
             initUserInfo()
         }
 
-//        bindingInstance.container.setOnClickListener{
-//            try {
-//                val locale = resources.configuration.locale
-//
-//                if (locale.language == "ar"){
-//                    changeLang(this, "en")
-//                }
-//                else if (locale.language =="en"){
-//                    changeLang(this, "ar")
-//                }
-//
-//            }
-//            catch (ex: Throwable){
-//                Toast.makeText(this, ex.localizedMessage, Toast.LENGTH_SHORT).show()
-//            }
-//
-//        }
-
-        Log.i(TAG, "MMMM onCreate: ONLY FIRST TIME")
         appSettingPrefs = getSharedPreferences("AppSettingPrefs", 0)
         sharedPrefsEdit = appSettingPrefs.edit()
         isNightModeOn = appSettingPrefs.getBoolean("NightMode", false)
@@ -130,7 +95,6 @@ class SettingsActivity : AppCompatActivity() {
             resultIntent.putExtra("userImageUpdated", userImageUpdated)
             resultIntent.putExtra("isModeUpdated", navDrawerViewModel.isModeUpdated)
             setResult(RESULT_OK, resultIntent)
-//            supportFinishAfterTransition()
             finish()
         }
 
@@ -143,9 +107,7 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         bindingInstance.changeModeImageButton.setOnClickListener {
-            Log.i(TAG, "MMMM onCreate: CLICKED")
             navDrawerViewModel.isModeUpdated = true
-//            animate()
             if (isNightModeOn) {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                 sharedPrefsEdit.putBoolean("NightMode", false)
@@ -191,52 +153,12 @@ class SettingsActivity : AppCompatActivity() {
 
     }
 
-        fun changeLang(context: Context, lang: String) {
-            val myLocale = Locale(lang)
-            Locale.setDefault(myLocale)
-            val config =  android.content.res.Configuration()
-            config.locale = myLocale
-            context.resources.updateConfiguration(config, context.resources.displayMetrics)
-        }
-
-
-    private fun animate() {
-        val w = bindingInstance.container.measuredWidth
-        val h = bindingInstance.container.measuredHeight
-        val finalRadius = hypot(w.toFloat(), h.toFloat())
-        val anim = ViewAnimationUtils.createCircularReveal(
-            bindingInstance.container,
-            w / 2,
-            h / 2,
-            0f,
-            finalRadius
-        )
-        anim.duration = 1000L
-        anim.start()
-        anim.doOnEnd {
-            if (isNightModeOn) {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                sharedPrefsEdit.putBoolean("NightMode", false)
-                sharedPrefsEdit.apply()
-                recreate()
-
-            } else {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                sharedPrefsEdit.putBoolean("NightMode", true)
-                sharedPrefsEdit.apply()
-                recreate()
-
-            }
-        }
-    }
-
     override fun onBackPressed() {
         val resultIntent = Intent()
         resultIntent.putExtra("userNameUpdated", userNameUpdated)
         resultIntent.putExtra("userImageUpdated", userImageUpdated)
         resultIntent.putExtra("isModeUpdated", navDrawerViewModel.isModeUpdated)
         setResult(RESULT_OK, resultIntent)
-//        supportFinishAfterTransition()
         finish()
     }
 
@@ -315,17 +237,11 @@ class SettingsActivity : AppCompatActivity() {
         registerReceiver(notificationBroadcastReceiver, intentFilterFail)
     }
 
-    override fun onStop() {
-        super.onStop()
-//        bindingInstance.progressBar.visibility = View.GONE
-//        bindingInstance.updateInfoButton.isEnabled = true
-        // unregisterReceiver(notificationBroadcastReceiver)
-    }
 
     override fun onDestroy() {
         super.onDestroy()
         /*
-            I removed receiver registeration from onStop() to here so that if the user choose an image and leave the application,
+            I removed receiver registering from onStop() to here so that if the user choose an image and leave the application,
             the receiver continues to work
          */
         unregisterReceiver(notificationBroadcastReceiver)
@@ -333,8 +249,6 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun updateUserInfo(firstName: String, lastName: String) {
-        //check to not make a dummy request with the same data
-//        if (firstName != user.firstName && lastName != user.lastName) {
         val userName = UserName(firstName, lastName)
         bindingInstance.progressBar.visibility = View.VISIBLE
         dismissProgressAfterTimeOut()
@@ -372,8 +286,6 @@ class SettingsActivity : AppCompatActivity() {
             Glide.with(this)
                 .asBitmap()
                 .load(userImageUrl)
-//                .skipMemoryCache(true)
-//                .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .into(object : CustomTarget<Bitmap>() {
                     override fun onResourceReady(
                         resource: Bitmap,
@@ -460,7 +372,6 @@ class SettingsActivity : AppCompatActivity() {
             var imageStringPath: String? = null
             try {
                 imageStringPath = FileUtils.getPath(this, selectedImageURI)
-//                imageStringPath = selectedImageURI?.path
             } catch (ex: Throwable) {
                 Toast.makeText(
                     this,
@@ -473,6 +384,7 @@ class SettingsActivity : AppCompatActivity() {
             if (selectedImageURI != null && imageStringPath != null) {
                 try {
                     val theRequiredFile = FileUtils.getFile(this, selectedImageURI)
+                    //If image size is more than 1 MB, tell user to lower it.
                     if (theRequiredFile.length() <= 1000000) {
                         bindingInstance.progressBar.visibility = View.VISIBLE
                         dismissProgressAfterTimeOut()
@@ -485,14 +397,17 @@ class SettingsActivity : AppCompatActivity() {
                         if (bitmap != null) {
                             val intent =
                                 Intent(this@SettingsActivity, ImageUploaderService::class.java)
+                            /*This is called here as i want to show the progressing notification,
+                              the cause is to give the user some indication that a process (compression) is running
+                              after that, i start the service as regular, and send the path to it.
+                             */
                             ContextCompat.startForegroundService(this@SettingsActivity, intent)
+                            //This process is to compress the image to make it small to be
+                            //uploaded to the server
                             CoroutineScope(Dispatchers.IO).launch {
-                                Log.i(TAG, "GGG onActivityResult: 1")
                                 val deferredBitmap: Deferred<Bitmap?> =
                                     CoroutineScope(Dispatchers.IO).async { compressImage(bitmap) }
-                                Log.i(TAG, "GGG onActivityResult: 2")
                                 userBitmap = deferredBitmap.await()
-                                Log.i(TAG, "GGG onActivityResult: 3")
                                 path = MediaStore.Images.Media.insertImage(
                                     contentResolver,
                                     userBitmap,
@@ -505,7 +420,6 @@ class SettingsActivity : AppCompatActivity() {
                                 intent.putExtra("oldImageName", navDrawerViewModel.imageUrl)
 
                                 startService(intent)
-//                                ContextCompat.startForegroundService(this@SettingsActivity, intent)
                             }
                         } else {
                             bindingInstance.progressBar.visibility = View.GONE
@@ -524,14 +438,35 @@ class SettingsActivity : AppCompatActivity() {
 
                 } catch (ex: Throwable) {
                     Toast.makeText(this, ex.localizedMessage, Toast.LENGTH_SHORT).show()
-                    //  bindingInstance.progressBar.visibility = View.GONE
-                } finally {
-                    //bindingInstance.progressBar.visibility = View.GONE
                 }
             }
         }
     }
 
+    private fun compressImage(bitmap: Bitmap): Bitmap? {
+        val bos = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.PNG, 0 /*ignored for PNG*/, bos)
+        val bitmapData = bos.toByteArray()
+        val inputStream = ByteArrayInputStream(bitmapData)
+
+        val original = BitmapFactory.decodeStream(inputStream)
+        val out = ByteArrayOutputStream()
+        original.compress(Bitmap.CompressFormat.PNG, 100, out)
+        val decoded = BitmapFactory.decodeStream(ByteArrayInputStream(out.toByteArray()))
+
+        Log.i("Original   TTT", original.width.toString() + " " + original.height)
+        Log.i("Compressed TTT", decoded.width.toString() + " " + decoded.height)
+
+        return decoded
+    }
+
+    private fun dismissProgressAfterTimeOut() {
+        lifecycleScope.launchWhenStarted {
+            loadingHandler.postDelayed({
+                bindingInstance.progressBar.visibility = View.GONE
+            }, Constants.TIME_OUT_MILLISECONDS)
+        }
+    }
 
     inner class NotificationBroadcastReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -561,37 +496,5 @@ class SettingsActivity : AppCompatActivity() {
             }
         }
     }
-
-    private fun compressImage(bitmap: Bitmap): Bitmap? {
-        val bos = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.PNG, 0 /*ignored for PNG*/, bos)
-        val bitmapData = bos.toByteArray()
-        val inputStream = ByteArrayInputStream(bitmapData)
-
-        val original = BitmapFactory.decodeStream(inputStream)
-        val out = ByteArrayOutputStream()
-        original.compress(Bitmap.CompressFormat.PNG, 100, out)
-        val decoded = BitmapFactory.decodeStream(ByteArrayInputStream(out.toByteArray()))
-
-        //Toast.makeText(this, "${original.width.toString() + " " + original.height}\n${decoded.width.toString() + " " + decoded.height}", Toast.LENGTH_LONG).show()
-        Log.i("Original   TTT", original.width.toString() + " " + original.height)
-        Log.i("Compressed TTT", decoded.width.toString() + " " + decoded.height)
-
-        return decoded
-    }
-
-
-    private fun dismissProgressAfterTimeOut() {
-        lifecycleScope.launchWhenStarted {
-//            bindingInstance.progressBar.visibility = View.VISIBLE
-            //  bindingInstance.updateInfoButton.isEnabled = false
-            loadingHandler.postDelayed({
-                bindingInstance.progressBar.visibility = View.GONE
-                // bindingInstance.updateInfoButton.isEnabled = true
-            }, Constants.TIME_OUT_MILLISECONDS)
-        }
-    }
-
-
 
 }

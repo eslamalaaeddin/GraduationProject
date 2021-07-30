@@ -27,12 +27,12 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class CommentConfigsBottomSheet(
     private val commentListener: CommentListener,
     private val comment: Comment,
-    private val placeId: Long,
+    private val productId: Long,
     private val position: Int
 ) :
     BottomSheetDialogFragment() {
     private lateinit var bindingInstance: CommentConfigurationsBottomSheetBinding
-    private val placeActivityViewModel by viewModel<ProductActivityViewModel>()
+    private val productActivityViewModel by viewModel<ProductActivityViewModel>()
     private lateinit var accessToken: String
     private lateinit var loadingHandler: Handler
 
@@ -58,7 +58,7 @@ class CommentConfigsBottomSheet(
             //get current comment
             //show it in a dialog box
             //showCommentUpdateDialog(comment)
-            val updateCommentBottomSheet = UpdateCommentBottomSheet(commentListener, comment, placeId, position)
+            val updateCommentBottomSheet = UpdateCommentBottomSheet(commentListener, comment, productId, position)
             updateCommentBottomSheet.show(requireActivity().supportFragmentManager, updateCommentBottomSheet.tag)
             dismiss()
         }
@@ -66,53 +66,6 @@ class CommentConfigsBottomSheet(
         bindingInstance.deleteCommentLayout.setOnClickListener {
             showCommentDeleteDialog(comment)
         }
-
-//        bindingInstance.ratePlaceLayout.setOnClickListener {
-//            showRateProductDialog(comment)
-//        }
-    }
-
-    private fun showCommentUpdateDialog(comment: Comment) {
-        val dialog = Dialog(requireContext())
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setCancelable(true)
-        dialog.setContentView(R.layout.update_comment_dialog)
-
-        val updateButton = dialog.findViewById(R.id.updateCommentButton) as Button
-        val cancelButton = dialog.findViewById(R.id.cancelUpdateCommentButton) as Button
-        val updateCommentEditText = dialog.findViewById(R.id.updateCommentEditText) as EditText
-
-        updateCommentEditText.setText(comment.commentContent.orEmpty())
-        updateCommentEditText.setSelection(updateCommentEditText.text.length)
-
-        updateButton.setOnClickListener {
-            val commentContent = updateCommentEditText.text.toString().trim()
-            if (commentContent.isNotEmpty()) {
-                val placeComment = ProductComment(placeId, commentContent)
-                lifecycleScope.launch {
-                    val responseMessage = placeActivityViewModel.updateCommentOnProduct(
-                        comment.commentId.toString(),
-                        placeComment,
-                        accessToken
-                    )
-                    responseMessage?.let {
-                        Toast.makeText(requireContext(), "Comment updated", Toast.LENGTH_SHORT)
-                            .show()
-                        //call an interface to get tell Product activity that comments has been updated
-                        comment.commentContent = commentContent
-                        commentListener.onCommentModified(comment, position)
-                        dialog.dismiss()
-                        dismiss()
-                    }
-                }
-            } else {
-                Toast.makeText(requireContext(), "Enter a comment first", Toast.LENGTH_SHORT).show()
-            }
-        }
-        cancelButton.setOnClickListener {
-            dialog.dismiss()
-        }
-        dialog.show()
 
     }
 
@@ -136,7 +89,7 @@ class CommentConfigsBottomSheet(
             }
 
             lifecycleScope.launch {
-                val responseMessage = placeActivityViewModel.deleteCommentFromProduct(
+                val responseMessage = productActivityViewModel.deleteCommentFromProduct(
                     comment.commentId.toString(),
                     accessToken
                 )

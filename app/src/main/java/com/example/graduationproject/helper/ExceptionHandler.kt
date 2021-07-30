@@ -21,10 +21,8 @@ class ExceptionHandler(private val context: Context) {
         when (ex) {
             is HttpException -> {
                 showErrorMessage(message)
-                Log.e(TAG, "HTTP --> ${ex.localizedMessage.orEmpty()}")
             }
             is IOException -> {
-//                showErrorMessage("Please check your internet connection")
                 if (getConnectionType(context) == 0) {
                     Toast.makeText(
                         context,
@@ -35,7 +33,6 @@ class ExceptionHandler(private val context: Context) {
                 else{
                     showErrorMessage(ex.localizedMessage)
                 }
-                Log.e(TAG, "IO --> ${ex.localizedMessage.orEmpty()}")
             }
             else -> {
                 //showErrorMessage(ex.localizedMessage)

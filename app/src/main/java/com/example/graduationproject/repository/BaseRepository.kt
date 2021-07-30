@@ -10,8 +10,6 @@ import retrofit2.Response
 private const val TAG = "BaseRepository"
 open class BaseRepository (context: Context){
 
-    var mContext = context
-
     val exceptionHandler = ExceptionHandler(context)
 
     suspend fun <T : Any> safeApiCall(call: suspend () -> Response<T>, errorMessage: String? = null): T? {

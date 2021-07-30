@@ -56,7 +56,10 @@ class UserRepository(private val api: Api,
             )
         }
         catch (ex: Throwable){
-            if (ex is HttpException){exceptionHandler.handleException(ex, ex.code().toString())}
+            if (ex is HttpException){
+                if (ex.code() == 406)
+                    exceptionHandler.handleException(ex, "Wrong password")
+            }
             else{exceptionHandler.handleException(ex)}
         }
         return responseMessage

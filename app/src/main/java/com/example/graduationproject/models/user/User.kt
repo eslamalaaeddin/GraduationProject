@@ -9,11 +9,9 @@ import com.google.gson.annotations.SerializedName
 data class User(
     var email: String? = null,
     @SerializedName("firstname")
-//    @ColumnInfo(name = "first_name")
     var firstName: String? = null,
     var id: Long? = null,
     var image: String? = null,
     @SerializedName("lastname")
-//    @ColumnInfo(name = "last_name")
     var lastName: String? = null
 )

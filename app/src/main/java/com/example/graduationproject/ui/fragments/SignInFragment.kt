@@ -102,19 +102,13 @@ class SignInFragment : Fragment() {
                     user?.let {
                         val userId : Long = it.id ?: 0
                         saveUserAsLoggedInAndSaveTokens(
-                            accessToken,
-                            refreshToken,
-                            accessTokenExTime,
-                            refreshTokenExTime,
-                            userId,
-                            "${user.firstName} ${user.lastName}",
-                            user.image.orEmpty(),
-                            mail
+                            accessToken = accessToken,
+                            accessTokenExTime = accessTokenExTime,
+                            userId = userId,
+                            userName = "${user.firstName} ${user.lastName}",
+                            userImageUrl = user.image.orEmpty(),
+                            mail = mail
                         )
-
-//                        lifecycleScope.launch {
-//                            cachingViewModel.insertUser(it)
-//                        }
                         navigateToMainActivity()
                     }
                     if (user == null){
@@ -149,9 +143,9 @@ class SignInFragment : Fragment() {
 
     private fun saveUserAsLoggedInAndSaveTokens(
         accessToken: String,
-        refreshToken: String,
+        refreshToken: String = "",
         accessTokenExTime: String,
-        refreshTokenExTime: String,
+        refreshTokenExTime: String = "",
         userId: Long,
         userName: String,
         userImageUrl : String,

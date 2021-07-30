@@ -18,6 +18,7 @@ import kotlinx.android.synthetic.main.searched_user_item.view.*
 
 private const val TAG = "SearchedProductsAdapter"
 
+// TODO: 7/10/2021 To be REMOVED
 class SearchedUsersAdapter :
     PagedListAdapter<User, SearchedUsersAdapter.SearchedUserViewHolder>(CALLBACK) {
 

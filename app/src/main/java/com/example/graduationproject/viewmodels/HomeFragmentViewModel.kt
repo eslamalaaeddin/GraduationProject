@@ -23,9 +23,12 @@ class HomeFragmentViewModel(
 
     suspend fun getRecommendedProductsPagedList(accessToken: String): LiveData<PagedList<Product>>? {
         //Constructing the Paging source
+        //getConnectionType() has two variants one with context parameter and the other without it
+        //as i should not pass any contexts to view models as it may cause memory leaks.
         val recommendedProductsSourceFactory =
             RecommendedProductsSourceFactory(accessToken,
                     productsRepository, cachingRepository, networkState = BaseApplication.getConnectionType())
+
         //This makes the product source used as live data.
         recommendedProductsSourceLiveData =
             recommendedProductsSourceFactory.recommendedProductsSourceLiveData
@@ -47,26 +50,6 @@ class HomeFragmentViewModel(
         return recommendedProductsPagedList
     }
 
-
-    suspend fun getRecommendedProductsPagedListFromDb(): LiveData<PagedList<Product>>? {
-        val recommendedProductsSourceFactory =
-            RecommendedProductsSourceFactory(productsRepository = productsRepository, cachingRepository = cachingRepository, networkState = BaseApplication.getConnectionType())
-        recommendedProductsSourceLiveData =
-            recommendedProductsSourceFactory.recommendedProductsSourceLiveData
-
-        val config: PagedList.Config = PagedList.Config.Builder()
-            .setEnablePlaceholders(true) //no items
-            .setInitialLoadSizeHint(10)
-            .setPageSize(2)
-            .setPrefetchDistance(4)
-            .build()
-
-        recommendedProductsPagedList =
-            LivePagedListBuilder<Int, Product>(recommendedProductsSourceFactory, config)
-                .build()
-
-        return recommendedProductsPagedList
-    }
 
 
 }

@@ -14,11 +14,10 @@ import kotlinx.coroutines.Dispatchers
 
 class CachingRepository(
     val database: Database,
-    val context: Context,
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+    val context: Context
 ) : BaseRepository(context) {
 
-    //FAVORITES DAO
+    //Favorites Caching
     suspend fun getFavoritesFromDb(page: Int) = database.getFavoritesDao().getFavoritesFromDb(page)
     suspend fun insertIntoFavorites(favoriteProduct: FavoriteProduct) = database.getFavoritesDao().insertIntoFavorites(
         favoriteProduct
@@ -27,8 +26,7 @@ class CachingRepository(
         favoriteProduct
     )
 
-    //PRODUCTS DAO
-//    suspend fun getProductsFromDb() = database.getProductsDao().getProductsFromDb()
+    //Home Caching
     suspend fun getProduct(productId: Long) = database.getProductsDao().getProduct(productId)
     suspend fun insertIntoProducts(product: Product) = database.getProductsDao().insertIntoProducts(
         product
@@ -36,9 +34,6 @@ class CachingRepository(
     suspend fun deleteFromProducts(product: Product) = database.getProductsDao().deleteFromProducts(
         product
     )
-
-
-    //CACHING HOME
 
     suspend fun getProductsFromDb(offset: Int): MutableList<Product>? = database.getProductsDao().getProductsFromDb(offset)
     suspend fun deleteProductsFromDb() = database.getProductsDao().deleteProducts()

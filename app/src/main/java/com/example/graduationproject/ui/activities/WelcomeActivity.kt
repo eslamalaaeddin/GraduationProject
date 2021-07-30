@@ -12,9 +12,7 @@ import com.example.graduationproject.adapters.SliderAdapter
 import com.example.graduationproject.databinding.ActivityWelcomeBinding
 
 class WelcomeActivity : AppCompatActivity() {
-    //data binding instance
     private lateinit var activityWelcomeBinding: ActivityWelcomeBinding
-    //slider adapter
     private lateinit var sliderAdapter : SliderAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,7 +39,6 @@ class WelcomeActivity : AppCompatActivity() {
         for ((i,item) in dots.withIndex()) {
             dots[i] = TextView(this)
             dots[i].apply {
-              //  background = resources.getDrawable(R.drawable.shape_deselected_dot)
                 text = (Html.fromHtml("&#8226;"))
                 textSize = 36F
                 setTextColor(resources.getColor(R.color.white_font_text))

@@ -13,32 +13,26 @@ import androidx.lifecycle.observe
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.graduationproject.R
-import com.example.graduationproject.adapters.RecommendedPlacesAdapter
+import com.example.graduationproject.adapters.RecommendedProductsAdapter
 import com.example.graduationproject.cache.CachingViewModel
 import com.example.graduationproject.databinding.FragmentHomeBinding
 import com.example.graduationproject.helper.Constants
-import com.example.graduationproject.helper.Utils
 import com.example.graduationproject.helper.Utils.getAccessToken
-import com.example.graduationproject.helper.listeners.RecommendedProductClickListener
 import com.example.graduationproject.models.products.Product
-import com.example.graduationproject.models.products.VisitedProduct
-import com.example.graduationproject.ui.activities.SplashActivity
+import com.example.graduationproject.models.products.PostFavoriteProduct
 import com.example.graduationproject.viewmodels.HomeFragmentViewModel
 import com.example.graduationproject.viewmodels.ProductActivityViewModel
-import kotlinx.android.synthetic.main.activity_product.*
-import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 private const val TAG = "HomeFragment"
 
-class HomeFragment : Fragment(), RecommendedProductClickListener {
+class HomeFragment : Fragment(){
     private val homeFragmentViewModel by viewModel<HomeFragmentViewModel>()
     private val placeActivityViewModel by viewModel<ProductActivityViewModel>()
-    private val cachingViewModel by viewModel<CachingViewModel>()
     private lateinit var fragmentBinding: FragmentHomeBinding
     private lateinit var gridLayoutManager: GridLayoutManager
-    private var recProductsAdapter: RecommendedPlacesAdapter? = null
+    private var recProductsAdapter: RecommendedProductsAdapter? = null
     private var accessToken = ""
     private lateinit var loadingHandler: Handler
 
@@ -61,50 +55,13 @@ class HomeFragment : Fragment(), RecommendedProductClickListener {
         loadingHandler = Handler(Looper.getMainLooper())
 
         Log.i(TAG, "RRRRR onViewCreated: RECREATED")
-//        if (Utils.getConnectionType(requireContext()) == 0) {
-//            getRecommendedPlacesFromDb()
-//
-//        } else {
-            getRecommendedPlaces()
-//        }
+
+        getRecommendedPlaces()
 
         initArrowImageButton()
         initScrollListener()
     }
 
-    private fun getRecommendedPlacesFromDb() {
-        try {
-            lifecycleScope.launch {
-                dismissProgressAfterTimeOut()
-                homeFragmentViewModel.getRecommendedProductsPagedListFromDb()
-                    ?.observe(viewLifecycleOwner)
-                    { recProducts ->
-                        fragmentBinding.homePlacesRecyclerView.apply {
-                            layoutManager = gridLayoutManager
-                            recProductsAdapter = RecommendedPlacesAdapter(
-                                R.layout.home_product_item,
-                                this@HomeFragment
-                            )
-                            recProductsAdapter?.let {
-                                fragmentBinding.progressBar.visibility = View.VISIBLE
-                                it.submitList(recProducts)
-                                adapter = it
-                                lifecycleScope.launchWhenStarted {
-                                    loadingHandler.postDelayed({
-                                        fragmentBinding.progressBar.visibility = View.GONE
-                                    }, 750)
-                                }
-                            }
-                        }
-                    }
-            }
-        } catch (ex: Throwable) {
-            Log.i(TAG, "getRecommendedPlaces: ${ex.localizedMessage}")
-        } finally {
-            dismissProgressAfterTimeOut()
-        }
-
-    }
 
     private fun initArrowImageButton() {
         fragmentBinding.arrowUpImageButton.setOnClickListener {
@@ -136,46 +93,6 @@ class HomeFragment : Fragment(), RecommendedProductClickListener {
         })
     }
 
-
-    override fun onFavoriteIconClicked(product: Product, productPosition: Int) {
-        val isPlaceFavorite = product.favorite == 1
-        if (isPlaceFavorite) {
-            lifecycleScope.launch { deletePlaceFromFavorite(product, productPosition) }
-        } else {
-            lifecycleScope.launch { addPlaceToFavorite(product, productPosition) }
-        }
-    }
-
-
-    private suspend fun addPlaceToFavorite(product: Product, productPosition: Int) {
-        val responseMessage = placeActivityViewModel.addProductToFavorites(
-            VisitedProduct(pid = product.id),
-            accessToken
-        )
-        responseMessage?.let {
-            //this line has no effect as you can't modify a state of items of a recycler view
-//            add_to_favorite_image_view.setImageResource(R.drawable.ic_heart_filled)
-            //the following two lines are meant to only change the state of a specific item
-            product.favorite = if (product.favorite == 0) 1 else 0
-            recProductsAdapter?.notifyItemChanged(productPosition, product)
-            // getRecommendedPlaces()
-        }
-    }
-
-    private suspend fun deletePlaceFromFavorite(product: Product, productPosition: Int) {
-        val responseMessage = placeActivityViewModel.deleteProductFromFavorites(
-            product.id.toString(),
-            accessToken
-        )
-        responseMessage?.let {
-//            add_to_favorite_image_view.setImageResource(R.drawable.ic_heart)
-            // getRecommendedPlaces()
-            product.favorite = if (product.favorite == 0) 1 else 0
-            recProductsAdapter?.notifyItemChanged(productPosition, product)
-
-        }
-    }
-
     private fun getRecommendedPlaces() {
         try {
             lifecycleScope.launch {
@@ -186,10 +103,7 @@ class HomeFragment : Fragment(), RecommendedProductClickListener {
 
                         fragmentBinding.homePlacesRecyclerView.apply {
                             layoutManager = gridLayoutManager
-                            recProductsAdapter = RecommendedPlacesAdapter(
-                                R.layout.home_product_item,
-                                this@HomeFragment
-                            )
+                            recProductsAdapter = RecommendedProductsAdapter(R.layout.home_product_item)
                             recProductsAdapter?.let {
                                 fragmentBinding.progressBar.visibility = View.VISIBLE
                                 it.submitList(recProducts)

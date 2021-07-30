@@ -85,7 +85,6 @@ class UserInfoFragment : Fragment() {
 
         bindingInstance.settingsLayout.setOnClickListener {
             navigateToSettingsActivity()
-//            fade()
         }
         bindingInstance.logOutLayout.setOnClickListener {
             showLogoutDialog()
@@ -106,10 +105,6 @@ class UserInfoFragment : Fragment() {
             getUserAndUpdateUiOnLine()
         }
 
-//        bindingInstance.userImageView.setOnClickListener{
-//            val addToPostBottomSheet = AddToPostBottomSheet(this)
-//            activity?.supportFragmentManager?.let { it1 -> addToPostBottomSheet.show(it1, addToPostBottomSheet.tag) }
-//        }
     }
 
     private fun showTeamNames(){
@@ -178,24 +173,6 @@ class UserInfoFragment : Fragment() {
 
     }
 
-    fun fade(){
-        userName = getUserName(requireContext()).toString()
-        userImageUrl = getUserImageUrl(requireContext()).toString()
-
-        val settingsIntent = Intent(requireContext(), SettingsActivity::class.java)
-        settingsIntent.putExtra("userFirstName", userName.substringBefore(" "))
-        settingsIntent.putExtra("userLastName", userName.substringAfter(" "))
-        settingsIntent.putExtra("userImageUrl", userImageUrl)
-
-
-        val p1  = Pair(bindingInstance.userImageView as View?, "userImageTrans")
-        val p2  = Pair(bindingInstance.userNameTextView, "userNameTrans")
-
-        val options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-            requireActivity(), bindingInstance.userImageView, "userImageTrans"
-        )
-        startActivity(settingsIntent, options.toBundle())
-    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -251,8 +228,6 @@ class UserInfoFragment : Fragment() {
                     Glide.with(requireContext())
                         .asBitmap()
                         .load(userImageUrl)
-//                        .skipMemoryCache(true)
-//                        .diskCacheStrategy(DiskCacheStrategy.NONE)
                         .into(object : CustomTarget<Bitmap>() {
                             override fun onResourceReady(
                                 resource: Bitmap,
@@ -269,7 +244,6 @@ class UserInfoFragment : Fragment() {
                 } else {
                     bindingInstance.userImageView.setImageResource(R.drawable.avatar)
                 }
-                //bindingInstance.progressBar.visibility = View.GONE
 
             }
             if (it == null) {

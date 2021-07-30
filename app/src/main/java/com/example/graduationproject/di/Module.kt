@@ -32,14 +32,6 @@ val databaseModule = module {
 }
 
 
-//val tokenAuthenticatorModule = module {
-//    fun provideTokenAuthenticatorModule(context: Context): TokenAuthenticator{
-//        return TokenAuthenticator( context)
-//    }
-//    single { provideTokenAuthenticatorModule(androidContext()) }
-//}
-
-
 val authenticationRepositoryModule = module {
     fun provideAuthenticationRepository(context: Context): AuthenticationRepository {
         return AuthenticationRepository(RetrofitInstance.api, context)

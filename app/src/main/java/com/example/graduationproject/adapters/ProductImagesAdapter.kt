@@ -16,40 +16,16 @@ import kotlinx.android.synthetic.main.product_details_item_layout.view.*
 //http://127.0.0.1:3000/images/products/product.png
 
 class PlaceImagesAdapter(
-    private val placeId: String,
     private var productImages: List<ProductImage>
     ) :
     RecyclerView.Adapter<PlaceImagesAdapter.PlacesImagesViewHolder>() {
 
-    inner class PlacesImagesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
-        View.OnClickListener, View.OnLongClickListener {
-        // private val placeNameTextView : TextView = itemView.findViewById(R.id.details_place_name_text_view)
-        private val placeImage: ImageView = itemView.findViewById(R.id.detail_place_image_view)
-        //  private val placeRatingBar : RatingBar = itemView.findViewById(R.id.details_place_rating_bar)
-
-
-        init {
-            itemView.setOnClickListener(this)
-            itemView.setOnLongClickListener(this)
-        }
-
-
+    inner class PlacesImagesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         fun bind(productImage: ProductImage) {
             if (productImage.name?.isNotEmpty() == true) {
                 Picasso.get().load(productImage.name).into(itemView.detail_place_image_view)
             }
         }
-
-        override fun onClick(item: View?) {
-            //Temp code
-            Toast.makeText(itemView.context, "ImageClicked", Toast.LENGTH_SHORT).show()
-
-        }
-
-        override fun onLongClick(item: View?): Boolean {
-            return true
-        }
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlacesImagesViewHolder {

@@ -17,7 +17,7 @@ class RetrofitInstance(){
 
     companion object {
 
-         val retrofit by lazy {
+         val retrofit: Retrofit by lazy {
              val okHttpClient: OkHttpClient = OkHttpClient.Builder()
                  .readTimeout(TIME_OUT_SECONDS, TimeUnit.SECONDS)
                  .connectTimeout(TIME_OUT_SECONDS, TimeUnit.SECONDS)
@@ -30,7 +30,7 @@ class RetrofitInstance(){
                 .build()
         }
 
-        val api by lazy {
+        val api: Api by lazy {
             retrofit.create(Api::class.java)
         }
     }

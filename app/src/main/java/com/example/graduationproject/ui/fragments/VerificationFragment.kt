@@ -74,10 +74,6 @@ class VerificationFragment : Fragment() {
             ).show()
         }
 
-//        haveAccountTextView.setOnClickListener {
-//            val action = VerificationFragmentDirections.actionVerificationFragmentToSignInFragment()
-//            findNavController().navigate(action)
-//        }
 
         verifyButton.setOnClickListener {
             val verificationCode = verification_code_edit_text.text.toString()
@@ -126,9 +122,6 @@ class VerificationFragment : Fragment() {
                         bindingInstance.progressBar.visibility = View.GONE
                         bindingInstance.verifyButton.isEnabled = true
 
-//                        lifecycleScope.launch {
-//                            cachingViewModel.insertUser(it)
-//                        }
                         navigateToMainActivity()
                     }
 

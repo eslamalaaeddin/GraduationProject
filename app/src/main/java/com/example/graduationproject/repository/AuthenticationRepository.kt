@@ -101,27 +101,6 @@ class AuthenticationRepository(
         return token
     }
 
-    suspend fun refreshToken(refreshToken: RefreshToken): Token? {
-        var token: Token? = null
-        try {
-            token = safeApiCall(
-                call = { withContext(ioDispatcher) { api.refreshToken(refreshToken) } },
-                errorMessage = "Refreshing token is not available now."
-            )
-        } catch (ex: Throwable) {
-            if (ex is HttpException) {
-                exceptionHandler.handleException(
-                    ex,
-                    "${ex.code()} Token is expired or invalid\nSomething went wrong"
-                )
-            } else {
-                exceptionHandler.handleException(ex)
-            }
-        }
-
-        return token
-    }
-
     private fun navigateToVerificationFragment() {
         val intent = Intent(context, RegisterActivity::class.java)
         intent.putExtra("unVerified", 403)

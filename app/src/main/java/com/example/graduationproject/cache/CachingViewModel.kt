@@ -16,9 +16,8 @@ private const val TAG = "CachingViewModel"
 
 class CachingViewModel(private val cachingRepository: CachingRepository) : ViewModel() {
     var favoritePlacesLiveData: LiveData<MutableList<FavoriteProduct>>? = null
-    var productsLiveData: LiveData<MutableList<Product>>? = null
+    //Offset
     var favoritePages = 0
-    var productPages = 0
 
     //FAVORITES DAO
     suspend fun getFavoriteProductsFromDb(): LiveData<MutableList<FavoriteProduct>>? {

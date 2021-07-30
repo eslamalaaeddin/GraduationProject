@@ -36,7 +36,7 @@ class FavoriteProductsAdapter(
         }
 
         fun bind(product: FavoriteProduct) {
-            if (product.isFavorite == true){
+            if (product.isFavorite){
                 itemView.add_to_favorite_image_view.setImageResource(R.drawable.ic_heart_filled)
             }
             else{
@@ -51,10 +51,8 @@ class FavoriteProductsAdapter(
             //Temp
             val favoriteProduct = favoriteProducts?.get(adapterPosition)
             val intent = Intent(itemView.context, ProductActivity::class.java)
-            intent.putExtra("placeId", favoriteProduct?.id)
-//            itemView.context.startActivity(intent)
+            intent.putExtra("productId", favoriteProduct?.id)
             favoriteProductClickListener.onFavoriteProductClicked(favoriteProduct, adapterPosition)
-//            itemView.context.startActivity(intent)
         }
     }
 
@@ -75,14 +73,12 @@ class FavoriteProductsAdapter(
         }
     }
 
-
+    // TODO: 7/10/2021 To be removed
     fun removeItem(position: Int) {
         favoriteProducts?.removeAt(position)
         notifyItemRemoved(position)
         notifyItemRangeChanged(position, itemCount)
     }
-
-
 
     override fun getItemCount(): Int {
         if (favoriteProducts != null) {

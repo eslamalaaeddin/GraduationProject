@@ -26,20 +26,17 @@ class SearchedProductsAdapter :
         fun bind(product: Product){
             itemView.productNameTextView.text = product.name
             itemView.homeRatingBar.rating = product.rating ?: 0F
-            val tags = product.tags.orEmpty().replace(",", ", ")
             //comedy,fantasy,drama ==> Comedy, Fantasy, Drama
-            val tags1 = product.tags.orEmpty().splitToSequence(",").toList().joinToString(", ") { item -> item.capitalize() }
-//            itemView.productTagsTextView.text = tags
-            itemView.productTagsTextView.text = tags1
+            val tags = product.tags.orEmpty().splitToSequence(",").toList().joinToString(", ") { item -> item.capitalize() }
+            itemView.productTagsTextView.text = tags
             Picasso.get().load(product.image).into(itemView.movie_image_view)
         }
 
         override fun onClick(v: View?) {
-            //Temp
-            val place = getItem(adapterPosition)
+            val product = getItem(adapterPosition)
             val intent = Intent(itemView.context, ProductActivity::class.java)
-            place?.let {
-                intent.putExtra("placeId", place.id)
+            product?.let {
+                intent.putExtra("productId", product.id)
                 itemView.context.startActivity(intent)
             }
 
@@ -53,9 +50,9 @@ class SearchedProductsAdapter :
     }
 
     override fun onBindViewHolder(holder: SearchedProductsViewHolder, position: Int) {
-        val place = getItem(position)
-        place?.let {
-            holder.bind(place)
+        val product = getItem(position)
+        product?.let {
+            holder.bind(product)
         }
     }
 

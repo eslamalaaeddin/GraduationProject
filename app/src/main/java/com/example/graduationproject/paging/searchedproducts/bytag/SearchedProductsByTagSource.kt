@@ -21,7 +21,6 @@ class SearchedProductsByTagSource(
         params: LoadInitialParams<Int>,
         callback: LoadInitialCallback<Int, Product>
     ) {
-        //I don't know why not to use MAIN dispatcher here
         CoroutineScope(Dispatchers.Main).launch {
             val response = searchRepository.searchByProductTag(tag, 1, accessToken)
             response.let { res ->

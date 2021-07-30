@@ -23,13 +23,7 @@ class NavigationDrawerViewModel(private val usersRepository: UserRepository) : V
             val data = usersRepository.getUser(accessToken)
             emit(data)
         }
-//         viewModelScope.launch {
-//             user = usersRepository.getUser(accessToken)
-//        }
-//        return user
     }
-
-    //I think that second solution will be with deferred, without using live data
 
     suspend fun updateUserName(userName: UserName, accessToken: String): ResponseMessage? {
         return usersRepository.updateUserName(userName, accessToken)

@@ -29,9 +29,8 @@ import com.example.graduationproject.helper.Utils
 import com.example.graduationproject.helper.Utils.getAccessToken
 import com.example.graduationproject.helper.listeners.FavoriteProductClickListener
 import com.example.graduationproject.models.products.FavoriteProduct
-import com.example.graduationproject.models.products.VisitedProduct
+import com.example.graduationproject.models.products.PostFavoriteProduct
 import com.example.graduationproject.ui.activities.ProductActivity
-import com.example.graduationproject.ui.activities.SplashActivity
 import com.example.graduationproject.viewmodels.ProductActivityViewModel
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -48,9 +47,7 @@ class FavoritesFragment : Fragment(), FavoriteProductClickListener {
     private lateinit var favoriteProductsAdapter: FavoriteProductsAdapter
     private var currentFavoriteProduct: FavoriteProduct? = null
     private var currentFavoriteProductPosition = 0
-    private var currentRecProducts: PagedList<FavoriteProduct>? = null
     private lateinit var gridLayoutManager: GridLayoutManager
-    private lateinit var networkStateReceiver: NetworkStateReceiver
     var userScrolled = true
     var pastVisibleItems = 0
     var visibleItemCount: Int = 0
@@ -130,7 +127,6 @@ class FavoritesFragment : Fragment(), FavoriteProductClickListener {
                             }
 
                         }
-
                     }
 
                     if (dy < 0) {
@@ -208,46 +204,6 @@ class FavoritesFragment : Fragment(), FavoriteProductClickListener {
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-        // networkStateReceiver = NetworkStateReceiver()
-        //val intentFilter = IntentFilter(CONNECTION_CHANGE)
-        //requireActivity().registerReceiver(networkStateReceiver, intentFilter)
-
-//        getFavoriteProducts()
-
-    }
-
-    override fun onStop() {
-        super.onStop()
-        //requireActivity().unregisterReceiver(networkStateReceiver)
-    }
-
-    private fun updateRecyclerViewOnline() {
-        try {
-            lifecycleScope.launch {
-                fragmentFavoritesBinding.progressBar.visibility = View.VISIBLE
-                val favoritePlacesLiveData = placeActivityViewModel.getFavoriteProducts(accessToken)
-                favoritePlacesLiveData?.observe(viewLifecycleOwner) { favProducts ->
-                    if (favProducts.isNullOrEmpty()) {
-                        placeActivityViewModel.favoritePages = -1
-                    } else {
-                        favoriteProducts?.addAll(favProducts.orEmpty())
-                        favoriteProductsAdapter.notifyDataSetChanged()
-                    }
-                    fragmentFavoritesBinding.noFavoriteProductsTextView.visibility = View.GONE
-                    fragmentFavoritesBinding.progressBar.visibility = View.GONE
-                }
-
-            }
-        } catch (ex: Throwable) {
-            Log.i(TAG, "updateRecyclerView: ${ex.localizedMessage}")
-            fragmentFavoritesBinding.progressBar.visibility = View.GONE
-        } finally {
-            dismissProgressAfterTimeOut()
-        }
-    }
-
     private fun getFavoriteProductsOnline() {
         try {
             lifecycleScope.launch {
@@ -293,6 +249,33 @@ class FavoritesFragment : Fragment(), FavoriteProductClickListener {
 
     }
 
+    private fun updateRecyclerViewOnline() {
+        try {
+            lifecycleScope.launch {
+                fragmentFavoritesBinding.progressBar.visibility = View.VISIBLE
+                val favoritePlacesLiveData = placeActivityViewModel.getFavoriteProducts(accessToken)
+                favoritePlacesLiveData?.observe(viewLifecycleOwner) { favProducts ->
+                    if (favProducts.isNullOrEmpty()) {
+                        placeActivityViewModel.favoritePages = -1
+                    } else {
+                        favoriteProducts?.addAll(favProducts.orEmpty())
+                        favoriteProductsAdapter.notifyDataSetChanged()
+                    }
+                    fragmentFavoritesBinding.noFavoriteProductsTextView.visibility = View.GONE
+                    fragmentFavoritesBinding.progressBar.visibility = View.GONE
+                }
+
+            }
+        } catch (ex: Throwable) {
+            Log.i(TAG, "updateRecyclerView: ${ex.localizedMessage}")
+            fragmentFavoritesBinding.progressBar.visibility = View.GONE
+        } finally {
+            dismissProgressAfterTimeOut()
+        }
+    }
+
+
+
     private fun handleFavoriteState(productPosition: Int, favoriteProduct: FavoriteProduct?) {
         val isFavorite = favoriteProduct?.isFavorite
         //Is favorite
@@ -335,8 +318,6 @@ class FavoritesFragment : Fragment(), FavoriteProductClickListener {
             ?.observe(viewLifecycleOwner) {
                 it?.let { product ->
                     lifecycleScope.launch {
-//                        cachingViewModel.deleteFromProducts(product)
-//                        cachingViewModel.deleteFromFavorites(favoriteProduct)
                         cachingViewModel.deleteAsTransaction(favoriteProduct, product)
                         Log.i(TAG, "LLLL: REMOVED TRANSACTION FRAGMENT")
                     }
@@ -347,7 +328,7 @@ class FavoritesFragment : Fragment(), FavoriteProductClickListener {
     private fun addProductToFavorite(favoriteProduct: FavoriteProduct?, productPosition: Int) {
         lifecycleScope.launch {
             val responseMessage = placeActivityViewModel.addProductToFavorites(
-                VisitedProduct(pid = favoriteProduct?.id),
+                PostFavoriteProduct(pid = favoriteProduct?.id),
                 accessToken
             )
             responseMessage?.let { _ ->
@@ -371,7 +352,6 @@ class FavoritesFragment : Fragment(), FavoriteProductClickListener {
                 accessToken
             )
             responseMessage?.let {
-
                 favoriteProduct.id?.let { id ->
                     getProductFromServerAndRemoveItLocally(id.toString(), accessToken, favoriteProduct)
                 }
@@ -407,7 +387,7 @@ class FavoritesFragment : Fragment(), FavoriteProductClickListener {
         val connectionState = Utils.getConnectionType(requireContext())
 
         val intent = Intent(requireContext(), ProductActivity::class.java)
-        intent.putExtra("placeId", favoriteProduct?.id)
+        intent.putExtra("productId", favoriteProduct?.id)
         intent.putExtra("connectionState", connectionState)
         startActivityForResult(intent, FAVORITE_PRODUCT_REQUEST_CODE)
 
@@ -419,10 +399,8 @@ class FavoritesFragment : Fragment(), FavoriteProductClickListener {
             if (resultCode == Activity.RESULT_OK) {
                 data?.let {
                     val isRemoved: Boolean = data.getBooleanExtra("removedProduct", false)
-                    val isAdded: Boolean = data.getBooleanExtra("addedProduct", false)
 
                     currentFavoriteProduct?.let {
-                        val isFavorite = currentFavoriteProduct?.isFavorite
                         //Is favorite
                         if (isRemoved) {
                             it.isFavorite = false
@@ -431,16 +409,7 @@ class FavoritesFragment : Fragment(), FavoriteProductClickListener {
                                 it
                             )
                             favoriteProductsAdapter.notifyDataSetChanged()
-                            // Toast.makeText(requireContext(), "Removed", Toast.LENGTH_SHORT).show()
                         }
-                        //Not favorite
-                        // I think below code is useless as you returned to the favorite state that you where in -- no change
-//                       if (isAdded) {
-//                           it.isFavorite = true
-//                           favoriteProductsAdapter.notifyItemChanged(currentFavoriteProductPosition, it)
-//                           favoriteProductsAdapter.notifyDataSetChanged()
-//                         //  Toast.makeText(requireContext(), "Added", Toast.LENGTH_SHORT).show()
-//                       }
                     }
                 }
             }
@@ -450,21 +419,6 @@ class FavoritesFragment : Fragment(), FavoriteProductClickListener {
     override fun onDestroy() {
         super.onDestroy()
         loadingHandler.removeCallbacksAndMessages(null)
-    }
-
-
-}
-
-class NetworkStateReceiver : BroadcastReceiver() {
-    override fun onReceive(context: Context?, intent: Intent?) {
-        context?.let {
-            if (Utils.getConnectionType(it) == 0) {
-                Toast.makeText(it, "NO", Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(it, "YES", Toast.LENGTH_SHORT).show()
-            }
-        }
-
     }
 
 }

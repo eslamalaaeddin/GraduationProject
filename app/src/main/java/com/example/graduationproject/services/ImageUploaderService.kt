@@ -94,11 +94,7 @@ class ImageUploaderService : Service() {
                         .setOngoing(false)
                     notificationManager.notify(NOTIFICATION_ID, notification.build())
                     handler.removeCallbacksAndMessages(null)
-                    //send a broad cast to update the ui
-//                    val intent = Intent(ACTION_IMAGE_UPLOADED_SUCCESS)
-//                    val noUiIntent = Intent(ACTION_IMAGE_UPLOADED_SUCCESS_NO_UI)
-//                    sendBroadcast(intent)
-//                    sendBroadcast(noUiIntent)
+
                     response.body()?.let {
                         val intent = Intent(ACTION_IMAGE_UPLOADED_SUCCESS)
                         val noUiIntent = Intent(ACTION_IMAGE_UPLOADED_SUCCESS_NO_UI)
@@ -128,7 +124,7 @@ class ImageUploaderService : Service() {
 
     private fun showImageUploadingProgress() {
         val progressMax = 100
-
+        //Creating the channel
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 CHANNEL_ID, CHANNEL_NAME,
@@ -145,7 +141,6 @@ class ImageUploaderService : Service() {
             .setChannelId(CHANNEL_ID)
             .setContentTitle("Image uploading")
             .setContentText("Uploading in progress")
-//            .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setOngoing(true)
             .setOnlyAlertOnce(true)
             .setProgress(progressMax, 0, true)

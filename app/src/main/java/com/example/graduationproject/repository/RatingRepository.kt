@@ -11,12 +11,12 @@ import retrofit2.HttpException
 
 class RatingRepository(private val api: Api, private val context: Context, private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO): BaseRepository(context) {
 
-    suspend fun addRatingToProduct(rate: Rate, placeId: String, accessToken: String): ResponseMessage?{
+    suspend fun addRatingToProduct(rate: Rate, productId: String, accessToken: String): ResponseMessage?{
         var responseMessage: ResponseMessage? = null
         try {
             responseMessage = safeApiCall(
-                call = { withContext(ioDispatcher){api.addRatingToPlace(placeId, rate, accessToken)} },
-                errorMessage = "Rating place is not available now."
+                call = { withContext(ioDispatcher){api.addRatingToProduct(productId, rate, accessToken)} },
+                errorMessage = "Rating product is not available now."
             )
         }
         catch (ex: Throwable){
@@ -26,12 +26,12 @@ class RatingRepository(private val api: Api, private val context: Context, priva
         return responseMessage
     }
 
-    suspend fun updateRatingToProduct(rate: Rate, placeId: String, accessToken: String): ResponseMessage?{
+    suspend fun updateRatingToProduct(rate: Rate, productId: String, accessToken: String): ResponseMessage?{
         var responseMessage: ResponseMessage? = null
         try {
             responseMessage = safeApiCall(
-                call = { withContext(ioDispatcher){api.updateRatingToPlace(placeId, rate, accessToken)} },
-                errorMessage = "Update Rating place is not available now."
+                call = { withContext(ioDispatcher){api.updateRatingToProduct(productId, rate, accessToken)} },
+                errorMessage = "Update Rating product is not available now."
             )
         }
         catch (ex: Throwable){
@@ -41,12 +41,12 @@ class RatingRepository(private val api: Api, private val context: Context, priva
         return responseMessage
     }
 
-    suspend fun getUserSpecificRate(placeId: String, accessToken: String): Rate? {
+    suspend fun getUserSpecificRate(productId: String, accessToken: String): Rate? {
         var rate: Rate? = null
         try {
             rate = safeApiCall(
-                call = { withContext(ioDispatcher){api.getUserSpecificRate(placeId, accessToken)} },
-                errorMessage = "Getting your rate on place is not available now."
+                call = { withContext(ioDispatcher){api.getUserSpecificRate(productId, accessToken)} },
+                errorMessage = "Getting your rate on product is not available now."
             )
         }
         catch (ex: Throwable){

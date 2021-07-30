@@ -122,7 +122,7 @@ class ProductActivityViewModel(
         return ratingRepository.updateRatingToProduct(rate, placeId, accessToken)
     }
 
-    suspend fun addProductToFavorites(favoriteProduct: VisitedProduct, accessToken: String): ResponseMessage?{
+    suspend fun addProductToFavorites(favoriteProduct: PostFavoriteProduct, accessToken: String): ResponseMessage?{
         return productsRepository.addProductToFavorites(favoriteProduct, accessToken)
     }
 

@@ -76,6 +76,7 @@
     <string name="account_created_successfully">Account created successfully</string>
     <string name="no_verification_code_entered">Enter verification code first</string>
     <string name="check_your_connectivity">Please check your connectivity</string>
+    <string name="write_a_comment">Write a comment...</string>
 
     <!-- Team -->
     <string name="team_members">Team members</string>
@@ -92,6 +93,7 @@
     <string name="recommend_it">Recommend it!</string>
     <string name="search_for_user">Search for users</string>
     <string name="search_by_user_name">Search by user name...</string>
+
 
 
 </resources>

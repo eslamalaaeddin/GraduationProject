@@ -34,17 +34,10 @@ class RecommendedProductsSource(
                 val response = productsRepository.getRecommendedProducts(1, accessToken)
                 response.let { res ->
                     val products = res.orEmpty().onEach { it.favorite = 0 }
-//                    Log.i(TAG, "XXXXXX loadInitial: ${products.size != products.distinct().count()}")
                     cachingRepository.database.withTransaction {
                         cachingRepository.deleteProductsFromDb()
                         delay(1000)
                         cachingRepository.insertProducts(products)
-//                        val cachedProducts = cachingRepository.getProductsFromDb(0)
-//                        cachedProducts?.let {
-//                            callback.onResult(it.distinct(), null, 2)
-//                            Log.i(TAG, "IIII loadInitial: ${it.size}")
-//                            Log.i(TAG, "IIII loadInitial:OFFSET $onlineOffset")
-//                        }
                     }
                     callback.onResult(products.distinct(), null, 2)
                 }
@@ -79,11 +72,6 @@ class RecommendedProductsSource(
                     Log.i(TAG, "XXXXXX loadAfter: $products")
                     cachingRepository.database.withTransaction {
                         cachingRepository.insertProducts(products)
-//                        val cachedProducts = cachingRepository.getProductsFromDb(products.size)
-//                        cachedProducts?.let {
-
-//                            onlineOffset += it.size
-//                        }
                     }
                     callback.onResult(products.distinct(), params.key + 1)
                 }

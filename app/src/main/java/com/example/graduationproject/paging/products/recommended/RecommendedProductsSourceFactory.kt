@@ -6,6 +6,10 @@ import com.example.graduationproject.cache.CachingRepository
 import com.example.graduationproject.models.products.Product
 import com.example.graduationproject.repository.ProductsRepository
 
+/**
+ * Data-loading systems of an application or library can implement this interface 
+ * to allow LiveData<PagedList>s to be created.
+ */
 class RecommendedProductsSourceFactory(
     private val accessToken: String = "",
     private val productsRepository: ProductsRepository,

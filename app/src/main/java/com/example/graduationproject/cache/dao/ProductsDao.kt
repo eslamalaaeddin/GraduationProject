@@ -5,8 +5,7 @@ import com.example.graduationproject.models.products.Product
 
 @Dao
 interface ProductsDao {
-
-    @Query("SELECT * FROM products WHERE products.id = :productId LIMIT 1")
+    @Query("SELECT * FROM products WHERE products.id = :productId")
     suspend fun getProduct(productId: Long) : Product?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -15,7 +14,7 @@ interface ProductsDao {
     @Delete
     suspend fun deleteFromProducts(product: Product)
 
-    @Query("SELECT * FROM products LIMIT 10 OFFSET :offset")
+    @Query("SELECT * FROM products WHERE favorite != 1 LIMIT 10 OFFSET :offset")
     suspend fun getProductsFromDb(offset: Int) : MutableList<Product>?
 
 

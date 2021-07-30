@@ -36,7 +36,7 @@ private const val TAG = "CommentsBottomSheet"
 
 class CommentsBottomSheet(
     private val accessToken: String,
-    private val placeId: Long,
+    private val productId: Long,
     private val userId: Long,
     private val userName: String,
     private val userImageUrl: String
@@ -45,7 +45,7 @@ class CommentsBottomSheet(
     CommentListener {
     private lateinit var bindingInstance: CommentsBottomSheetBinding
     private val productActivityViewModel by viewModel<ProductActivityViewModel>()
-    var isPlaceFavorite = false
+    var isProductFavorite = false
     private var commentsAdapter: CommentsAdapter = CommentsAdapter(mutableListOf(), userId, this)
     private lateinit var layoutManager: LinearLayoutManager
     private var comments: MutableList<Comment?> = mutableListOf()
@@ -99,10 +99,10 @@ class CommentsBottomSheet(
         }
         else{
             bindingInstance.noConnectionLayout.visibility = View.GONE
-            ///bindingInstance.noConnectionLayout.visibility = View.GONE
             lifecycleScope.launch {
                 getComments()
                 //to get always the updated rate
+                // TODO: 7/15/2021 What is its purpose
                 getUserSpecificRate()
             }
         }
@@ -189,7 +189,7 @@ class CommentsBottomSheet(
         lifecycleScope.launch {
             dismissProgressAfterTimeOut()
             val commentsLiveData =
-                productActivityViewModel.getProductComments(placeId.toString(), accessToken)
+                productActivityViewModel.getProductComments(productId.toString(), accessToken)
             commentsLiveData?.observe(viewLifecycleOwner) { it ->
                 bindingInstance.progressBar.visibility = View.GONE
                 if (!it.isNullOrEmpty()) {
@@ -218,7 +218,7 @@ class CommentsBottomSheet(
             bindingInstance.addCommentFab.isEnabled = false
 
             val productComment = ProductComment(
-                placeId = placeId,
+                productId = productId,
                 comment = bindingInstance.commentEditText.text.toString()
             )
             lifecycleScope.launch {
@@ -261,13 +261,13 @@ class CommentsBottomSheet(
             }
         }
 
-       
+
     }
 
     private suspend fun getComments() {
         dismissProgressAfterTimeOut()
         val productCommentsLiveData = productActivityViewModel.getProductComments(
-            placeId.toString(),
+            productId.toString(),
             accessToken
         )
         productCommentsLiveData?.observe(viewLifecycleOwner) { it ->
@@ -296,7 +296,7 @@ class CommentsBottomSheet(
 
     private suspend fun getUserSpecificRate() {
         val rate = productActivityViewModel.getUserSpecificRate(
-            placeId.toString(),
+            productId.toString(),
             accessToken
         )
         rate?.let {
@@ -308,7 +308,7 @@ class CommentsBottomSheet(
 
 
     override fun onMoreOnCommentClicked(comment: Comment, position: Int) {
-        val commentConfigsBottomSheet = CommentConfigsBottomSheet(this, comment, placeId, position)
+        val commentConfigsBottomSheet = CommentConfigsBottomSheet(this, comment, productId, position)
         commentConfigsBottomSheet.show(
             requireActivity().supportFragmentManager,
             commentConfigsBottomSheet.tag

@@ -9,22 +9,20 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.*
 import android.widget.AbsListView
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.observe
-import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.graduationproject.R
+import com.example.graduationproject.helper.listeners.SearchListener
 import com.example.graduationproject.adapters.SearchedProductsAdapter
 import com.example.graduationproject.databinding.SearchFragmentBinding
 import com.example.graduationproject.helper.Constants
 import com.example.graduationproject.helper.Utils.getAccessToken
 import com.example.graduationproject.helper.listeners.TagClickListener
-import com.example.graduationproject.ui.activities.SplashActivity
 import com.example.graduationproject.viewmodels.SearchFragmentViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -32,7 +30,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 private const val TAG = "SearchFragment"
-class SearchFragment : Fragment() , TagClickListener{
+class SearchFragment(private val searchListener: SearchListener) : Fragment() , TagClickListener{
     private lateinit var bindingInstance: SearchFragmentBinding
     private val searchFragmentViewModel by viewModel<SearchFragmentViewModel>()
     private lateinit var linearLayoutManager : LinearLayoutManager
@@ -62,7 +60,6 @@ class SearchFragment : Fragment() , TagClickListener{
 
         accessToken = getAccessToken(requireContext()).orEmpty()
         linearLayoutManager = LinearLayoutManager(requireContext())
-//        bindingInsta nce.progressBar.visibility = View.VISIBLE
 
         loadingHandler = Handler(Looper.getMainLooper())
 
@@ -198,11 +195,13 @@ class SearchFragment : Fragment() , TagClickListener{
         bindingInstance.searchProductsEditText.text.clear()
         bindingInstance.searchProductsEditText.hint = "#$tag"
         searchProductsByTag(tag)
+        searchListener.onSearchEvent()
     }
 
     private fun searchProductsByName(productName: String) {
         bindingInstance.progressBar.visibility = View.VISIBLE
         bindingInstance.emptyQueryLayout.visibility = View.GONE
+        searchListener.onSearchEvent()
         try {
             lifecycleScope.launch {
                 dismissProgressAfterTimeOut()
@@ -243,15 +242,6 @@ class SearchFragment : Fragment() , TagClickListener{
         }
 
     }
-
-//    private fun updateView(itemCount: Int) {
-//        if (itemCount > 0){
-//            Toast.makeText(requireContext(), "NOT EMPTY", Toast.LENGTH_SHORT).show()
-//        }
-//        else{
-//            Toast.makeText(requireContext(), "EMPTY", Toast.LENGTH_SHORT).show()
-//        }
-//    }
 
     private fun searchProductsByTag(tag: String) {
         bindingInstance.progressBar.visibility = View.VISIBLE
